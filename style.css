@@ -1,3 +1,22 @@
+form {
+    max-width: 400px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+input, textarea {
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+}
+
+button {
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}
 .projects {
     display: flex;
     justify-content: center;
