@@ -1,3 +1,10 @@
+.language button {
+    background:none;
+    border:none;
+    font-size:20px;
+    cursor:pointer;
+}
+
 #theme-toggle {
     background: none;
     border: none;
