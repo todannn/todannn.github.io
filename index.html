@@ -149,5 +149,46 @@ menu.classList.toggle("active");
 }
 
 </script>
+<script>
+
+const toggle = document.getElementById("theme-toggle");
+
+const body = document.body;
+
+
+// cek tema sebelumnya
+
+if(localStorage.getItem("theme") === "light"){
+
+    body.classList.add("light");
+
+    toggle.innerHTML = "🌙";
+
+}
+
+
+toggle.onclick = function(){
+
+    body.classList.toggle("light");
+
+
+    if(body.classList.contains("light")){
+
+        localStorage.setItem("theme","light");
+
+        toggle.innerHTML="🌙";
+
+    }else{
+
+        localStorage.setItem("theme","dark");
+
+        toggle.innerHTML="☀️";
+
+    }
+
+}
+
+</script>
+    
 </body>
 </html>
