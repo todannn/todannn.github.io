@@ -20,3 +20,14 @@
     background: black;
     color: white;
 }
+.profile-card {
+    margin-top: 50px;
+    padding: 30px;
+}
+
+.profile-card img {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+}
