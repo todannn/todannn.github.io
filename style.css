@@ -31,3 +31,17 @@
     border-radius: 50%;
     object-fit: cover;
 }
+nav {
+    padding: 20px;
+}
+
+nav a {
+    margin: 10px;
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+}
+
+section {
+    margin-bottom: 50px;
+}
