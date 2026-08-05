@@ -45,3 +45,47 @@ nav a {
 section {
     margin-bottom: 50px;
 }
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #111;
+    color: white;
+}
+
+nav {
+    background: #000;
+    padding: 20px;
+    position: sticky;
+    top: 0;
+}
+
+nav a {
+    color: white;
+}
+
+.hero {
+    padding: 100px 20px;
+    text-align: center;
+}
+
+.profile-card {
+    max-width: 500px;
+    margin: auto;
+    padding: 30px;
+    background: #222;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.profile-card img {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    border: 5px solid white;
+}
+
+section {
+    padding: 40px 20px;
+    text-align: center;
+}
