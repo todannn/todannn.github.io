@@ -89,3 +89,38 @@ section {
     padding: 40px 20px;
     text-align: center;
 }
+.hero, .profile-card, section {
+    animation: fadeIn 1.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+.profile-card img {
+    transition: 0.3s;
+}
+
+
+.profile-card img:hover {
+    transform: scale(1.1);
+}
+
+
+.hero a {
+    transition: 0.3s;
+}
+
+
+.hero a:hover {
+    transform: scale(1.1);
+}
