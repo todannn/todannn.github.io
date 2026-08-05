@@ -1,3 +1,23 @@
+.projects {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+
+.card {
+    width: 250px;
+    padding: 25px;
+    background: #222;
+    border-radius: 15px;
+    transition: 0.3s;
+}
+
+
+.card:hover {
+    transform: translateY(-10px);
+}
 .hero {
     padding: 80px 20px;
 }
