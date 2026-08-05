@@ -1,3 +1,19 @@
+form input,
+form textarea {
+    background: #222;
+    color: white;
+}
+
+form button {
+    background: white;
+    color: black;
+    border: none;
+    font-weight: bold;
+}
+
+form button:hover {
+    transform: scale(1.05);
+}
 form {
     max-width: 400px;
     margin: auto;
