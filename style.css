@@ -1,3 +1,14 @@
+.article {
+    max-width: 800px;
+    margin: auto;
+    text-align: left;
+    line-height: 1.8;
+}
+
+.article img {
+    width: 200px;
+    border-radius: 20px;
+}
 form input,
 form textarea {
     background: #222;
