@@ -53,6 +53,17 @@ Todannn
 <a href="#contact">Contact</a>
 
 </div>
+<div class="language">
+
+<button onclick="changeLanguage('id')">
+🇮🇩
+</button>
+
+<button onclick="changeLanguage('en')">
+🇺🇸
+</button>
+
+</div>
 <button id="theme-toggle">
 🌙
 </button>
@@ -62,20 +73,22 @@ Todannn
 
     <img src="profile.jpeg" alt="Profile Photo">
 
-    <h2>About Me</h2>
+    <h2 data-id="Tentangku" data-en="About Me">About Me</h2>
 
-    <p>
+    <p data-id="Halo, saya Dani. Ini adalah situs web portofolio pribadi saya. Saya menciptakan, mempelajari, dan mengeksplorasi teknologi." data-en="Hello, I'm Dani.
+        This is my personal portfolio website.
+        I create, learn, and explore technology.">
         Hello, I'm Dani.
         This is my personal portfolio website.
         I create, learn, and explore technology.
     </p>
 
 </div>
-   
+   <!-- data-id="" data-en="" -->
 </section>
 <section id="projects">
 
-<h2>My Projects</h2>
+<h2 data-id="Proyekku" data-en="My Projects">My Projects</h2>
 
 <div class="projects">
 
@@ -189,6 +202,35 @@ toggle.onclick = function(){
 }
 
 </script>
-    
+<script>
+
+function changeLanguage(lang){
+
+let elements = document.querySelectorAll("[data-"+lang+"]");
+
+
+elements.forEach(function(element){
+
+element.innerHTML = element.getAttribute("data-"+lang);
+
+});
+
+
+localStorage.setItem("language", lang);
+
+}
+
+
+// load bahasa terakhir
+
+let savedLanguage = localStorage.getItem("language");
+
+if(savedLanguage){
+
+changeLanguage(savedLanguage);
+
+}
+
+</script>
 </body>
 </html>
