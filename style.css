@@ -1,3 +1,33 @@
+#theme-toggle {
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    color: white;
+}
+
+
+body.light {
+    background: #f5f5f5;
+    color: #111;
+}
+
+
+body.light .navbar {
+    background: white;
+}
+
+
+body.light .navbar a {
+    color: #111;
+}
+
+
+body.light .profile-card,
+body.light .card {
+    background: white;
+    color: #111;
+}
 .hamburger {
     display: none;
     font-size: 28px;
