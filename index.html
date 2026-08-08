@@ -1,145 +1,215 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>dani - Personal Portfolio</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dani Ramdani - Web Developer Portfolio</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="manifest" href="manifest.json">
-    <meta name="description" content="Todannn personal website and online portfolio showcasing technology, creativity, and projects.">
-
-<meta name="keywords" content="Todannn, portfolio, technology, web development, creative projects">
-
-<meta name="author" content="Todannn">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portfolio profesional Dani Ramdani, seorang Web Developer yang berpengalaman dalam pembuatan aplikasi web, frontend, dan backend.">
+    <meta name="keywords" content="Dani Ramdani, Todannn, portfolio, web developer, frontend, backend, php, javascript">
+    <meta name="author" content="Dani Ramdani">
     <meta name="google-site-verification" content="2Tcy5w8Rb0Jl6t2QiuxAXakFyXwHSNLk9Z8TQSqelpc" />
     <link rel="stylesheet" href="style.css">
-    <meta property="og:title" content="Todannn - Personal Portfolio">
-
-<meta property="og:description" content="My personal website and online portfolio showcasing technology, creativity, and projects.">
-
-<meta property="og:image" content="https://todannn.github.io/profile.jpg">
-
-<meta property="og:url" content="https://todannn.github.io/">
-
-<meta property="og:type" content="website">
+    <meta property="og:title" content="Dani Ramdani - Web Developer Portfolio">
+    <meta property="og:description" content="Personal website and online portfolio showcasing technology, creativity, and web development projects.">
+    <meta property="og:image" content="https://todannn.github.io/profile.jpeg">
+    <meta property="og:url" content="https://todannn.github.io/">
+    <meta property="og:type" content="website">
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-HR206WH6C0"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-HR206WH6C0');
-</script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HR206WH6C0"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-HR206WH6C0');
+    </script>
 </head>
 
 <body>
 <nav class="navbar">
-
-<div class="logo">
-Todannn
-</div>
-
-<button class="hamburger" onclick="toggleMenu()">
-☰
-</button>
-
-<div class="menu" id="menu">
-
-<a href="index.html" data-id="Beranda" data-en="Home">Home</a>
-<a href="#about" data-id="Tentang" data-en="About">About</a>
-<a href="#projects" data-id="Proyek" data-en="Projects">Projects</a>
-<a href="blog.html">Blog</a>
-<a href="#contact" data-id="Kontak" data-en="Contact" >Contact</a>
-
-</div>
-<div class="language">
-
-<button onclick="changeLanguage('id')">
-🇮🇩
-</button>
-
-<button onclick="changeLanguage('en')">
-🇺🇸
-</button>
-
-</div>
-<button id="theme-toggle">
-🌙
-</button>
+    <div class="logo">
+        Dani Ramdani
+    </div>
+    <button class="hamburger" onclick="toggleMenu()">
+        ☰
+    </button>
+    <div class="menu" id="menu">
+        <a href="#home" data-id="Beranda" data-en="Home">Home</a>
+        <a href="#about" data-id="Tentang" data-en="About">About</a>
+        <a href="#skills" data-id="Keahlian" data-en="Skills">Skills</a>
+        <a href="#projects" data-id="Proyek" data-en="Projects">Projects</a>
+        <a href="#certification" data-id="Sertifikasi & Pendidikan" data-en="Certifications & Education">Certifications</a>
+        <a href="blog.html">Blog</a>
+        <a href="#contact" data-id="Kontak" data-en="Contact">Contact</a>
+    </div>
+    <div class="language">
+        <button onclick="changeLanguage('id')">🇮🇩</button>
+        <button onclick="changeLanguage('en')">🇺🇸</button>
+    </div>
+    <button id="theme-toggle">🌙</button>
 </nav>
-    <section class="hero" id="home">
-    <div class="profile-card" id="about">
 
-    <img src="profile.jpeg" alt="Profile Photo">
-
-    <h2 data-id="Tentangku" data-en="About Me">About Me</h2>
-
-    <p data-id="Halo, saya Dani. Ini adalah situs web portofolio pribadi saya. Saya menciptakan, mempelajari, dan mengeksplorasi teknologi." data-en="Hello, I'm Dani.
-        This is my personal portfolio website.
-        I create, learn, and explore technology.">
-        Hello, I'm Dani.
-        This is my personal portfolio website.
-        I create, learn, and explore technology.
-    </p>
-
-</div>
-   <!-- data-id="" data-en="" -->
+<!-- 1. HERO / COVER -->
+<section class="hero" id="home">
+    <div class="profile-card">
+        <img src="profile.jpeg" alt="Profile Photo">
+        <h1 style="margin-top: 15px; font-size: 1.8rem;">Dani Ramdani</h1>
+        <h3 style="color: var(--accent-color, #4f46e5); margin-bottom: 10px;" data-id="Web Developer" data-en="Web Developer">Web Developer</h3>
+        <p style="margin-bottom: 15px;" data-id="Halo, saya Dani. Selamat datang di portofolio profesional saya." data-en="Hello, I'm Dani. Welcome to my professional portfolio.">
+            Hello, I'm Dani. Welcome to my professional portfolio.
+        </p>
+        <div class="contact-links" style="font-size: 0.9rem; opacity: 0.9;">
+            <p>📧 Email: <a href="mailto:id.dani.ramdani@gmail.com">id.dani.ramdani@gmail.com</a></p>
+            <p>💼 LinkedIn: <a href="https://www.linkedin.com/in/todannn/" target="_blank">linkedin.com/in/todannn</a></p>
+            <p>📱 WhatsApp: <a href="https://wa.me/628997979101" target="_blank">08997979101</a></p>
+        </div>
+    </div>
 </section>
+
+<!-- 2. TENTANG SAYA (ABOUT ME) -->
+<section id="about">
+    <h2 data-id="Tentang Saya" data-en="About Me">About Me</h2>
+    <div class="card" style="text-align: left; max-width: 800px; margin: 0 auto; line-height: 1.6;">
+        <h3 data-id="Ringkasan Singkat" data-en="Summary">Summary</h3>
+        <p data-id="Seorang Web Developer yang berdedikasi dan memiliki ketertarikan tinggi dalam membangun aplikasi web yang fungsional, responsif, dan berpusat pada pengalaman pengguna (user-centric). Memiliki fondasi yang kuat dalam pengembangan sisi frontend maupun backend, serta terbiasa memecahkan masalah kompleks dengan kode yang bersih dan terstruktur. Menjunjung tinggi nilai kerja keras, kolaborasi tim, dan pembelajaran berkelanjutan terhadap teknologi web terbaru." 
+           data-en="A dedicated Web Developer with a strong passion for building functional, responsive, and user-centric web applications. Possesses a solid foundation in both frontend and backend development, accustomed to solving complex problems with clean and structured code. Upholds strong values in hard work, teamwork, and continuous learning of the latest web technologies.">
+           Seorang Web Developer yang berdedikasi dan memiliki ketertarikan tinggi dalam membangun aplikasi web yang fungsional, responsif, dan berpusat pada pengalaman pengguna (user-centric). Memiliki fondasi yang kuat dalam pengembangan sisi frontend maupun backend, serta terbiasa memecahkan masalah kompleks dengan kode yang bersih dan terstruktur. Menjunjung tinggi nilai kerja keras, kolaborasi tim, dan pembelajaran berkelanjutan terhadap teknologi web terbaru.
+        </p>
+
+        <h3 style="margin-top: 20px;" data-id="Fokus Karier & Tujuan Profesional" data-en="Career Focus & Professional Goals">Career Focus & Professional Goals</h3>
+        <p data-id="Berkomitmen untuk terus berkembang menjadi seorang Full-Stack Developer senior yang mampu memimpin pengembangan produk digital berskala besar. Bertujuan untuk berkontribusi di perusahaan inovatif yang dinamis, di mana saya dapat mengoptimalkan performa web, menciptakan solusi digital yang efisien, dan memberikan dampak nyata bagi bisnis melalui teknologi."
+           data-en="Committed to growing into a senior Full-Stack Developer capable of leading large-scale digital product development. Aiming to contribute to dynamic and innovative companies where I can optimize web performance, create efficient digital solutions, and deliver real business impact through technology.">
+           Berkomitmen untuk terus berkembang menjadi seorang Full-Stack Developer senior yang mampu memimpin pengembangan produk digital berskala besar. Bertujuan untuk berkontribusi di perusahaan inovatif yang dinamis, di mana saya dapat mengoptimalkan performa web, menciptakan solusi digital yang efisien, dan memberikan dampak nyata bagi bisnis melalui teknologi.
+        </p>
+    </div>
+</section>
+
+<!-- 3. KEAHLIAN & KETERAMPILAN -->
+<section id="skills">
+    <h2 data-id="Keahlian & Keterampilan" data-en="Skills & Tools">Skills & Tools</h2>
+    <div class="projects" style="max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+        
+        <div class="card" style="text-align: left;">
+            <h3 data-id="Hard Skills" data-en="Hard Skills">Hard Skills</h3>
+            <ul style="padding-left: 20px; line-height: 1.8;">
+                <li data-id="Frontend Development (HTML5, CSS3, JavaScript ES6+, Responsive Web Design)" data-en="Frontend Development (HTML5, CSS3, JavaScript ES6+, Responsive Web Design)">Frontend Development (HTML5, CSS3, JavaScript ES6+, Responsive Web Design)</li>
+                <li data-id="Backend Development (PHP, Pemrograman Berorientasi Objek / OOP)" data-en="Backend Development (PHP, Object-Oriented Programming / OOP)">Backend Development (PHP, Pemrograman Berorientasi Objek / OOP)</li>
+                <li data-id="Database Management (MySQL, Relational Database Design)" data-en="Database Management (MySQL, Relational Database Design)">Database Management (MySQL, Relational Database Design)</li>
+                <li data-id="Version Control (Git & GitHub)" data-en="Version Control (Git & GitHub)">Version Control (Git & GitHub)</li>
+                <li data-id="API Integration (RESTful API)" data-en="API Integration (RESTful API)">API Integration (RESTful API)</li>
+            </ul>
+        </div>
+
+        <div class="card" style="text-align: left;">
+            <h3 data-id="Tools & Software" data-en="Tools & Software">Tools & Software</h3>
+            <ul style="padding-left: 20px; line-height: 1.8;">
+                <li data-id="Bahasa Pemrograman: JavaScript, PHP, CSS, HTML, Python" data-en="Programming Languages: JavaScript, PHP, CSS, HTML, Python">Bahasa Pemrograman: JavaScript, PHP, CSS, HTML, Python</li>
+                <li data-id="Framework & Library: React.js, Node.js, Bootstrap, Tailwind CSS, Laravel" data-en="Framework & Library: React.js, Node.js, Bootstrap, Tailwind CSS, Laravel">Framework & Library: React.js, Node.js, Bootstrap, Tailwind CSS, Laravel</li>
+                <li data-id="Tools Pendukung: Visual Studio Code, Git, Postman, XAMPP, Microsoft Excel" data-en="Supporting Tools: Visual Studio Code, Git, Postman, XAMPP, Microsoft Excel">Tools Pendukung: Visual Studio Code, Git, Postman, XAMPP, Microsoft Excel</li>
+            </ul>
+        </div>
+
+    </div>
+</section>
+
+<!-- 4. PROYEK / PENGALAMAN UNGGULAN -->
 <section id="projects">
+    <h2 data-id="Proyek Unggulan" data-en="Featured Projects">Featured Projects</h2>
+    <div class="projects" style="max-width: 900px; margin: 0 auto;">
 
-<h2 data-id="Proyekku" data-en="My Projects">My Projects</h2>
+        <div class="card" style="text-align: left; margin-bottom: 20px;">
+            <h3 data-id="Sistem Manajemen E-Commerce & Toko Online" data-en="E-Commerce & Online Store Management System">Sistem Manajemen E-Commerce & Toko Online</h3>
+            <p style="margin-top: 10px;">
+                <strong data-id="Deskripsi Singkat:" data-en="Short Description:">Deskripsi Singkat:</strong> 
+                <span data-id="Mengembangkan platform e-commerce berbasis web yang dirancang untuk memudahkan UMKM dalam mengelola katalog produk, transaksi penjualan, dan inventaris secara real-time. Dilengkapi dengan sistem autentikasi pengguna yang aman dan dasbor admin yang interaktif."
+                      data-en="Developing a web-based e-commerce platform designed to help SMEs manage product catalogs, sales transactions, and inventory in real-time. Equipped with a secure user authentication system and an interactive admin dashboard.">
+                    Mengembangkan platform e-commerce berbasis web yang dirancang untuk memudahkan UMKM dalam mengelola katalog produk, transaksi penjualan, dan inventaris secara real-time. Dilengkapi dengan sistem autentikasi pengguna yang aman dan dasbor admin yang interaktif.
+                </span>
+            </p>
+            <p style="margin-top: 10px;">
+                <strong data-id="Teknologi / Metode:" data-en="Technology / Method:">Teknologi / Metode:</strong><br>
+                • <em>Riset:</em> Menganalisis kebutuhan pengguna dan alur transaksi toko daring konvensional untuk mengoptimalkan User Experience (UX).<br>
+                • <em>Pelajari & Eksekusi:</em> Menggunakan arsitektur MVC (Model-View-Controller), merancang basis data relasional untuk pengelolaan stok, serta menerapkan teknik responsive design.<br>
+                • <em>Tech Stack:</em> PHP, JavaScript, MySQL, CSS (Bootstrap), Git.
+            </p>
+            <p style="margin-top: 10px;">
+                <strong data-id="Hasil / Dampak:" data-en="Result / Impact:">Hasil / Dampak:</strong> 
+                <span data-id="Berhasil mempercepat proses pencatatan transaksi toko hingga 40% dan mengurangi kesalahan rekapitulasi data inventaris berkat integrasi basis data yang otomatis."
+                      data-en="Successfully accelerated store transaction recording processes by up to 40% and reduced inventory data recalculation errors through automated database integration.">
+                    Berhasil mempercepat proses pencatatan transaksi toko hingga 40% dan mengurangi kesalahan rekapitulasi data inventaris berkat integrasi basis data yang otomatis.
+                </span>
+            </p>
+        </div>
 
-<div class="projects">
+        <div class="card" style="text-align: left;">
+            <h3 data-id="Aplikasi Web Monitoring & Dashboard Analitik Bisnis" data-en="Web Monitoring Application & Business Analytics Dashboard">Aplikasi Web Monitoring & Dashboard Analitik Bisnis</h3>
+            <p style="margin-top: 10px;">
+                <strong data-id="Deskripsi Singkat:" data-en="Short Description:">Deskripsi Singkat:</strong> 
+                <span data-id="Membangun aplikasi web dasbor interaktif untuk memonitor metrik performa penjualan dan data operasional harian perusahaan secara visual dan transparan."
+                      data-en="Building an interactive dashboard web application to monitor sales performance metrics and daily company operational data visually and transparently.">
+                    Membangun aplikasi web dasbor interaktif untuk memonitor metrik performa penjualan dan data operasional harian perusahaan secara visual dan transparan.
+                </span>
+            </p>
+            <p style="margin-top: 10px;">
+                <strong data-id="Teknologi / Metode:" data-en="Technology / Method:">Teknologi / Metode:</strong><br>
+                • <em>Riset:</em> Menentukan parameter metrik utama (KPI) yang paling dibutuhkan oleh manajemen untuk pengambilan keputusan cepat.<br>
+                • <em>Pelajari & Eksekusi:</em> Mengembangkan skrip otomatisasi pengolahan data dan mengintegrasikannya ke dalam antarmuka web dinamis.<br>
+                • <em>Tech Stack:</em> JavaScript, Python, HTML5, CSS3, RESTful API.
+            </p>
+            <p style="margin-top: 10px;">
+                <strong data-id="Hasil / Dampak:" data-en="Result / Impact:">Hasil / Dampak:</strong> 
+                <span data-id="Meningkatkan efisiensi pelaporan manajemen hingga 50% lebih cepat dibandingkan metode manual sebelumnya yang berbasis lembar kerja terpisah."
+                      data-en="Increased management reporting efficiency up to 50% faster compared to previous manual spreadsheet-based methods.">
+                    Meningkatkan efisiensi pelaporan manajemen hingga 50% lebih cepat dibandingkan metode manual sebelumnya yang berbasis lembar kerja terpisah.
+                </span>
+            </p>
+        </div>
 
-    <div class="card">
-        <h3 data-id="Proyek Satu" data-en="Project One">Project One</h3>
-        <p data-id="Proyek dan eksperimen digital pertama saya." data-en="My first digital project and experiment.">
-        My first digital project and experiment.
-        </p>
     </div>
-
-
-    <div class="card">
-        <h3 data-id="Proyek Dua" data-en="Project Two">Project Two</h3>
-        <p data-id="Proyek teknologi kreatif." data-en="Creative technology project.">
-        Creative technology project.
-        </p>
-    </div>
-
-
-    <div class="card">
-        <h3 data-id="Proyek Tiga" data-en="Project Three">Project Three</h3>
-        <p data-id="Proyek pembelajaran dan pengembangan." data-en="Learning and development project.
-">
-        Learning and development project.
-        </p>
-    </div>
-
-</div>
-
 </section>
 
+<!-- 5. SERTIFIKASI & RIWAYAT PENDIDIKAN -->
+<section id="certification">
+    <h2 data-id="Sertifikasi & Pendidikan" data-en="Certifications & Education">Certifications & Education</h2>
+    <div class="projects" style="max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+        
+        <div class="card" style="text-align: left;">
+            <h3 data-id="Sertifikasi Profesional" data-en="Professional Certifications">Professional Certifications</h3>
+            <ul style="padding-left: 20px; line-height: 1.8; margin-top: 10px;">
+                <li>Sertifikasi Frontend Web Development – Kota Bandung</li>
+                <li>Sertifikasi Pemrograman Python untuk Analisis Data & Otomatisasi – Jakarta Digital Coding Camp</li>
+                <li>Sertifikasi JavaScript & Modern Web Applications – Surabaya Tech Academy</li>
+                <li>Sertifikasi Dasar-Dasar Pemrograman & Basis Data MySQL – Regional Jawa Barat</li>
+            </ul>
+        </div>
+
+        <div class="card" style="text-align: left;">
+            <h3 data-id="Riwayat Pendidikan" data-en="Education History">Education History</h3>
+            <ul style="padding-left: 20px; line-height: 1.8; margin-top: 10px;">
+                <li data-id="Pendidikan Formal: SMK Rekayasa Perangkat Lunak (RPL)" data-en="Formal Education: Vocational High School of Software Engineering (RPL)">
+                    Pendidikan Formal: SMK Rekayasa Perangkat Lunak (RPL)
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</section>
+
+<!-- KONTAK / CONTACT -->
 <section id="contact">
-
-<h2 data-id="Kontak Aku" data-en="Contact Me">Contact Me</h2>
-
-<form action="https://formspree.io/f/mnpaqbbk" method="POST">
-
-<input type="text" name="name" placeholder="Your Name" required>
-
-<input type="email" name="email" placeholder="Your Email" required>
-
-<textarea name="message" placeholder="Your Message"></textarea>
-
-<button type="submit"  data-id="Kirim Pesan" data-en="Send Message">
-Send Message
-</button>
-
-</form>
-
+    <h2 data-id="Kontak Aku" data-en="Contact Me">Contact Me</h2>
+    <form action="https://formspree.io/f/mnpaqbbk" method="POST" style="max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px;">
+        <input type="text" name="name" placeholder="Your Name" required style="padding: 12px; border-radius: 5px; border: 1px solid #ccc;">
+        <input type="email" name="email" placeholder="Your Email" required style="padding: 12px; border-radius: 5px; border: 1px solid #ccc;">
+        <textarea name="message" placeholder="Your Message" rows="5" style="padding: 12px; border-radius: 5px; border: 1px solid #ccc;"></textarea>
+        <button type="submit" data-id="Kirim Pesan" data-en="Send Message" style="padding: 12px; border-radius: 5px; background: var(--accent-color, #4f46e5); color: white; border: none; cursor: pointer; font-weight: bold;">
+            Send Message
+        </button>
+    </form>
 </section>
-   <script>
+
+<script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", function() {
     navigator.serviceWorker.register("service-worker.js")
@@ -152,86 +222,48 @@ if ("serviceWorker" in navigator) {
   });
 }
 </script>
-    <script>
 
-function toggleMenu(){
-
-let menu = document.getElementById("menu");
-
-menu.classList.toggle("active");
-
-}
-
-</script>
 <script>
+function toggleMenu(){
+    let menu = document.getElementById("menu");
+    menu.classList.toggle("active");
+}
+</script>
 
+<script>
 const toggle = document.getElementById("theme-toggle");
-
 const body = document.body;
 
-
-// cek tema sebelumnya
-
 if(localStorage.getItem("theme") === "light"){
-
     body.classList.add("light");
-
     toggle.innerHTML = "🌙";
-
 }
-
 
 toggle.onclick = function(){
-
     body.classList.toggle("light");
-
-
     if(body.classList.contains("light")){
-
         localStorage.setItem("theme","light");
-
         toggle.innerHTML="🌙";
-
     }else{
-
         localStorage.setItem("theme","dark");
-
         toggle.innerHTML="☀️";
-
     }
-
 }
-
 </script>
+
 <script>
-
 function changeLanguage(lang){
-
-let elements = document.querySelectorAll("[data-"+lang+"]");
-
-
-elements.forEach(function(element){
-
-element.innerHTML = element.getAttribute("data-"+lang);
-
-});
-
-
-localStorage.setItem("language", lang);
-
+    let elements = document.querySelectorAll("[data-"+lang+"]");
+    elements.forEach(function(element){
+        element.innerHTML = element.getAttribute("data-"+lang);
+    });
+    localStorage.setItem("language", lang);
 }
-
-
-// load bahasa terakhir
 
 let savedLanguage = localStorage.getItem("language");
-
 if(savedLanguage){
-
-changeLanguage(savedLanguage);
-
+    changeLanguage(savedLanguage);
 }
-
 </script>
 </body>
 </html>
