@@ -24,45 +24,419 @@
       gtag('js', new Date());
       gtag('config', 'G-HR206WH6C0');
     </script>
+    <style>
+        :root {
+            --bg-primary: #0a1128;
+            --bg-secondary: #0f1c3f;
+            --card-bg: rgba(15, 28, 63, 0.75);
+            --card-border: rgba(212, 175, 55, 0.25);
+            --card-border-hover: rgba(212, 175, 55, 0.6);
+            --text-main: #f8fafc;
+            --text-muted: #cbd5e1;
+            --gold: #d4af37;
+            --gold-light: #f3e5ab;
+            --gold-gradient: linear-gradient(135deg, #f3e5ab 0%, #d4af37 50%, #aa771c 100%);
+            --accent-glow: rgba(212, 175, 55, 0.15);
+            --nav-bg: rgba(10, 17, 40, 0.85);
+        }
+
+        body.light {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --card-border: rgba(170, 119, 28, 0.2);
+            --card-border-hover: rgba(170, 119, 28, 0.5);
+            --text-main: #0f1c3f;
+            --text-muted: #475569;
+            --gold: #aa771c;
+            --gold-light: #855b11;
+            --gold-gradient: linear-gradient(135deg, #d4af37 0%, #aa771c 50%, #70470b 100%);
+            --accent-glow: rgba(170, 119, 28, 0.1);
+            --nav-bg: rgba(248, 250, 252, 0.85);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.03) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(212, 175, 55, 0.03) 0%, transparent 40%);
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 5%;
+            background: var(--nav-bg);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--card-border);
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            font-weight: 700;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.5px;
+        }
+
+        .menu {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .menu a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .menu a:hover {
+            color: var(--gold);
+        }
+
+        .navbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .language button, #theme-toggle {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            padding: 6px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .language button:hover, #theme-toggle:hover {
+            border-color: var(--gold);
+        }
+
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Sections */
+        section {
+            padding: 100px 8% 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        section h2 {
+            font-size: 2rem;
+            margin-bottom: 35px;
+            text-align: center;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        /* Hero / Cover Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-top: 80px;
+        }
+
+        /* Elegan Gold-Dongker Card Design */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--gold-gradient);
+            opacity: 0.8;
+        }
+
+        .card:hover {
+            border-color: var(--card-border-hover);
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px var(--accent-glow);
+        }
+
+        .profile-card {
+            text-align: center;
+            max-width: 550px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 40px 30px;
+        }
+
+        .profile-card img {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--gold);
+            padding: 3px;
+            box-shadow: 0 0 20px var(--accent-glow);
+            margin-bottom: 20px;
+        }
+
+        .profile-card h1 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+
+        .profile-card h3 {
+            font-size: 1.1rem;
+            color: var(--gold);
+            margin-bottom: 15px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .profile-card p {
+            color: var(--text-muted);
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+        }
+
+        .contact-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+            font-size: 0.95rem;
+        }
+
+        .contact-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .contact-links a:hover {
+            color: var(--gold);
+        }
+
+        /* Grid Layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        /* About & Lists */
+        .about-content {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        .about-content h3 {
+            color: var(--gold);
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            margin-top: 20px;
+        }
+
+        .about-content h3:first-child {
+            margin-top: 0;
+        }
+
+        .about-content p {
+            color: var(--text-muted);
+            margin-bottom: 15px;
+        }
+
+        /* Skills & Certifications Lists */
+        ul {
+            list-style: none;
+        }
+
+        ul li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 10px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        ul li::before {
+            content: '▪';
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+        }
+
+        /* Projects Section */
+        .project-meta {
+            margin: 12px 0;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .project-meta strong {
+            color: var(--text-main);
+        }
+
+        .tech-stack {
+            display: inline-block;
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--gold);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 10px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        /* Contact Form */
+        form {
+            max-width: 650px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        form input, form textarea {
+            width: 100%;
+            padding: 14px 18px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        form input:focus, form textarea:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        form button[type="submit"] {
+            background: var(--gold-gradient);
+            color: #0a1128;
+            font-weight: 700;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        form button[type="submit"]:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .menu {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: var(--bg-secondary);
+                padding: 20px;
+                border-bottom: 1px solid var(--card-border);
+                box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            }
+            .menu.active {
+                display: flex;
+            }
+            .hamburger {
+                display: block;
+            }
+            section {
+                padding: 90px 5% 40px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 <nav class="navbar">
-    <div class="logo">
-        Dani Ramdani
-    </div>
-    <button class="hamburger" onclick="toggleMenu()">
-        ☰
-    </button>
+    <div class="logo">Dani Ramdani</div>
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
     <div class="menu" id="menu">
         <a href="#home" data-id="Beranda" data-en="Home">Home</a>
         <a href="#about" data-id="Tentang" data-en="About">About</a>
         <a href="#skills" data-id="Keahlian" data-en="Skills">Skills</a>
         <a href="#projects" data-id="Proyek" data-en="Projects">Projects</a>
-        <a href="#certification" data-id="Sertifikasi & Pendidikan" data-en="Certifications & Education">Certifications</a>
-        <a href="blog.html">Blog</a>
+        <a href="#certification" data-id="Sertifikasi" data-en="Certifications">Certifications</a>
+        <a href="blog.html" data-id="Blog" data-en="Blog">Blog</a>
         <a href="#contact" data-id="Kontak" data-en="Contact">Contact</a>
     </div>
-    <div class="language">
-        <button onclick="changeLanguage('id')">🇮🇩</button>
-        <button onclick="changeLanguage('en')">🇺🇸</button>
+    <div class="navbar-actions">
+        <div class="language">
+            <button onclick="changeLanguage('id')">🇮🇩</button>
+            <button onclick="changeLanguage('en')">🇺🇸</button>
+        </div>
+        <button id="theme-toggle">🌙</button>
     </div>
-    <button id="theme-toggle">🌙</button>
 </nav>
 
 <!-- 1. HERO / COVER -->
 <section class="hero" id="home">
-    <div class="profile-card">
+    <div class="card profile-card">
         <img src="profile.jpeg" alt="Profile Photo">
-        <h1 style="margin-top: 15px; font-size: 1.8rem;">Dani Ramdani</h1>
-        <h3 style="color: var(--accent-color, #4f46e5); margin-bottom: 10px;" data-id="Web Developer" data-en="Web Developer">Web Developer</h3>
-        <p style="margin-bottom: 15px;" data-id="Halo, saya Dani. Selamat datang di portofolio profesional saya." data-en="Hello, I'm Dani. Welcome to my professional portfolio.">
+        <h1>Dani Ramdani</h1>
+        <h3 data-id="Web Developer" data-en="Web Developer">Web Developer</h3>
+        <p data-id="Halo, saya Dani. Selamat datang di portofolio profesional saya." data-en="Hello, I'm Dani. Welcome to my professional portfolio.">
             Hello, I'm Dani. Welcome to my professional portfolio.
         </p>
-        <div class="contact-links" style="font-size: 0.9rem; opacity: 0.9;">
-            <p>📧 Email: <a href="mailto:id.dani.ramdani@gmail.com">id.dani.ramdani@gmail.com</a></p>
-            <p>💼 LinkedIn: <a href="https://www.linkedin.com/in/todannn/" target="_blank">linkedin.com/in/todannn</a></p>
-            <p>📱 WhatsApp: <a href="https://wa.me/628997979101" target="_blank">08997979101</a></p>
+        <div class="contact-links">
+            <a href="mailto:id.dani.ramdani@gmail.com">📧 id.dani.ramdani@gmail.com</a>
+            <a href="https://www.linkedin.com/in/todannn/" target="_blank">💼 linkedin.com/in/todannn</a>
+            <a href="https://wa.me/628997979101" target="_blank">📱 08997979101</a>
         </div>
     </div>
 </section>
@@ -70,14 +444,14 @@
 <!-- 2. TENTANG SAYA (ABOUT ME) -->
 <section id="about">
     <h2 data-id="Tentang Saya" data-en="About Me">About Me</h2>
-    <div class="card" style="text-align: left; max-width: 800px; margin: 0 auto; line-height: 1.6;">
+    <div class="card about-content">
         <h3 data-id="Ringkasan Singkat" data-en="Summary">Summary</h3>
         <p data-id="Seorang Web Developer yang berdedikasi dan memiliki ketertarikan tinggi dalam membangun aplikasi web yang fungsional, responsif, dan berpusat pada pengalaman pengguna (user-centric). Memiliki fondasi yang kuat dalam pengembangan sisi frontend maupun backend, serta terbiasa memecahkan masalah kompleks dengan kode yang bersih dan terstruktur. Menjunjung tinggi nilai kerja keras, kolaborasi tim, dan pembelajaran berkelanjutan terhadap teknologi web terbaru." 
            data-en="A dedicated Web Developer with a strong passion for building functional, responsive, and user-centric web applications. Possesses a solid foundation in both frontend and backend development, accustomed to solving complex problems with clean and structured code. Upholds strong values in hard work, teamwork, and continuous learning of the latest web technologies.">
            Seorang Web Developer yang berdedikasi dan memiliki ketertarikan tinggi dalam membangun aplikasi web yang fungsional, responsif, dan berpusat pada pengalaman pengguna (user-centric). Memiliki fondasi yang kuat dalam pengembangan sisi frontend maupun backend, serta terbiasa memecahkan masalah kompleks dengan kode yang bersih dan terstruktur. Menjunjung tinggi nilai kerja keras, kolaborasi tim, dan pembelajaran berkelanjutan terhadap teknologi web terbaru.
         </p>
 
-        <h3 style="margin-top: 20px;" data-id="Fokus Karier & Tujuan Profesional" data-en="Career Focus & Professional Goals">Career Focus & Professional Goals</h3>
+        <h3 data-id="Fokus Karier & Tujuan Profesional" data-en="Career Focus & Professional Goals">Career Focus & Professional Goals</h3>
         <p data-id="Berkomitmen untuk terus berkembang menjadi seorang Full-Stack Developer senior yang mampu memimpin pengembangan produk digital berskala besar. Bertujuan untuk berkontribusi di perusahaan inovatif yang dinamis, di mana saya dapat mengoptimalkan performa web, menciptakan solusi digital yang efisien, dan memberikan dampak nyata bagi bisnis melalui teknologi."
            data-en="Committed to growing into a senior Full-Stack Developer capable of leading large-scale digital product development. Aiming to contribute to dynamic and innovative companies where I can optimize web performance, create efficient digital solutions, and deliver real business impact through technology.">
            Berkomitmen untuk terus berkembang menjadi seorang Full-Stack Developer senior yang mampu memimpin pengembangan produk digital berskala besar. Bertujuan untuk berkontribusi di perusahaan inovatif yang dinamis, di mana saya dapat mengoptimalkan performa web, menciptakan solusi digital yang efisien, dan memberikan dampak nyata bagi bisnis melalui teknologi.
@@ -88,11 +462,10 @@
 <!-- 3. KEAHLIAN & KETERAMPILAN -->
 <section id="skills">
     <h2 data-id="Keahlian & Keterampilan" data-en="Skills & Tools">Skills & Tools</h2>
-    <div class="projects" style="max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
-        
-        <div class="card" style="text-align: left;">
-            <h3 data-id="Hard Skills" data-en="Hard Skills">Hard Skills</h3>
-            <ul style="padding-left: 20px; line-height: 1.8;">
+    <div class="grid-2">
+        <div class="card">
+            <h3 style="color: var(--gold); margin-bottom: 15px;" data-id="Hard Skills" data-en="Hard Skills">Hard Skills</h3>
+            <ul>
                 <li data-id="Frontend Development (HTML5, CSS3, JavaScript ES6+, Responsive Web Design)" data-en="Frontend Development (HTML5, CSS3, JavaScript ES6+, Responsive Web Design)">Frontend Development (HTML5, CSS3, JavaScript ES6+, Responsive Web Design)</li>
                 <li data-id="Backend Development (PHP, Pemrograman Berorientasi Objek / OOP)" data-en="Backend Development (PHP, Object-Oriented Programming / OOP)">Backend Development (PHP, Pemrograman Berorientasi Objek / OOP)</li>
                 <li data-id="Database Management (MySQL, Relational Database Design)" data-en="Database Management (MySQL, Relational Database Design)">Database Management (MySQL, Relational Database Design)</li>
@@ -100,142 +473,111 @@
                 <li data-id="API Integration (RESTful API)" data-en="API Integration (RESTful API)">API Integration (RESTful API)</li>
             </ul>
         </div>
-
-        <div class="card" style="text-align: left;">
-            <h3 data-id="Tools & Software" data-en="Tools & Software">Tools & Software</h3>
-            <ul style="padding-left: 20px; line-height: 1.8;">
+        <div class="card">
+            <h3 style="color: var(--gold); margin-bottom: 15px;" data-id="Tools & Software" data-en="Tools & Software">Tools & Software</h3>
+            <ul>
                 <li data-id="Bahasa Pemrograman: JavaScript, PHP, CSS, HTML, Python" data-en="Programming Languages: JavaScript, PHP, CSS, HTML, Python">Bahasa Pemrograman: JavaScript, PHP, CSS, HTML, Python</li>
                 <li data-id="Framework & Library: React.js, Node.js, Bootstrap, Tailwind CSS, Laravel" data-en="Framework & Library: React.js, Node.js, Bootstrap, Tailwind CSS, Laravel">Framework & Library: React.js, Node.js, Bootstrap, Tailwind CSS, Laravel</li>
                 <li data-id="Tools Pendukung: Visual Studio Code, Git, Postman, XAMPP, Microsoft Excel" data-en="Supporting Tools: Visual Studio Code, Git, Postman, XAMPP, Microsoft Excel">Tools Pendukung: Visual Studio Code, Git, Postman, XAMPP, Microsoft Excel</li>
             </ul>
         </div>
-
     </div>
 </section>
 
 <!-- 4. PROYEK / PENGALAMAN UNGGULAN -->
 <section id="projects">
     <h2 data-id="Proyek Unggulan" data-en="Featured Projects">Featured Projects</h2>
-    <div class="projects" style="max-width: 900px; margin: 0 auto;">
-
-        <div class="card" style="text-align: left; margin-bottom: 20px;">
-            <h3 data-id="Sistem Manajemen E-Commerce & Toko Online" data-en="E-Commerce & Online Store Management System">Sistem Manajemen E-Commerce & Toko Online</h3>
-            <p style="margin-top: 10px;">
-                <strong data-id="Deskripsi Singkat:" data-en="Short Description:">Deskripsi Singkat:</strong> 
-                <span data-id="Mengembangkan platform e-commerce berbasis web yang dirancang untuk memudahkan UMKM dalam mengelola katalog produk, transaksi penjualan, dan inventaris secara real-time. Dilengkapi dengan sistem autentikasi pengguna yang aman dan dasbor admin yang interaktif."
-                      data-en="Developing a web-based e-commerce platform designed to help SMEs manage product catalogs, sales transactions, and inventory in real-time. Equipped with a secure user authentication system and an interactive admin dashboard.">
-                    Mengembangkan platform e-commerce berbasis web yang dirancang untuk memudahkan UMKM dalam mengelola katalog produk, transaksi penjualan, dan inventaris secara real-time. Dilengkapi dengan sistem autentikasi pengguna yang aman dan dasbor admin yang interaktif.
+    <div class="grid-2">
+        <div class="card">
+            <h3 style="color: var(--gold); margin-bottom: 10px;" data-id="Sistem Manajemen E-Commerce" data-en="E-Commerce Management System">Sistem Manajemen E-Commerce & Toko Online</h3>
+            <p class="project-meta">
+                <strong data-id="Deskripsi:" data-en="Description:">Deskripsi:</strong> 
+                <span data-id="Mengembangkan platform e-commerce berbasis web yang dirancang untuk memudahkan UMKM dalam mengelola katalog produk, transaksi penjualan, dan inventaris secara real-time."
+                      data-en="Developing a web-based e-commerce platform designed to help SMEs manage product catalogs, sales transactions, and inventory in real-time.">
+                    Mengembangkan platform e-commerce berbasis web yang dirancang untuk memudahkan UMKM dalam mengelola katalog produk, transaksi penjualan, dan inventaris secara real-time.
                 </span>
             </p>
-            <p style="margin-top: 10px;">
-                <strong data-id="Teknologi / Metode:" data-en="Technology / Method:">Teknologi / Metode:</strong><br>
-                • <em>Riset:</em> Menganalisis kebutuhan pengguna dan alur transaksi toko daring konvensional untuk mengoptimalkan User Experience (UX).<br>
-                • <em>Pelajari & Eksekusi:</em> Menggunakan arsitektur MVC (Model-View-Controller), merancang basis data relasional untuk pengelolaan stok, serta menerapkan teknik responsive design.<br>
-                • <em>Tech Stack:</em> PHP, JavaScript, MySQL, CSS (Bootstrap), Git.
-            </p>
-            <p style="margin-top: 10px;">
-                <strong data-id="Hasil / Dampak:" data-en="Result / Impact:">Hasil / Dampak:</strong> 
-                <span data-id="Berhasil mempercepat proses pencatatan transaksi toko hingga 40% dan mengurangi kesalahan rekapitulasi data inventaris berkat integrasi basis data yang otomatis."
-                      data-en="Successfully accelerated store transaction recording processes by up to 40% and reduced inventory data recalculation errors through automated database integration.">
-                    Berhasil mempercepat proses pencatatan transaksi toko hingga 40% dan mengurangi kesalahan rekapitulasi data inventaris berkat integrasi basis data yang otomatis.
+            <p class="project-meta">
+                <strong data-id="Hasil / Dampak:" data-en="Impact:">Hasil / Dampak:</strong> 
+                <span data-id="Mempercepat proses pencatatan transaksi hingga 40% dan mengurangi kesalahan rekapitulasi data."
+                      data-en="Accelerated transaction recording processes by up to 40% and reduced data recalculation errors.">
+                    Mempercepat proses pencatatan transaksi hingga 40% dan mengurangi kesalahan rekapitulasi data.
                 </span>
             </p>
+            <div class="tech-stack">PHP • JavaScript • MySQL • Bootstrap</div>
         </div>
 
-        <div class="card" style="text-align: left;">
-            <h3 data-id="Aplikasi Web Monitoring & Dashboard Analitik Bisnis" data-en="Web Monitoring Application & Business Analytics Dashboard">Aplikasi Web Monitoring & Dashboard Analitik Bisnis</h3>
-            <p style="margin-top: 10px;">
-                <strong data-id="Deskripsi Singkat:" data-en="Short Description:">Deskripsi Singkat:</strong> 
-                <span data-id="Membangun aplikasi web dasbor interaktif untuk memonitor metrik performa penjualan dan data operasional harian perusahaan secara visual dan transparan."
-                      data-en="Building an interactive dashboard web application to monitor sales performance metrics and daily company operational data visually and transparently.">
-                    Membangun aplikasi web dasbor interaktif untuk memonitor metrik performa penjualan dan data operasional harian perusahaan secara visual dan transparan.
+        <div class="card">
+            <h3 style="color: var(--gold); margin-bottom: 10px;" data-id="Aplikasi Web Monitoring" data-en="Web Monitoring Application">Aplikasi Web Monitoring & Dashboard</h3>
+            <p class="project-meta">
+                <strong data-id="Deskripsi:" data-en="Description:">Deskripsi:</strong> 
+                <span data-id="Membangun aplikasi web dasbor interaktif untuk memonitor metrik performa penjualan dan data operasional harian secara visual dan transparan."
+                      data-en="Building an interactive dashboard web application to monitor sales performance metrics and daily operational data transparently.">
+                    Membangun aplikasi web dasbor interaktif untuk memonitor metrik performa penjualan dan data operasional harian secara visual dan transparan.
                 </span>
             </p>
-            <p style="margin-top: 10px;">
-                <strong data-id="Teknologi / Metode:" data-en="Technology / Method:">Teknologi / Metode:</strong><br>
-                • <em>Riset:</em> Menentukan parameter metrik utama (KPI) yang paling dibutuhkan oleh manajemen untuk pengambilan keputusan cepat.<br>
-                • <em>Pelajari & Eksekusi:</em> Mengembangkan skrip otomatisasi pengolahan data dan mengintegrasikannya ke dalam antarmuka web dinamis.<br>
-                • <em>Tech Stack:</em> JavaScript, Python, HTML5, CSS3, RESTful API.
-            </p>
-            <p style="margin-top: 10px;">
-                <strong data-id="Hasil / Dampak:" data-en="Result / Impact:">Hasil / Dampak:</strong> 
-                <span data-id="Meningkatkan efisiensi pelaporan manajemen hingga 50% lebih cepat dibandingkan metode manual sebelumnya yang berbasis lembar kerja terpisah."
-                      data-en="Increased management reporting efficiency up to 50% faster compared to previous manual spreadsheet-based methods.">
-                    Meningkatkan efisiensi pelaporan manajemen hingga 50% lebih cepat dibandingkan metode manual sebelumnya yang berbasis lembar kerja terpisah.
+            <p class="project-meta">
+                <strong data-id="Hasil / Dampak:" data-en="Impact:">Hasil / Dampak:</strong> 
+                <span data-id="Meningkatkan efisiensi pelaporan manajemen hingga 50% lebih cepat dibandingkan metode manual."
+                      data-en="Increased management reporting efficiency up to 50% faster compared to manual methods.">
+                    Meningkatkan efisiensi pelaporan manajemen hingga 50% lebih cepat dibandingkan metode manual.
                 </span>
             </p>
+            <div class="tech-stack">JavaScript • Python • RESTful API</div>
         </div>
-
     </div>
 </section>
 
 <!-- 5. SERTIFIKASI & RIWAYAT PENDIDIKAN -->
 <section id="certification">
     <h2 data-id="Sertifikasi & Pendidikan" data-en="Certifications & Education">Certifications & Education</h2>
-    <div class="projects" style="max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
-        
-        <div class="card" style="text-align: left;">
-            <h3 data-id="Sertifikasi Profesional" data-en="Professional Certifications">Professional Certifications</h3>
-            <ul style="padding-left: 20px; line-height: 1.8; margin-top: 10px;">
+    <div class="grid-2">
+        <div class="card">
+            <h3 style="color: var(--gold); margin-bottom: 15px;" data-id="Sertifikasi Profesional" data-en="Professional Certifications">Professional Certifications</h3>
+            <ul>
                 <li>Sertifikasi Frontend Web Development – Kota Bandung</li>
-                <li>Sertifikasi Pemrograman Python untuk Analisis Data & Otomatisasi – Jakarta Digital Coding Camp</li>
-                <li>Sertifikasi JavaScript & Modern Web Applications – Surabaya Tech Academy</li>
-                <li>Sertifikasi Dasar-Dasar Pemrograman & Basis Data MySQL – Regional Jawa Barat</li>
+                <li>Sertifikasi Python untuk Analisis Data – Jakarta Digital Coding Camp</li>
+                <li>Sertifikasi JavaScript & Modern Web Apps – Surabaya Tech Academy</li>
+                <li>Sertifikasi Dasar Pemrograman & MySQL – Regional Jawa Barat</li>
             </ul>
         </div>
-
-        <div class="card" style="text-align: left;">
-            <h3 data-id="Riwayat Pendidikan" data-en="Education History">Education History</h3>
-            <ul style="padding-left: 20px; line-height: 1.8; margin-top: 10px;">
+        <div class="card">
+            <h3 style="color: var(--gold); margin-bottom: 15px;" data-id="Riwayat Pendidikan" data-en="Education History">Education History</h3>
+            <ul>
                 <li data-id="Pendidikan Formal: SMK Rekayasa Perangkat Lunak (RPL)" data-en="Formal Education: Vocational High School of Software Engineering (RPL)">
                     Pendidikan Formal: SMK Rekayasa Perangkat Lunak (RPL)
                 </li>
             </ul>
         </div>
-
     </div>
 </section>
 
 <!-- KONTAK / CONTACT -->
 <section id="contact">
     <h2 data-id="Kontak Aku" data-en="Contact Me">Contact Me</h2>
-    <form action="https://formspree.io/f/mnpaqbbk" method="POST" style="max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px;">
-        <input type="text" name="name" placeholder="Your Name" required style="padding: 12px; border-radius: 5px; border: 1px solid #ccc;">
-        <input type="email" name="email" placeholder="Your Email" required style="padding: 12px; border-radius: 5px; border: 1px solid #ccc;">
-        <textarea name="message" placeholder="Your Message" rows="5" style="padding: 12px; border-radius: 5px; border: 1px solid #ccc;"></textarea>
-        <button type="submit" data-id="Kirim Pesan" data-en="Send Message" style="padding: 12px; border-radius: 5px; background: var(--accent-color, #4f46e5); color: white; border: none; cursor: pointer; font-weight: bold;">
-            Send Message
-        </button>
-    </form>
+    <div class="card" style="max-width: 700px; margin: 0 auto;">
+        <form action="https://formspree.io/f/mnpaqbbk" method="POST">
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Your Email" required>
+            <textarea name="message" placeholder="Your Message" rows="5"></textarea>
+            <button type="submit" data-id="Kirim Pesan" data-en="Send Message">Send Message</button>
+        </form>
+    </div>
 </section>
-
-<script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", function() {
-    navigator.serviceWorker.register("service-worker.js")
-    .then(function(registration) {
-      console.log("Service Worker aktif:", registration.scope);
-    })
-    .catch(function(error) {
-      console.log("Service Worker gagal:", error);
-    });
-  });
-}
-</script>
 
 <script>
 function toggleMenu(){
     let menu = document.getElementById("menu");
     menu.classList.toggle("active");
 }
-</script>
 
-<script>
 const toggle = document.getElementById("theme-toggle");
 const body = document.body;
 
 if(localStorage.getItem("theme") === "light"){
     body.classList.add("light");
+    toggle.innerHTML = "☀️";
+} else {
     toggle.innerHTML = "🌙";
 }
 
@@ -243,15 +585,13 @@ toggle.onclick = function(){
     body.classList.toggle("light");
     if(body.classList.contains("light")){
         localStorage.setItem("theme","light");
-        toggle.innerHTML="🌙";
+        toggle.innerHTML="☀️";
     }else{
         localStorage.setItem("theme","dark");
-        toggle.innerHTML="☀️";
+        toggle.innerHTML="🌙";
     }
 }
-</script>
 
-<script>
 function changeLanguage(lang){
     let elements = document.querySelectorAll("[data-"+lang+"]");
     elements.forEach(function(element){
