@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Sewa dan Custom Itinerary Multi-Hari</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        navy: { 800: '#1e293b', 900: '#0f172a' }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 text-navy-900 dark:bg-navy-900 dark:text-gray-100 min-h-screen flex flex-col justify-center items-center p-4 transition-colors duration-300 font-sans">
+
+    <!-- Container Utama Kalkulator -->
+    <div class="w-full max-w-2xl bg-white dark:bg-navy-800 p-6 sm:p-8 rounded-3xl shadow-xl border border-amber-500/20 relative my-8">
+        
+        <!-- Toggle Control (Dark Mode dan Language Switcher) -->
+        <div class="absolute top-4 right-4 flex items-center space-x-2">
+            <!-- Selector Bahasa -->
+            <button onclick="toggleLanguage()" id="langBtn" class="px-3 py-1.5 rounded-xl bg-gray-100 dark:bg-navy-900 text-xs font-bold text-amber-500 hover:scale-105 transition border border-gray-200 dark:border-gray-700">
+                🌐 EN
+            </button>
+
+            <!-- Toggle Dark Mode -->
+            <button onclick="toggleDarkMode()" class="p-2 rounded-xl bg-gray-100 dark:bg-navy-900 text-amber-500 hover:scale-105 transition border border-gray-200 dark:border-gray-700" title="Ganti Mode Tampilan">
+                🌙
+            </button>
+        </div>
+
+        <!-- Judul -->
+        <div class="text-center mb-6 mt-2">
+            <h1 class="text-2xl font-black text-navy-900 dark:text-white" data-i18n="title">🧮 Kalkulator Sewa dan Custom Itinerary</h1>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1" data-i18n="subtitle">Hitung estimasi biaya dan susun itinerary perjalanan Anda per hari</p>
+        </div>
+
+        <!-- Form Input Utama -->
+        <div class="space-y-4">
+
+            <!-- BAGIAN TANGGAL & WAKTU SEWA -->
+            <div class="bg-gray-50 dark:bg-navy-900/50 p-3.5 rounded-2xl border border-gray-200 dark:border-gray-700 space-y-3">
+                <p class="text-xs font-extrabold text-amber-600 dark:text-amber-400" data-i18n="dateTimeTitle">📅 Jadwal & Waktu Perjalanan:</p>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <!-- Tanggal Mulai -->
+                    <div>
+                        <label class="block text-[11px] font-bold mb-1" data-i18n="startDateLabel">Tanggal Mulai (Start Date):</label>
+                        <input type="date" id="startDate" onchange="calculateTotal()" class="w-full bg-white dark:bg-navy-900 border border-gray-300 dark:border-gray-700 rounded-xl p-2.5 text-xs font-semibold focus:outline-none focus:border-amber-500">
+                    </div>
+                    <!-- Jam Penjemputan -->
+                    <div>
+                        <label class="block text-[11px] font-bold mb-1" data-i18n="pickupTimeLabel">Jam Penjemputan (Pickup Time):</label>
+                        <input type="time" id="pickupTime" value="08:00" class="w-full bg-white dark:bg-navy-900 border border-gray-300 dark:border-gray-700 rounded-xl p-2.5 text-xs font-semibold focus:outline-none focus:border-amber-500">
+                    </div>
+                </div>
+                
+                <!-- Info Estimasi Tanggal Selesai -->
+                <div id="endDateInfo" class="text-[11px] text-gray-600 dark:text-gray-400 italic font-medium pt-1">
+                    <!-- Dinamis via JS -->
+                </div>
+            </div>
+
+            <!-- BAGIAN PENJEMPUTAN dan DROP OFF -->
+            <div class="bg-gray-50 dark:bg-navy-900/50 p-3.5 rounded-2xl border border-gray-200 dark:border-gray-700 space-y-3">
+                <p class="text-xs font-extrabold text-amber-600 dark:text-amber-400" data-i18n="pickupDropTitle">📍 Pengaturan Penjemputan dan Drop Off Utama:</p>
+                
+                <!-- Opsi Kategori Penjemputan -->
+                <div>
+                    <label class="block text-[11px] font-bold mb-1" data-i18n="pickupCat">Kategori Penjemputan (Pickup):</label>
+                    <select id="calcPickup" onchange="calculateTotal()" class="w-full bg-white dark:bg-navy-900 border border-gray-300 dark:border-gray-700 rounded-xl p-2.5 text-xs font-semibold focus:outline-none focus:border-amber-500">
+                        <option value="0" data-name-id="Area Kota Bandung (Hotel / Stasiun / KCIC Whoosh / Terminal Bus)" data-name-en="Bandung City Area (Hotel / Station / Whoosh HSR / Bus Terminal)" data-i18n="pickupOpt1">Area Kota Bandung (Hotel / Stasiun / KCIC Whoosh / Terminal Bus) - Bebas Biaya</option>
+                        <option value="150000" data-name-id="Luar Kota Bandung (Non-Airport)" data-name-en="Outside Bandung City (Non-Airport)" data-i18n="pickupOpt2">Luar Kota Bandung Non-Airport (+ Rp 150.000)</option>
+                        <option value="600000" data-name-id="Jemput Airport Jakarta/Tangerang CGK (Sekali Jalan)" data-name-en="CGK Airport Pickup (One Way)" data-i18n="pickupOpt3">Jemput Airport Jakarta/Tangerang CGK (+ Rp 600.000)</option>
+                    </select>
+                </div>
+
+                <!-- Detail Lokasi Penjemputan -->
+                <div>
+                    <label class="block text-[11px] font-bold mb-1" data-i18n="pickupDetailLabel">Detail Alamat Penjemputan:</label>
+                    <input type="text" id="pickupDetail" placeholder="Contoh: Hotel Aston Pasteur / Stasiun Bandung / Stasiun KCIC Whoosh / Terminal Leuwipanjang" data-i18n-ph="pickupDetailPh" class="w-full bg-white dark:bg-navy-900 border border-gray-300 dark:border-gray-700 rounded-xl p-2.5 text-xs font-medium focus:outline-none focus:border-amber-500">
+                </div>
+
+                <!-- Opsi Kategori Drop Off -->
+                <div>
+                    <label class="block text-[11px] font-bold mb-1" data-i18n="dropCat">Kategori Pengantaran Akhir (Drop Off):</label>
+                    <select id="calcDrop" onchange="calculateTotal()" class="w-full bg-white dark:bg-navy-900 border border-gray-300 dark:border-gray-700 rounded-xl p-2.5 text-xs font-semibold focus:outline-none focus:border-amber-500">
+                        <option value="0" data-name-id="Area Kota Bandung (Hotel / Stasiun / KCIC Whoosh / Terminal Bus)" data-name-en="Bandung City Area (Hotel / Station / Whoosh HSR / Bus Terminal)" data-i18n="dropOpt1">Area Kota Bandung (Hotel / Stasiun / KCIC Whoosh / Terminal Bus) - Bebas Biaya</option>
+                        <option value="150000" data-name-id="Luar Kota Bandung (Non-Airport)" data-name-en="Outside Bandung City (Non-Airport)" data-i18n="dropOpt2">Luar Kota Bandung Non-Airport (+ Rp 150.000)</option>
+                        <option value="600000" data-name-id="Drop Airport CGK (Sekali Jalan)" data-name-en="CGK Airport Drop (One Way)" data-i18n="dropOpt3">Drop Off Airport Jakarta/Tangerang CGK (+ Rp 600.000)</option>
+                    </select>
+                </div>
+
+                <!-- Detail Lokasi Drop Off -->
+                <div>
+                    <label class="block text-[11px] font-bold mb-1" data-i18n="dropDetailLabel">Detail Alamat Drop Off:</label>
+                    <input type="text" id="dropDetail" placeholder="Contoh: Stasiun KCIC Whoosh Tegalluar / Hotel / Rumah / Airport CGK" data-i18n-ph="dropDetailPh" class="w-full bg-white dark:bg-navy-900 border border-gray-300 dark:border-gray-700 rounded-xl p-2.5 text-xs font-medium focus:outline-none focus:border-amber-500">
+                </div>
+            </div>
+
+            <!-- Durasi Hari dan Jumlah Peserta -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-bold mb-1.5" data-i18n="durationLabel">Durasi Sewa (Hari):</label>
+                    <input type="number" id="calcDays" value="0" min="0" max="10" onchange="onDaysChange()" onkeyup="onDaysChange()" class="w-full bg-gray-50 dark:bg-navy-900 border border-gray-300 dark:border-gray-700 rounded-xl p-3 text-xs font-semibold focus:outline-none focus:border-amber-500">
+                    <p id="daysWarningText" class="text-[11px] text-red-500 font-bold mt-1" data-i18n="daysWarning">⚠️ Silakan isi durasi hari sewa terlebih dahulu!</p>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold mb-1.5" data-i18n="paxLabel">Jumlah Peserta (Orang):</label>
+                    <input type="number" id="calcPax" value="4" min="1" max="50" onchange="onPaxChange()" onkeyup="onPaxChange()" class="w-full bg-gray-50 dark:bg-navy-900 border border-gray-300 dark:border-gray-700 rounded-xl p-3 text-xs font-semibold focus:outline-none focus:border-amber-500">
+                    <p class="text-[10px] text-gray-500 dark:text-gray-400 mt-1" data-i18n="paxNote">👶 *Sertakan anak kecil atau bayi jika membawa.</p>
+                </div>
+            </div>
+
+            <!-- Pesan Rekomendasi / Peringatan Kapasitas Armada -->
+            <div id="paxWarningBox" class="hidden bg-red-500/10 border border-red-500/30 p-2.5 rounded-xl text-[11px] text-red-600 dark:text-red-400 font-medium"></div>
+            <div id="paxRecommendationBox" class="bg-blue-500/10 border border-blue-500/30 p-2.5 rounded-xl text-[11px] text-blue-600 dark:text-blue-400 font-medium">
+                💡 <strong data-i18n="recTitle">Rekomendasi Armada:</strong> <span id="recommendedCarText">Toyota Calya / Sigra / Avanza</span>
+            </div>
+
+            <!-- Box Catatan / Request Pelanggan -->
+            <div>
+                <label class="block text-xs font-bold mb-1 text-gray-700 dark:text-gray-300" data-i18n="custNotesLabel">📝 Catatan Lain-Lain / Request Khusus Pelanggan:</label>
+                <textarea id="customerNotes" rows="2" placeholder="Contoh: Bawa koper besar 4 unit, butuh supir ramah anak / bisa bahasa Inggris, atau minta car seat bayi..." data-i18n-ph="custNotesPh" class="w-full bg-gray-50 dark:bg-navy-900 border border-gray-300 dark:border-gray-700 rounded-xl p-2.5 text-xs font-medium focus:outline-none focus:border-amber-500"></textarea>
+            </div>
+
+            <!-- Pilih Armada Kendaraan dan Tarif -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="sm:col-span-2">
+                    <label class="block text-xs font-bold mb-1.5" data-i18n="selectFleet">Pilih Armada Kendaraan:</label>
+                    <select id="calcCar" onchange="updateCarPrice()" class="w-full bg-gray-50 dark:bg-navy-900 border border-gray-300 dark:border-gray-700 rounded-xl p-3 text-xs font-semibold focus:outline-none focus:border-amber-500">
+                        <option value="500000" data-maxpax="5" data-name-id="Toyota Calya / Sigra (Maks 5 Pax)" data-name-en="Toyota Calya / Sigra (Max 5 Pax)">Toyota Calya / Sigra (Maks 5 Orang)</option>
+                        <option value="700000" data-maxpax="6" data-name-id="Toyota Avanza / Xenia (Maks 6 Pax)" data-name-en="Toyota Avanza / Xenia (Max 6 Pax)" selected>Toyota Avanza / Xenia (Maks 6 Orang)</option>
+                        <option value="900000" data-maxpax="7" data-name-id="Innova Reborn Diesel (Maks 7 Pax)" data-name-en="Innova Reborn Diesel (Max 7 Pax)">Innova Reborn Diesel (Maks 7 Orang)</option>
+                        <option value="1100000" data-maxpax="7" data-name-id="Toyota Innova Zenix (Maks 7 Pax)" data-name-en="Toyota Innova Zenix (Max 7 Pax)">Toyota Innova Zenix (Maks 7 Orang)</option>
+                        <option value="1400000" data-maxpax="14" data-name-id="Toyota HiAce Commuter (Maks 14 Pax)" data-name-en="Toyota HiAce Commuter (Max 14 Pax)">Toyota HiAce Commuter (Maks 14 Orang)</option>
+                        <option value="1700000" data-maxpax="11" data-name-id="Toyota HiAce Premio (Maks 11 Pax)" data-name-en="Toyota HiAce Premio (Max 11 Pax)">Toyota HiAce Premio (Maks 11 Orang)</option>
+                        <option value="1900000" data-maxpax="19" data-name-id="Isuzu Elf Long (Maks 19 Pax)" data-name-en="Isuzu Elf Long (Max 19 Pax)">Isuzu Elf Long (Maks 19 Orang)</option>
+                        <option value="2200000" data-maxpax="18" data-name-id="Toyota Coaster VIP (Maks 18 Pax)" data-name-en="Toyota Coaster VIP (Max 18 Pax)">Toyota Coaster VIP (Maks 18 Orang)</option>
+                        <option value="2800000" data-maxpax="31" data-name-id="Medium Bus (Maks 31 Pax)" data-name-en="Medium Bus (Max 31 Pax)">Medium Bus (Maks 31 Orang)</option>
+                        <option value="3800000" data-maxpax="50" data-name-id="Big Bus VIP (Maks 50 Pax)" data-name-en="Big Bus VIP (Max 50 Pax)">Big Bus VIP (Maks 50 Orang)</option>
+                        <option value="3000000" data-maxpax="5" data-name-id="Toyota Alphard VIP (Maks 5 Pax)" data-name-en="Toyota Alphard VIP (Max 5 Pax)">Toyota Alphard VIP (Maks 5 Orang)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold mb-1.5" data-i18n="pricePerDay">Harga / Hari (12j):</label>
+                    <input type="text" id="carPriceDisplay" readonly class="w-full bg-gray-100 dark:bg-navy-900/60 border border-gray-300 dark:border-gray-700 rounded-xl p-3 text-xs font-bold text-amber-500 cursor-not-allowed focus:outline-none" value="Rp 700.000">
+                </div>
+            </div>
+
+            <!-- Custom Itinerary Per Hari -->
+            <div class="bg-gray-50 dark:bg-navy-900 border border-gray-200 dark:border-gray-700 rounded-2xl p-4 space-y-3">
+                <div class="flex items-center justify-between">
+                    <label class="block text-xs font-bold text-amber-500" data-i18n="itineraryTitle">🗓️ Penyusunan Itinerary Per Hari:</label>
+                    <span id="activeDayIndicator" class="text-[11px] bg-amber-500/20 text-amber-600 dark:text-amber-400 font-bold px-2 py-0.5 rounded-lg">-</span>
+                </div>
+
+                <!-- Tab Pilih Hari -->
+                <div id="dayTabsContainer" class="flex flex-wrap gap-1.5 border-b border-gray-200 dark:border-gray-700 pb-2"></div>
+
+                <!-- Select Wilayah Utama Khusus Hari Aktif -->
+                <div class="pt-1">
+                    <label class="block text-[11px] font-bold mb-1 text-gray-700 dark:text-gray-300"><span data-i18n="selectRegion">Pilih Wilayah Tour / Layanan untuk</span> <span id="labelWilayahHari" class="text-amber-500">-</span>:</label>
+                    <select id="calcAreaDay" onchange="onAreaDayChange()" class="w-full bg-white dark:bg-navy-800 border border-gray-300 dark:border-gray-700 rounded-xl p-2.5 text-xs font-semibold focus:outline-none focus:border-amber-500">
+                        <option value="BandungKota" data-toll="0" selected data-i18n="areaKota">🏛️ 2. Kota Bandung (Wisata Sejarah, Kuliner dan Kota)</option>
+                        <option value="BandungUtara" data-toll="0" data-i18n="areaLembang">🌲 3. Lembang (Bandung Barat)</option>
+                        <option value="BandungSelatan1" data-toll="0" data-i18n="areaCiwidey">🌋 1. Ciwidey (Bandung Selatan)</option>
+                        <option value="BandungSelatan2" data-toll="0" data-i18n="areaPangalengan">🍃 4. Pangalengan (Bandung Selatan)</option>
+                        <option value="DropOnlyBandung" data-toll="200000" data-i18n="areaDrop">🚗 Khusus Layanan Drop / Jemput Saja (Hotel / Penginapan <-> Stasiun Area Bandung - Rp 200.000)</option>
+                        <option value="Jakarta" data-toll="600000" data-i18n="areaJakarta">🏙️ 1. Jakarta (Wisata Kota / Antar-Kota - Biaya Rp 600.000)</option>
+                        <option value="Bogor" data-toll="600000" data-i18n="areaBogor">🌿 2. Bogor (Wisata Alam / Antar-Kota - Biaya Rp 600.000)</option>
+                        <option value="Jogja" data-toll="1500000" data-i18n="areaJogja">🏛️ 3. Yogyakarta / Jogja (⚠️ Tidak Direkomendasikan/Terlalu Jauh - Biaya Rp 1.500.000 sekali jalan)</option>
+                    </select>
+                </div>
+
+                <!-- Checklist Destinasi Hari Ini -->
+                <div id="destinationSection" class="pt-1 space-y-2">
+                    <label class="block text-[11px] font-bold text-gray-600 dark:text-gray-400" data-i18n="selectDest">Pilih Tempat Wisata yang Ingin Dikunjungi:</label>
+                    <div id="destinationOptions" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs"></div>
+
+                    <!-- Input Request Destinasi / Tempat Lainnya Per Hari -->
+                    <div class="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700/80">
+                        <label class="block text-[11px] font-bold text-amber-600 dark:text-amber-400 mb-1" data-i18n="customDestLabel">✨ Tempat yang Diinginkan Tidak Ada di Daftar? Tulis di Sini (Khusus Hari Ini):</label>
+                        <input type="text" id="customDayDest" onkeyup="onCustomDestChange()" onchange="onCustomDestChange()" placeholder="Contoh: Kuliner Sudirman Street, Cafe Sudut Rasa, Belanja Kartika Sari..." data-i18n-ph="customDestPh" class="w-full bg-white dark:bg-navy-800 border border-gray-300 dark:border-gray-700 rounded-xl p-2.5 text-xs font-medium focus:outline-none focus:border-amber-500">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Breakdown Rincian Terpisah dan Itinerary Summary -->
+            <div class="bg-gray-100 dark:bg-navy-900/80 rounded-2xl p-4 border border-gray-200 dark:border-gray-700 space-y-2 text-xs">
+                <p class="font-bold text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700 pb-1" data-i18n="costBreakdown">📊 Rincian Komponen Biaya:</p>
+                <div class="flex justify-between">
+                    <span class="text-gray-500 dark:text-gray-400" data-i18n="lblTransport">Sewa Transport Utama:</span>
+                    <span id="detailTransport" class="font-semibold">Rp 0</span>
+                </div>
+                <div id="rowPickupFee" class="flex justify-between text-amber-600 dark:text-amber-400 font-semibold hidden">
+                    <span data-i18n="lblPickupFee">Charge Penjemputan Utama:</span>
+                    <span id="detailPickupFee">Rp 0</span>
+                </div>
+                <div id="rowDropFee" class="flex justify-between text-amber-600 dark:text-amber-400 font-semibold hidden">
+                    <span data-i18n="lblDropFee">Charge Pengantaran Utama:</span>
+                    <span id="detailDropFee">Rp 0</span>
+                </div>
+                <div id="rowOutTownToll" class="flex justify-between text-amber-600 dark:text-amber-400 font-semibold hidden">
+                    <span data-i18n="lblOutTown">Biaya Layanan Wilayah / Antar-Kota:</span>
+                    <span id="detailOutTownToll">Rp 0</span>
+                </div>
+
+                <!-- Summary Itinerary -->
+                <div class="pt-2 border-t border-gray-200 dark:border-gray-700 mt-2">
+                    <p class="font-bold text-gray-700 dark:text-gray-300 mb-1" data-i18n="draftTitle">🗺️ Draf Akumulasi Itinerary Lengkap:</p>
+                    <div id="itinerarySummary" class="text-[11px] text-gray-600 dark:text-gray-400 bg-white dark:bg-navy-800 p-2.5 rounded-xl border border-gray-200 dark:border-gray-700 italic space-y-1">
+                        Belum ada destinasi terpilih.
+                    </div>
+                </div>
+
+                <!-- Informasi Ketentuan Operasional -->
+                <div class="bg-amber-500/10 border-l-4 border-amber-500 p-3 rounded-r-xl mt-3 text-[11px] leading-relaxed text-gray-700 dark:text-gray-300 space-y-0.5">
+                    <p class="font-bold text-amber-600 dark:text-amber-400 mb-0.5" data-i18n="termsTitle">ℹ️ Ketentuan Operasional dan Penjemputan:</p>
+                    <p data-i18n="term1">• Durasi pelayanan maksimal <strong>12 Jam per hari</strong> (maksimal selesai pukul <strong>21.00 WIB</strong>).</p>
+                    <p data-i18n="term2">• Layanan antar/jemput Bandara CGK (Jakarta/Tangerang) dikenakan <strong>Rp 600.000 / sekali jalan</strong>.</p>
+                    <p data-i18n="term3">• Layanan Drop/Jemput lokal area Kota Bandung (Hotel ke Stasiun/sebaliknya) <strong>Rp 200.000</strong>.</p>
+                    <p data-i18n="term4">• Destinasi luar kota / beda kota dikenakan <strong>tambahan biaya operasional antar-kota</strong>.</p>
+                </div>
+            </div>
+
+            <!-- Box Hasil dan Tombol WA -->
+            <div class="bg-amber-500/10 border border-amber-500/30 p-5 rounded-2xl flex flex-col sm:flex-row justify-between items-center gap-4 mt-4">
+                <div class="text-center sm:text-left">
+                    <span class="text-xs text-gray-500 dark:text-gray-400 block" data-i18n="totalEstimate">Estimasi Biaya Paket Total:</span>
+                    <span id="calcResult" class="text-2xl sm:text-3xl font-black text-amber-500">Rp 0</span>
+                </div>
+                <button id="btnSendWA" disabled onclick="sendOrderWA()" class="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 disabled:bg-gray-400 disabled:cursor-not-allowed text-navy-900 font-extrabold px-6 py-3.5 rounded-xl text-xs shadow-lg hover:shadow-amber-500/20 transition" data-i18n="btnBook">
+                    Pesan via WhatsApp 📱
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Script Logika dan Bahasa -->
+    <script>
+        let currentLang = 'id';
+
+        const i18nDict = {
+            id: {
+                title: "🧮 Kalkulator Sewa dan Custom Itinerary",
+                subtitle: "Hitung estimasi biaya dan susun itinerary perjalanan Anda per hari",
+                dateTimeTitle: "📅 Jadwal & Waktu Perjalanan:",
+                startDateLabel: "Tanggal Mulai (Start Date):",
+                pickupTimeLabel: "Jam Penjemputan (Pickup Time):",
+                pickupDropTitle: "📍 Pengaturan Penjemputan dan Drop Off Utama:",
+                pickupCat: "Kategori Penjemputan (Pickup):",
+                pickupOpt1: "Area Kota Bandung (Hotel / Stasiun / KCIC Whoosh / Terminal Bus) - Bebas Biaya",
+                pickupOpt2: "Luar Kota Bandung Non-Airport (+ Rp 150.000)",
+                pickupOpt3: "Jemput Airport Jakarta/Tangerang CGK (+ Rp 600.000)",
+                pickupDetailLabel: "Detail Alamat Penjemputan:",
+                pickupDetailPh: "Contoh: Hotel Aston Pasteur / Stasiun Bandung / Stasiun KCIC Whoosh / Terminal Leuwipanjang",
+                dropCat: "Kategori Pengantaran Akhir (Drop Off):",
+                dropOpt1: "Area Kota Bandung (Hotel / Stasiun / KCIC Whoosh / Terminal Bus) - Bebas Biaya",
+                dropOpt2: "Luar Kota Bandung Non-Airport (+ Rp 150.000)",
+                dropOpt3: "Drop Off Airport Jakarta/Tangerang CGK (+ Rp 600.000)",
+                dropDetailLabel: "Detail Alamat Drop Off:",
+                dropDetailPh: "Contoh: Stasiun KCIC Whoosh Tegalluar / Hotel / Rumah / Airport CGK",
+                durationLabel: "Durasi Sewa (Hari):",
+                paxLabel: "Jumlah Peserta (Orang):",
+                paxNote: "👶 *Sertakan anak kecil atau bayi jika membawa.",
+                recTitle: "Rekomendasi Armada:",
+                custNotesLabel: "📝 Catatan Lain-Lain / Request Khusus Pelanggan:",
+                custNotesPh: "Contoh: Bawa koper besar 4 unit, butuh supir ramah anak / bisa bahasa Inggris, atau minta car seat bayi...",
+                selectFleet: "Pilih Armada Kendaraan:",
+                pricePerDay: "Harga / Hari (12j):",
+                itineraryTitle: "🗓️ Penyusunan Itinerary Per Hari:",
+                selectRegion: "Pilih Wilayah Tour / Layanan untuk",
+                areaKota: "🏛️ 2. Kota Bandung (Wisata Sejarah, Kuliner dan Kota)",
+                areaLembang: "🌲 3. Lembang (Bandung Barat)",
+                areaCiwidey: "🌋 1. Ciwidey (Bandung Selatan)",
+                areaPangalengan: "🍃 4. Pangalengan (Bandung Selatan)",
+                areaDrop: "🚗 Khusus Layanan Drop / Jemput Saja (Hotel / Penginapan <-> Stasiun Area Bandung - Rp 200.000)",
+                areaJakarta: "🏙️ 1. Jakarta (Wisata Kota / Antar-Kota - Biaya Rp 600.000)",
+                areaBogor: "🌿 2. Bogor (Wisata Alam / Antar-Kota - Biaya Rp 600.000)",
+                areaJogja: "🏛️ 3. Yogyakarta / Jogja (⚠️ Tidak Direkomendasikan/Terlalu Jauh - Biaya Rp 1.500.000 sekali jalan)",
+                selectDest: "Pilih Tempat Wisata yang Ingin Dikunjungi:",
+                customDestLabel: "✨ Tempat yang Diinginkan Tidak Ada di Daftar? Tulis di Sini (Khusus Hari Ini):",
+                customDestPh: "Contoh: Kuliner Sudirman Street, Cafe Sudut Rasa, Belanja Kartika Sari...",
+                costBreakdown: "📊 Rincian Komponen Biaya:",
+                lblTransport: "Sewa Transport Utama:",
+                lblPickupFee: "Charge Penjemputan Utama:",
+                lblDropFee: "Charge Pengantaran Utama:",
+                lblOutTown: "Biaya Layanan Wilayah / Antar-Kota:",
+                draftTitle: "🗺️ Draf Akumulasi Itinerary Lengkap:",
+                termsTitle: "ℹ️ Ketentuan Operasional dan Penjemputan:",
+                term1: "• Durasi pelayanan maksimal 12 Jam per hari (maksimal selesai pukul 21.00 WIB).",
+                term2: "• Layanan antar/jemput Bandara CGK (Jakarta/Tangerang) dikenakan Rp 600.000 / sekali jalan.",
+                term3: "• Layanan Drop/Jemput lokal area Kota Bandung (Hotel ke Stasiun/sebaliknya) Rp 200.000.",
+                term4: "• Destinasi luar kota / beda kota dikenakan tambahan biaya operasional antar-kota.",
+                totalEstimate: "Estimasi Biaya Paket Total:",
+                btnBook: "Pesan via WhatsApp 📱",
+                dayText: "Hari",
+                emptyDest: "Belum ada destinasi terpilih.",
+                editInDay: "Edit di Hari",
+                daysWarning: "⚠️ Silakan isi durasi hari sewa terlebih dahulu!",
+                exceededCap: "⚠️ Peringatan Kapasitas: Jumlah peserta ({pax} Orang) melebihi kapasitas armada sebelumnya. Sistem telah otomatis menyesuaikan ke {car}."
+            },
+            en: {
+                title: "🧮 Rental and Custom Itinerary Calculator",
+                subtitle: "Estimate rental cost and organize your trip itinerary day by day",
+                dateTimeTitle: "📅 Trip Schedule & Time:",
+                startDateLabel: "Start Date:",
+                pickupTimeLabel: "Pickup Time:",
+                pickupDropTitle: "📍 Main Pickup and Drop Off Settings:",
+                pickupCat: "Pickup Category:",
+                pickupOpt1: "Bandung City Area (Hotel / Railway Station / Whoosh HSR Station / Bus Terminal) - Free Fee",
+                pickupOpt2: "Outside Bandung City (Non-Airport) (+ IDR 150,000)",
+                pickupOpt3: "Jakarta/Tangerang CGK Airport Pickup (+ IDR 600,000)",
+                pickupDetailLabel: "Pickup Address Details:",
+                pickupDetailPh: "Example: Aston Pasteur Hotel / Bandung Station / KCIC Whoosh Station / Bus Terminal",
+                dropCat: "Final Drop Off Category:",
+                dropOpt1: "Bandung City Area (Hotel / Railway Station / Whoosh HSR Station / Bus Terminal) - Free Fee",
+                dropOpt2: "Outside Bandung City (Non-Airport) (+ IDR 150,000)",
+                dropOpt3: "Jakarta/Tangerang CGK Airport Drop (+ IDR 600,000)",
+                dropDetailLabel: "Drop Off Address Details:",
+                dropDetailPh: "Example: Tegalluar Whoosh Station / Hotel / Home / CGK Airport",
+                durationLabel: "Rental Duration (Days):",
+                paxLabel: "Total Passengers (Pax):",
+                paxNote: "👶 *Include toddlers or infants if any.",
+                recTitle: "Vehicle Recommendation:",
+                custNotesLabel: "📝 Other Notes / Special Customer Requests:",
+                custNotesPh: "Example: Bringing 4 large suitcases, need an English-speaking/kid-friendly driver, request child safety seat...",
+                selectFleet: "Select Vehicle / Fleet:",
+                pricePerDay: "Price / Day (12h):",
+                itineraryTitle: "🗓️ Daily Itinerary Builder:",
+                selectRegion: "Select Region / Service for",
+                areaKota: "🏛️ 2. Bandung City (History, Culinary and City Tour)",
+                areaLembang: "🌲 3. Lembang (West Bandung)",
+                areaCiwidey: "🌋 1. Ciwidey (South Bandung)",
+                areaPangalengan: "🍃 4. Pangalengan (South Bandung)",
+                areaDrop: "🚗 Drop / Transfer Service Only (Hotel <-> Station in Bandung - IDR 200,000)",
+                areaJakarta: "🏙️ 1. Jakarta (City Tour / Inter-City - Fee IDR 600,000)",
+                areaBogor: "🌿 2. Bogor (Nature Tour / Inter-City - Fee IDR 600,000)",
+                areaJogja: "🏛️ 3. Yogyakarta / Jogja (⚠️ Not Recommended/Too Far - Fee IDR 1,500,000 one way)",
+                selectDest: "Select Destinations to Visit:",
+                customDestLabel: "✨ Desired Place Not on the List? Write it Here (For Today):",
+                customDestPh: "Example: Sudirman Street Food, Local Cafe, Kartika Sari Bakery...",
+                costBreakdown: "📊 Cost Breakdown:",
+                lblTransport: "Main Fleet Rental:",
+                lblPickupFee: "Main Pickup Charge:",
+                lblDropFee: "Main Drop Off Charge:",
+                lblOutTown: "Inter-City / Regional Surcharge:",
+                draftTitle: "🗺️ Accumulated Itinerary Draft:",
+                termsTitle: "ℹ️ Operational Terms and Conditions:",
+                term1: "• Maximum service duration is 12 Hours per day (ends by 09:00 PM WIB).",
+                term2: "• CGK Airport (Jakarta/Tangerang) pickup/drop fee is IDR 600,000 / one way.",
+                term3: "• Local drop/pickup in Bandung City (Hotel to Station/vice versa) is IDR 200,000.",
+                term4: "• Out of city / inter-city destinations incur additional operational fees.",
+                totalEstimate: "Total Estimated Package Cost:",
+                btnBook: "Book via WhatsApp 📱",
+                dayText: "Day",
+                emptyDest: "No destinations selected yet.",
+                editInDay: "Edit in Day",
+                daysWarning: "⚠️ Please fill in the rental duration first!",
+                exceededCap: "⚠️ Capacity Warning: Number of passengers ({pax} Pax) exceeds previous vehicle capacity. System automatically adjusted to {car}."
+            }
+        };
+
+        const destData = {
+            BandungKota: [
+                { id: "bk_1", name: { id: "Jalan Asia Afrika dan Gedung Merdeka", en: "Asia Afrika Street and Merdeka Building" }, desc: { id: "Spot bersejarah dan arsitektur klasik", en: "Historic spot and classic colonial architecture" } },
+                { id: "bk_2", name: { id: "Jalan Braga", en: "Braga Street" }, desc: { id: "Kawasan jalan ikonik dengan cafe, bangunan tua, dan galeri lukisan", en: "Iconic street with cafes, heritage buildings, and art galleries" } },
+                { id: "bk_3", name: { id: "Alun-Alun Bandung dan Masjid Raya", en: "Bandung City Square and Grand Mosque" }, desc: { id: "Taman rumput sintetis di pusat kota", en: "Synthetic grass park in the heart of the city" } },
+                { id: "bk_4", name: { id: "Gedung Sate dan Museum Gedung Sate", en: "Gedung Sate and Museum" }, desc: { id: "Ikon landmark Jawa Barat", en: "West Java's iconic landmark" } },
+                { id: "bk_5", name: { id: "Kiara Artha Park", en: "Kiara Artha Park" }, desc: { id: "Taman kota modern dengan air mancur menari dan taman Korea", en: "Modern city park featuring dancing fountains and Korean park" } },
+                { id: "bk_6", name: { id: "Hutan Kota Babakan Siliwangi (Babsil)", en: "Babakan Siliwangi Forest Walk" }, desc: { id: "Forest walk di tengah kota", en: "Scenic urban forest walk in the city center" } },
+                { id: "bk_7", name: { id: "Pasar Baru Trade Center", en: "Pasar Baru Trade Center" }, desc: { id: "Pusat belanja tekstil dan pakaian populer", en: "Famous market for textiles and local apparel" } },
+                { id: "bk_8", name: { id: "Saung Angklung Udjo", en: "Saung Angklung Udjo" }, desc: { id: "Pusat seni dan pertunjukan budaya tradisional", en: "Traditional Sundanese bamboo culture and musical show" } }
+            ],
+            BandungUtara: [
+                { id: "bu_1", name: { id: "Orchid Forest Cikole", en: "Orchid Forest Cikole" }, desc: { id: "Hutan pinus dengan koleksi anggrek dan jembatan gantung berlampu", en: "Pine forest with orchid collection and illuminated wooden bridge" } },
+                { id: "bu_2", name: { id: "Dusun Bambu", en: "Dusun Bambu Park" }, desc: { id: "Taman rekreasi alam, danau, dan restoran khas Sunda", en: "Eco-tourism park with lake views and traditional Sundanese dining" } },
+                { id: "bu_3", name: { id: "The Lodge Maribaya", en: "The Lodge Maribaya" }, desc: { id: "Wisata alam dengan wahana foto ekstrem/menantang", en: "Nature park with adventure rides and scenic photo spots" } },
+                { id: "bu_4", name: { id: "Floating Market Lembang", en: "Lembang Floating Market" }, desc: { id: "Pasar terapung, taman bunga, dan sewa kostum Jepang/Korea", en: "Floating food vendors, flower garden, and traditional costume rentals" } },
+                { id: "bu_5", name: { id: "Farmhouse Susu Lembang", en: "Farmhouse Lembang" }, desc: { id: "Wisata gaya Eropa dengan rumah Hobbit", en: "European-themed park featuring Hobbit houses and pet farm" } },
+                { id: "bu_6", name: { id: "The Great Asia Africa", en: "The Great Asia Africa" }, desc: { id: "Taman miniatur landmark negara-negara Asia dan Afrika", en: "Miniature park showcasing iconic Asian and African landmarks" } },
+                { id: "bu_7", name: { id: "Tangkuban Perahu", en: "Tangkuban Perahu Crater" }, desc: { id: "Kawah gunung berapi aktif yang bisa diakses langsung dengan mobil", en: "Active volcanic crater easily accessible directly by vehicle" } },
+                { id: "bu_8", name: { id: "Taman Begonia", en: "Begonia Garden" }, desc: { id: "Taman bunga warna-warni", en: "Vibrant flower garden and flora nursery" } },
+                { id: "bu_9", name: { id: "Lembang Park dan Zoo", en: "Lembang Park and Zoo" }, desc: { id: "Kebun binatang modern dan resto berkonsep terbuka", en: "Modern zoo with interactive animal encounters and open-air cafes" } }
+            ],
+            BandungSelatan1: [
+                { id: "bs1_1", name: { id: "Kawah Putih", en: "Kawah Putih (White Crater)" }, desc: { id: "Danau kawah vulkanik ikonik", en: "Iconic turquoise volcanic crater lake" } },
+                { id: "bs1_2", name: { id: "Ranca Upas", en: "Ranca Upas Deer Park" }, desc: { id: "Penangkaran rusa, camping ground, dan pemandian air panas", en: "Deer sanctuary, camping ground, and natural hot spring pools" } },
+                { id: "bs1_3", name: { id: "Glamping Lakeside Rancabali", en: "Glamping Lakeside Rancabali" }, desc: { id: "Restoran bentuk kapal Phinisi di tepi Danau Situ Patenggang", en: "Pinisi ship restaurant located beside Situ Patenggang Lake" } },
+                { id: "bs1_4", name: { id: "Situ Patenggang", en: "Situ Patenggang Lake" }, desc: { id: "Danau alami di tengah kebun teh", en: "Scenic natural lake surrounded by lush tea plantations" } },
+                { id: "bs1_5", name: { id: "Kebun Teh Rancabali dan Tea Cliff Bridge", en: "Rancabali Tea Plantation and Tea Cliff Bridge" }, desc: { id: "Jembatan kayu di atas hamparan kebun teh", en: "Wooden boardwalk path elevated over tea gardens" } },
+                { id: "bs1_6", name: { id: "Kawah Rengganis dan Suspension Bridge", en: "Rengganis Crater and Suspension Bridge" }, desc: { id: "Jembatan gantung terpanjang dan pemandian air panas alami", en: "Longest suspension bridge and natural mud hot springs" } },
+                { id: "bs1_7", name: { id: "Happy Farm Ciwidey", en: "Happy Farm Ciwidey" }, desc: { id: "Wisata edukasi dan ramah anak", en: "Family-friendly educational farm and petting zoo" } }
+            ],
+            BandungSelatan2: [
+                { id: "bs2_1", name: { id: "Nimo Highland", en: "Nimo Highland" }, desc: { id: "Jembatan kaca melingkar di atas kebun teh dengan pemandangan 360 derajat", en: "Circular glass skywalk over tea plantations with 360-degree views" } },
+                { id: "bs2_2", name: { id: "Wayang Windu Panenjoan (WWP)", en: "Wayang Windu Panenjoan" }, desc: { id: "Jembatan kayu meliuk di tengah hamparan kebun teh", en: "Winding wooden bridge across tea hills" } },
+                { id: "bs2_3", name: { id: "Situ Cileunca", en: "Situ Cileunca Lake" }, desc: { id: "Danau luas untuk wisata rafting/arung jeram, flying fox, dan boating", en: "Vast lake popular for river rafting, flying fox, and boat rides" } },
+                { id: "bs2_4", name: { id: "Taman Langit Pangalengan", en: "Taman Langit Pangalengan" }, desc: { id: "Spot camping dan sunrise di atas awan", en: "Famous camping spot above the clouds for sunrise views" } },
+                { id: "bs2_5", name: { id: "Pineus Tilu Riverside Camping", en: "Pineus Tilu Riverside Camping" }, desc: { id: "Camping eksklusif di tepi aliran sungai dalam hutan pinus", en: "Exclusive riverside camping experience inside pine forest" } },
+                { id: "bs2_6", name: { id: "Kebun Teh Malabar dan Rumah Kayu Bosscha", en: "Malabar Tea Estate and Bosscha Wooden House" }, desc: { id: "Nilai sejarah pengelola kebun teh zaman Belanda", en: "Historic Dutch heritage tea estate and plantation tea house" } },
+                { id: "bs2_7", name: { id: "Hutan Pinus Rahong", en: "Rahong Pine Forest" }, desc: { id: "Area outbound, paintball, dan camping", en: "Outdoor adventure park with paintball, rafting, and camping" } }
+            ],
+            Jakarta: [
+                { id: "jk_1", name: { id: "Monumen Nasional (Monas)", en: "National Monument (Monas)" }, desc: { id: "Tugu ikonik Indonesia dengan museum sejarah dan gardu pandang puncak", en: "Indonesia's iconic landmark with history museum and observation deck" } },
+                { id: "jk_2", name: { id: "Kawasan Kota Tua dan Museum Fatahillah", en: "Jakarta Old Town and Fatahillah Museum" }, desc: { id: "Arsitektur kolonial Belanda, sewa sepeda ontel, dan Museum Bank Indonesia", en: "Dutch colonial plaza, vintage bicycle rentals, and historical museums" } },
+                { id: "jk_3", name: { id: "Pantai Indah Kapuk (PIK) 2", en: "Pantai Indah Kapuk (PIK) 2 Promenade" }, desc: { id: "Area pantai modern, pusat kuliner hits", en: "Modern coastal area with trendy culinary hubs and waterfront walk" } },
+                { id: "jk_4", name: { id: "Taman Mini Indonesia Indah (TMII)", en: "Taman Mini Indonesia Indah (TMII)" }, desc: { id: "Taman rekreasi edukasi kebudayaan nusantara", en: "Cultural theme park showcasing Indonesian provinces" } },
+                { id: "jk_5", name: { id: "Taman Impian Jaya Ancol", en: "Ancol Dreamland Complex" }, desc: { id: "Kompleks hiburan pesisir (Dufan, Sea World, Samudra, Pantai Ancol)", en: "Coastal amusement park complex (Dufan theme park and Sea World)" } },
+                { id: "jk_6", name: { id: "Masjid Istiqlal dan Gereja Katedral", en: "Istiqlal Mosque and Cathedral Church" }, desc: { id: "Wisata religi dan simbol toleransi berdekatan", en: "Adjacent landmark religious sites symbolizing harmony" } },
+                { id: "jk_7", name: { id: "Hutan Kota GBK", en: "GBK Urban Forest Park" }, desc: { id: "Area terbuka hijau di tengah gedung pencakar langit", en: "Lush green city park amid central Jakarta skyscrapers" } }
+            ],
+            Bogor: [
+                { id: "bg_1", name: { id: "Kebun Raya Bogor dan Istana Bogor", en: "Bogor Botanical Gardens and Palace" }, desc: { id: "Taman botani tertua di Asia Tenggara", en: "Oldest botanical garden in Southeast Asia" } },
+                { id: "bg_2", name: { id: "Kebun Teh Puncak (Gunung Mas)", en: "Gunung Mas Puncak Tea Estate" }, desc: { id: "Pemandangan kebun teh, tea bridge dan flying fox", en: "Sprawling tea hill views, wooden bridge walks, and flying fox" } },
+                { id: "bg_3", name: { id: "Taman Safari Indonesia (Cisarua)", en: "Taman Safari Indonesia" }, desc: { id: "Safari berkendara melihat satwa dari dekat", en: "Drive-through wildlife safari park" } },
+                { id: "bg_4", name: { id: "Telaga Saat Puncak", en: "Telaga Saat Lake Puncak" }, desc: { id: "Danau alami tersembunyi di tengah hamparan kebun teh Puncak", en: "Hidden natural lake surrounded by misty tea hills" } },
+                { id: "bg_5", name: { id: "Kuntum Farmfield", en: "Kuntum Farmfield" }, desc: { id: "Wisata edukasi peternakan dan pertanian ramah anak", en: "Kid-friendly organic farm and interactive animal feeding" } },
+                { id: "bg_6", name: { id: "Little Venice Kota Bunga", en: "Little Venice Puncak" }, desc: { id: "Taman rekreasi tematik berkonsep kota Venesia", en: "Venice-themed leisure resort with gondola rides" } }
+            ],
+            Jogja: [
+                { id: "jg_1", name: { id: "Jalan Malioboro dan Titik Nol KM", en: "Malioboro Street and Zero Kilometer Point" }, desc: { id: "Pusat belanja oleh-oleh dan suasana malam khas Jogja", en: "Famous shopping district and vibrant Yogyakarta nightlife" } },
+                { id: "jg_2", name: { id: "Kraton Yogyakarta dan Taman Sari", en: "Yogyakarta Palace and Water Castle" }, desc: { id: "Istana Kesultanan Yogyakarta dan kompleks pemandian sejarah", en: "Historic Royal Sultan Palace and historic water castle ruins" } },
+                { id: "jg_3", name: { id: "Candi Prambanan", en: "Prambanan Temple" }, desc: { id: "Kompleks candi Hindu terbesar di Indonesia", en: "The largest Hindu temple complex in Indonesia" } },
+                { id: "jg_4", name: { id: "Candi Borobudur", en: "Borobudur Temple" }, desc: { id: "Candi Buddha terbesar di dunia", en: "World's largest Buddhist temple (UNESCO World Heritage Site)" } },
+                { id: "jg_5", name: { id: "Jeep Lava Tour Merapi", en: "Merapi Volcano Jeep Lava Tour" }, desc: { id: "Wisata petualangan menyusuri jejak erupsi Gunung Merapi", en: "Off-road 4x4 jeep adventure along Mt. Merapi eruption trails" } },
+                { id: "jg_6", name: { id: "HeHa Sky View dan HeHa Ocean View", en: "HeHa Sky View and HeHa Ocean View" }, desc: { id: "Spot foto modern pemandangan kota/laut", en: "Popular cliffside photo spots with city skyline or ocean views" } }
+            ],
+            DropOnlyBandung: []
+        };
+
+        const defaultSelectedDestinations = {
+            BandungKota: [],
+            BandungUtara: [],
+            BandungSelatan1: [],
+            BandungSelatan2: [],
+            Jakarta: [],
+            Bogor: [],
+            Jogja: [],
+            DropOnlyBandung: []
+        };
+
+        let dayData = {};
+        let currentActiveDay = 1;
+
+        // Set default tanggal hari ini saat pertama kali load
+        window.addEventListener('DOMContentLoaded', () => {
+            const todayStr = new Date().toISOString().split('T')[0];
+            const startDateEl = document.getElementById('startDate');
+            if (startDateEl) startDateEl.value = todayStr;
+        });
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'id' ? 'en' : 'id';
+            document.getElementById('langBtn').innerText = currentLang === 'id' ? '🌐 EN' : '🌐 ID';
+            applyLanguage();
+        }
+
+        function applyLanguage() {
+            const dict = i18nDict[currentLang];
+            
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (dict[key]) el.innerHTML = dict[key];
+            });
+
+            document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+                const key = el.getAttribute('data-i18n-ph');
+                if (dict[key]) el.placeholder = dict[key];
+            });
+
+            onPaxChange();
+            renderDayTabs(parseInt(document.getElementById('calcDays').value) || 0);
+            renderDestinations();
+            updateItinerarySummary();
+            updateEndDateDisplay();
+        }
+
+        function onPaxChange() {
+            const paxInput = document.getElementById('calcPax');
+            let pax = parseInt(paxInput.value) || 1;
+            if (pax < 1) pax = 1;
+
+            const carSelect = document.getElementById('calcCar');
+            const options = carSelect.options;
+            const warningBox = document.getElementById('paxWarningBox');
+            const recText = document.getElementById('recommendedCarText');
+            const dict = i18nDict[currentLang];
+
+            let currentCarValid = true;
+            let availableCars = [];
+
+            for (let i = 0; i < options.length; i++) {
+                const maxPax = parseInt(options[i].getAttribute('data-maxpax'));
+                const nameAttr = currentLang === 'en' ? options[i].getAttribute('data-name-en') : options[i].getAttribute('data-name-id');
+                
+                if (pax > maxPax) {
+                    options[i].disabled = true;
+                    options[i].text = nameAttr + (currentLang === 'en' ? " 🚫 (Exceeds Capacity)" : " 🚫 (Kapasitas Tidak Cukup)");
+                    if (carSelect.selectedIndex === i) {
+                        currentCarValid = false;
+                    }
+                } else {
+                    options[i].disabled = false;
+                    options[i].text = nameAttr;
+                    availableCars.push(options[i]);
+                }
+            }
+
+            if (!currentCarValid && availableCars.length > 0) {
+                carSelect.value = availableCars[0].value;
+                warningBox.classList.remove('hidden');
+                
+                const chosenCarName = currentLang === 'en' ? availableCars[0].getAttribute('data-name-en') : availableCars[0].getAttribute('data-name-id');
+                let msg = dict.exceededCap.replace('{pax}', pax).replace('{car}', `<strong>${chosenCarName}</strong>`);
+                warningBox.innerHTML = msg;
+            } else {
+                warningBox.classList.add('hidden');
+            }
+
+            if (pax <= 5) {
+                recText.innerText = "Toyota Calya / Sigra / Avanza / Alphard VIP";
+            } else if (pax == 6) {
+                recText.innerText = "Toyota Avanza / Xenia / Innova Reborn / Zenix";
+            } else if (pax == 7) {
+                recText.innerText = "Innova Reborn Diesel / Toyota Innova Zenix";
+            } else if (pax <= 11) {
+                recText.innerText = "Toyota HiAce Premio (Max 11 Pax)";
+            } else if (pax <= 14) {
+                recText.innerText = "Toyota HiAce Commuter (Max 14 Pax)";
+            } else if (pax <= 18) {
+                recText.innerText = "Toyota Coaster VIP (Max 18 Pax) / Isuzu Elf Long";
+            } else if (pax <= 19) {
+                recText.innerText = "Isuzu Elf Long (Max 19 Pax)";
+            } else if (pax <= 31) {
+                recText.innerText = "Medium Bus (Max 31 Pax)";
+            } else if (pax <= 50) {
+                recText.innerText = "Big Bus VIP (Max 50 Pax)";
+            } else {
+                recText.innerText = currentLang === 'en' ? "Multiple fleets / buses required" : "Disarankan menggunakan multiple armada / Big Bus";
+            }
+
+            updateCarPrice();
+        }
+
+        function onDaysChange() {
+            let daysInput = document.getElementById('calcDays');
+            let days = parseInt(daysInput.value);
+
+            if (isNaN(days) || days <= 0) {
+                days = 0;
+                daysInput.value = 0;
+            } else if (days > 10) {
+                days = 10;
+                daysInput.value = 10;
+            }
+
+            const daysWarningText = document.getElementById('daysWarningText');
+            const btnSendWA = document.getElementById('btnSendWA');
+
+            if (days === 0) {
+                daysWarningText.classList.remove('hidden');
+                btnSendWA.disabled = true;
+                dayData = {};
+                renderDayTabs(0);
+                updateItinerarySummary();
+                calculateTotal();
+                updateEndDateDisplay();
+                return;
+            } else {
+                daysWarningText.classList.add('hidden');
+                btnSendWA.disabled = false;
+            }
+            
+            for (let d in dayData) {
+                if (parseInt(d) > days) {
+                    delete dayData[d];
+                }
+            }
+
+            if (currentActiveDay > days) {
+                currentActiveDay = days;
+            }
+
+            for (let i = 1; i <= days; i++) {
+                if (!dayData[i]) {
+                    const defaultArea = 'BandungKota';
+                    const autoDests = [...(defaultSelectedDestinations[defaultArea] || [])];
+                    dayData[i] = { area: defaultArea, dests: autoDests, customText: '' };
+                }
+            }
+
+            renderDayTabs(days);
+            loadActiveDayForm();
+            updateItinerarySummary();
+            calculateTotal();
+            updateEndDateDisplay();
+        }
+
+        function updateEndDateDisplay() {
+            const startDateVal = document.getElementById('startDate').value;
+            const days = parseInt(document.getElementById('calcDays').value) || 0;
+            const endDateInfo = document.getElementById('endDateInfo');
+
+            if (!startDateVal || days <= 0) {
+                endDateInfo.innerText = "";
+                return;
+            }
+
+            let startDate = new Date(startDateVal);
+            // Tambah hari sewa (-1 karena hari pertama sudah dihitung)
+            startDate.setDate(startDate.getDate() + (days - 1));
+            
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedEndDate = startDate.toLocaleDateString(currentLang === 'en' ? 'en-US' : 'id-ID', options);
+
+            if (currentLang === 'en') {
+                endDateInfo.innerText = `🏁 Estimated completion date: ${formattedEndDate}`;
+            } else {
+                endDateInfo.innerText = `🏁 Estimasi tanggal selesai sewa: ${formattedEndDate}`;
+            }
+        }
+
+        function renderDayTabs(totalDays) {
+            const container = document.getElementById('dayTabsContainer');
+            container.innerHTML = '';
+            const dict = i18nDict[currentLang];
+
+            if (totalDays === 0) {
+                container.innerHTML = `<span class="text-xs text-gray-400 italic">${dict.daysWarning}</span>`;
+                document.getElementById('activeDayIndicator').innerText = `-`;
+                document.getElementById('labelWilayahHari').innerText = `-`;
+                return;
+            }
+
+            for (let i = 1; i <= totalDays; i++) {
+                const isActive = i === currentActiveDay;
+                const btnClass = isActive 
+                    ? 'bg-amber-500 text-navy-900 font-extrabold shadow' 
+                    : 'bg-gray-200 dark:bg-navy-900 text-gray-700 dark:text-gray-300 font-semibold hover:bg-gray-300';
+
+                // Hitung tanggal spesifik per hari jika startDate terisi
+                let dateStrLabel = `${dict.dayText} ${i}`;
+                const startDateVal = document.getElementById('startDate').value;
+                if (startDateVal) {
+                    let d = new Date(startDateVal);
+                    d.setDate(d.getDate() + (i - 1));
+                    const dayMonth = d.toLocaleDateString(currentLang === 'en' ? 'en-US' : 'id-ID', { month: 'short', day: 'numeric' });
+                    dateStrLabel = `${dict.dayText} ${i} (${dayMonth})`;
+                }
+
+                container.innerHTML += `
+                    <button type="button" onclick="switchDay(${i})" class="px-3 py-1.5 rounded-lg text-xs transition ${btnClass}">
+                        ${dateStrLabel}
+                    </button>
+                `;
+            }
+            document.getElementById('activeDayIndicator').innerText = `${dict.dayText} ${currentActiveDay}`;
+            document.getElementById('labelWilayahHari').innerText = `${dict.dayText} ${currentActiveDay}`;
+        }
+
+        function switchDay(dayNum) {
+            currentActiveDay = dayNum;
+            const days = parseInt(document.getElementById('calcDays').value) || 0;
+            renderDayTabs(days);
+            loadActiveDayForm();
+        }
+
+        function loadActiveDayForm() {
+            const dayObj = dayData[currentActiveDay] || { area: 'BandungKota', dests: [], customText: '' };
+            document.getElementById('calcAreaDay').value = dayObj.area;
+            document.getElementById('customDayDest').value = dayObj.customText || '';
+            renderDestinations();
+        }
+
+        function onAreaDayChange() {
+            const days = parseInt(document.getElementById('calcDays').value) || 0;
+            if (days === 0) return;
+
+            const selectedArea = document.getElementById('calcAreaDay').value;
+            const autoDests = [...(defaultSelectedDestinations[selectedArea] || [])];
+
+            if (!dayData[currentActiveDay]) {
+                dayData[currentActiveDay] = { area: selectedArea, dests: autoDests, customText: '' };
+            } else {
+                dayData[currentActiveDay].area = selectedArea;
+                dayData[currentActiveDay].dests = autoDests;
+            }
+
+            renderDestinations();
+            updateItinerarySummary();
+            calculateTotal();
+        }
+
+        function onCustomDestChange() {
+            const days = parseInt(document.getElementById('calcDays').value) || 0;
+            if (days === 0) return;
+
+            const val = document.getElementById('customDayDest').value;
+            if (!dayData[currentActiveDay]) {
+                dayData[currentActiveDay] = { area: document.getElementById('calcAreaDay').value, dests: [], customText: val };
+            } else {
+                dayData[currentActiveDay].customText = val;
+            }
+            updateItinerarySummary();
+        }
+
+        function renderDestinations() {
+            const days = parseInt(document.getElementById('calcDays').value) || 0;
+            const container = document.getElementById('destinationOptions');
+            const destSection = document.getElementById('destinationSection');
+            const dict = i18nDict[currentLang];
+
+            if (days === 0) {
+                container.innerHTML = `<span class="text-xs text-gray-400 italic">${dict.daysWarning}</span>`;
+                return;
+            }
+
+            const area = document.getElementById('calcAreaDay').value;
+
+            if (area === 'DropOnlyBandung') {
+                destSection.classList.add('hidden');
+                container.innerHTML = '';
+                return;
+            } else {
+                destSection.classList.remove('hidden');
+            }
+
+            const items = destData[area] || [];
+            container.innerHTML = '';
+
+            let usedInOtherDays = {}; 
+            for (let day in dayData) {
+                if (parseInt(day) !== currentActiveDay) {
+                    (dayData[day].dests || []).forEach(destId => {
+                        usedInOtherDays[destId] = day;
+                    });
+                }
+            }
+
+            const currentDayDestIds = (dayData[currentActiveDay] && dayData[currentActiveDay].dests) ? dayData[currentActiveDay].dests : [];
+
+            items.forEach((item) => {
+                const isSelectedInCurrentDay = currentDayDestIds.includes(item.id);
+                const chosenDay = usedInOtherDays[item.id];
+                const displayName = item.name[currentLang] || item.name['id'];
+                const displayDesc = item.desc[currentLang] || item.desc['id'];
+
+                if (chosenDay) {
+                    container.innerHTML += `
+                        <div class="flex items-center justify-between p-2 rounded-lg bg-gray-200/60 dark:bg-navy-900/40 border border-dashed border-gray-300 dark:border-gray-700">
+                            <div class="flex items-center space-x-2 overflow-hidden">
+                                <input type="checkbox" disabled class="rounded text-gray-400 w-4 h-4 cursor-not-allowed flex-shrink-0">
+                                <div class="truncate">
+                                    <span class="text-gray-500 dark:text-gray-400 font-medium text-xs line-through block truncate" title="${displayName}">${displayName}</span>
+                                    <span class="text-[10px] text-gray-400 block truncate">${displayDesc}</span>
+                                </div>
+                            </div>
+                            <button type="button" onclick="switchDay(${chosenDay})" class="text-[10px] bg-amber-500/20 text-amber-600 dark:text-amber-400 font-bold px-2 py-0.5 rounded hover:bg-amber-500/30 transition flex-shrink-0 ml-1">
+                                ${dict.editInDay} ${chosenDay}
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    const checkedAttr = isSelectedInCurrentDay ? 'checked' : '';
+                    container.innerHTML += `
+                        <label class="flex items-start space-x-2 p-2 rounded-lg hover:bg-amber-500/10 dark:hover:bg-navy-800/50 cursor-pointer border border-transparent hover:border-amber-500/20 transition">
+                            <input type="checkbox" value="${item.id}" ${checkedAttr} onchange="toggleDestination('${item.id}', this.checked)" class="dest-checkbox rounded text-amber-500 focus:ring-amber-500 w-4 h-4 mt-0.5 flex-shrink-0">
+                            <div class="leading-tight">
+                                <span class="text-gray-700 dark:text-gray-300 font-semibold text-xs block">${displayName}</span>
+                                <span class="text-[10px] text-gray-500 dark:text-gray-400 block mt-0.5">${displayDesc}</span>
+                            </div>
+                        </label>
+                    `;
+                }
+            });
+        }
+
+        function toggleDestination(destId, isChecked) {
+            const days = parseInt(document.getElementById('calcDays').value) || 0;
+            if (days === 0) return;
+
+            if (!dayData[currentActiveDay]) {
+                dayData[currentActiveDay] = { area: document.getElementById('calcAreaDay').value, dests: [], customText: '' };
+            }
+
+            if (isChecked) {
+                if (!dayData[currentActiveDay].dests.includes(destId)) {
+                    dayData[currentActiveDay].dests.push(destId);
+                }
+            } else {
+                dayData[currentActiveDay].dests = dayData[currentActiveDay].dests.filter(id => id !== destId);
+            }
+
+            updateItinerarySummary();
+            renderDestinations();
+        }
+
+        function findDestObjectById(destId) {
+            for (let area in destData) {
+                const found = destData[area].find(item => item.id === destId);
+                if (found) return found;
+            }
+            return null;
+        }
+
+        function updateItinerarySummary() {
+            const summaryBox = document.getElementById('itinerarySummary');
+            let hasAnySelection = false;
+            let html = '';
+
+            const days = parseInt(document.getElementById('calcDays').value) || 0;
+            const areaSelectElem = document.getElementById('calcAreaDay');
+            const startDateVal = document.getElementById('startDate').value;
+            const dict = i18nDict[currentLang];
+
+            if (days === 0) {
+                summaryBox.innerText = dict.daysWarning;
+                return;
+            }
+
+            for (let i = 1; i <= days; i++) {
+                const dayObj = dayData[i] || { area: 'BandungKota', dests: [], customText: '' };
+                
+                let areaText = dayObj.area;
+                for (let opt of areaSelectElem.options) {
+                    if (opt.value === dayObj.area) {
+                        areaText = opt.text.split('-')[0].split('(')[0].trim();
+                        break;
+                    }
+                }
+
+                let dateSubLabel = "";
+                if (startDateVal) {
+                    let d = new Date(startDateVal);
+                    d.setDate(d.getDate() + (i - 1));
+                    dateSubLabel = ` (${d.toLocaleDateString(currentLang === 'en' ? 'en-US' : 'id-ID', { month: 'short', day: 'numeric', year: 'numeric' })})`;
+                }
+
+                if (dayObj.area === 'DropOnlyBandung') {
+                    hasAnySelection = true;
+                    html += `
+                        <div class="mb-2 pb-1 border-b border-gray-100 dark:border-gray-700/50 last:border-none">
+                            <span class="font-bold text-amber-600 dark:text-amber-400">📍 ${dict.dayText} ${i}${dateSubLabel}:</span> ${currentLang === 'en' ? 'Drop / Transfer Service Only (Bandung City Area)' : 'Khusus Layanan Drop / Jemput Saja (Area Kota Bandung)'}
+                        </div>
+                    `;
+                } else {
+                    const list = dayObj.dests || [];
+                    const custom = (dayObj.customText || '').trim();
+
+                    if (list.length > 0 || custom !== '') {
+                        hasAnySelection = true;
+                        let destsListHtml = list.map(id => {
+                            const obj = findDestObjectById(id);
+                            if (!obj) return '';
+                            const dName = obj.name[currentLang] || obj.name['id'];
+                            const dDesc = obj.desc[currentLang] || obj.desc['id'];
+                            return `<li><strong>${dName}</strong> <span class="text-gray-400 text-[10px]">(${dDesc})</span></li>`;
+                        }).join('');
+
+                        if (custom !== '') {
+                            destsListHtml += `<li><span class="text-amber-500 font-bold">[Request Custom]:</span> <strong>${custom}</strong></li>`;
+                        }
+
+                        html += `
+                            <div class="mb-2 pb-1 border-b border-gray-100 dark:border-gray-700/50 last:border-none">
+                                <span class="font-bold text-amber-600 dark:text-amber-400">📍 ${dict.dayText} ${i}${dateSubLabel} (${areaText}):</span>
+                                <ul class="list-disc list-inside pl-2 font-medium text-gray-700 dark:text-gray-300 space-y-0.5 mt-0.5">
+                                    ${destsListHtml}
+                                </ul>
+                            </div>
+                        `;
+                    } else {
+                        html += `
+                            <div class="mb-1">
+                                <span class="font-bold text-gray-400">📍 ${dict.dayText} ${i}${dateSubLabel} (${areaText}):</span> <span class="italic text-gray-400">(${currentLang === 'en' ? 'No destinations selected' : 'Belum memilih tempat'})</span>
+                            </div>
+                        `;
+                    }
+                }
+            }
+
+            if (!hasAnySelection) {
+                summaryBox.innerText = dict.emptyDest;
+            } else {
+                summaryBox.innerHTML = html;
+            }
+        }
+
+        function updateCarPrice() {
+            const carSelect = document.getElementById('calcCar');
+            const carPrice = parseInt(carSelect.value);
+            
+            document.getElementById('carPriceDisplay').value = "Rp " + carPrice.toLocaleString('id-ID');
+            calculateTotal();
+        }
+
+        function calculateTotal() {
+            const carSelect = document.getElementById('calcCar');
+            const carPrice = parseInt(carSelect.value);
+            const days = parseInt(document.getElementById('calcDays').value) || 0;
+
+            if (days === 0) {
+                document.getElementById('detailTransport').innerText = "Rp 0";
+                document.getElementById('rowPickupFee').classList.add('hidden');
+                document.getElementById('rowDropFee').classList.add('hidden');
+                document.getElementById('rowOutTownToll').classList.add('hidden');
+                document.getElementById('calcResult').innerText = "Rp 0";
+                return;
+            }
+
+            const pickupFee = parseInt(document.getElementById('calcPickup').value) || 0;
+            const dropFee = parseInt(document.getElementById('calcDrop').value) || 0;
+
+            let totalOutTownToll = 0;
+            const areaSelectElem = document.getElementById('calcAreaDay');
+
+            for (let i = 1; i <= days; i++) {
+                const dayObj = dayData[i] || { area: 'BandungKota' };
+                let dayToll = 0;
+                for (let opt of areaSelectElem.options) {
+                    if (opt.value === dayObj.area) {
+                        dayToll = parseInt(opt.getAttribute('data-toll')) || 0;
+                        break;
+                    }
+                }
+                totalOutTownToll += dayToll;
+            }
+
+            const totalTransport = carPrice * days;
+            const total = totalTransport + pickupFee + dropFee + totalOutTownToll;
+
+            document.getElementById('detailTransport').innerText = "Rp " + totalTransport.toLocaleString('id-ID');
+
+            if (pickupFee > 0) {
+                document.getElementById('rowPickupFee').classList.remove('hidden');
+                document.getElementById('detailPickupFee').innerText = "Rp " + pickupFee.toLocaleString('id-ID');
+            } else {
+                document.getElementById('rowPickupFee').classList.add('hidden');
+            }
+
+            if (dropFee > 0) {
+                document.getElementById('rowDropFee').classList.remove('hidden');
+                document.getElementById('detailDropFee').innerText = "Rp " + dropFee.toLocaleString('id-ID');
+            } else {
+                document.getElementById('rowDropFee').classList.add('hidden');
+            }
+
+            if (totalOutTownToll > 0) {
+                document.getElementById('rowOutTownToll').classList.remove('hidden');
+                document.getElementById('detailOutTownToll').innerText = "Rp " + totalOutTownToll.toLocaleString('id-ID');
+            } else {
+                document.getElementById('rowOutTownToll').classList.add('hidden');
+            }
+
+            document.getElementById('calcResult').innerText = "Rp " + total.toLocaleString('id-ID');
+            updateEndDateDisplay();
+        }
+
+        // Pengiriman Pesan WhatsApp Utuh
+        function sendOrderWA() {
+            const days = parseInt(document.getElementById('calcDays').value) || 0;
+            if (days === 0) {
+                alert(i18nDict[currentLang].daysWarning);
+                return;
+            }
+
+            const isEn = currentLang === 'en';
+            const startDateVal = document.getElementById('startDate').value;
+            const pickupTimeVal = document.getElementById('pickupTime').value;
+
+            let formattedStartDate = startDateVal;
+            if (startDateVal) {
+                let d = new Date(startDateVal);
+                formattedStartDate = d.toLocaleDateString(isEn ? 'en-US' : 'id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            }
+
+            const pickupSelect = document.getElementById('calcPickup');
+            const pickupName = isEn ? pickupSelect.options[pickupSelect.selectedIndex].getAttribute('data-name-en') : pickupSelect.options[pickupSelect.selectedIndex].getAttribute('data-name-id');
+            const pickupFee = parseInt(pickupSelect.value) || 0;
+            const pickupDetail = document.getElementById('pickupDetail').value || (isEn ? "Not specified" : "Belum diisi");
+
+            const dropSelect = document.getElementById('calcDrop');
+            const dropName = isEn ? dropSelect.options[dropSelect.selectedIndex].getAttribute('data-name-en') : dropSelect.options[dropSelect.selectedIndex].getAttribute('data-name-id');
+            const dropFee = parseInt(dropSelect.value) || 0;
+            const dropDetail = document.getElementById('dropDetail').value || (isEn ? "Not specified" : "Belum diisi");
+
+            const custNotes = document.getElementById('customerNotes').value || (isEn ? "None" : "Tidak ada");
+
+            const carSelect = document.getElementById('calcCar');
+            const carName = isEn ? carSelect.options[carSelect.selectedIndex].getAttribute('data-name-en') : carSelect.options[carSelect.selectedIndex].getAttribute('data-name-id');
+            
+            const pax = document.getElementById('calcPax').value;
+            
+            const detailTransport = document.getElementById('detailTransport').innerText;
+            const total = document.getElementById('calcResult').innerText;
+
+            let totalOutTownToll = 0;
+            const areaSelectElem = document.getElementById('calcAreaDay');
+
+            // Ekstraksi Itinerary Summary secara Utuh Per Hari dengan Format Baru
+            let itineraryText = "";
+            for (let i = 1; i <= days; i++) {
+                const dayObj = dayData[i] || { area: 'BandungKota', dests: [], customText: '' };
+                
+                let areaText = dayObj.area;
+                let dayToll = 0;
+                for (let opt of areaSelectElem.options) {
+                    if (opt.value === dayObj.area) {
+                        areaText = opt.text.split('-')[0].split('(')[0].trim();
+                        dayToll = parseInt(opt.getAttribute('data-toll')) || 0;
+                        break;
+                    }
+                }
+                totalOutTownToll += dayToll;
+
+                let dateSubLabel = "";
+                if (startDateVal) {
+                    let d = new Date(startDateVal);
+                    d.setDate(d.getDate() + (i - 1));
+                    dateSubLabel = ` (${d.toLocaleDateString(isEn ? 'en-US' : 'id-ID', { month: 'short', day: 'numeric', year: 'numeric' })})`;
+                }
+
+                if (dayObj.area === 'DropOnlyBandung') {
+                    itineraryText += `%0A  📌 *${isEn ? 'Day' : 'Hari'} ${i}${dateSubLabel}:* ${isEn ? 'Drop / Transfer Service Only' : 'Khusus Layanan Drop / Jemput Saja'}`;
+                } else {
+                    const list = dayObj.dests || [];
+                    const custom = (dayObj.customText || '').trim();
+
+                    if (list.length > 0 || custom !== '') {
+                        itineraryText += `%0A  📅 *${isEn ? 'Day' : 'Hari'} ${i}${dateSubLabel}* (${areaText}):`;
+                        list.forEach(id => {
+                            const obj = findDestObjectById(id);
+                            if (obj) {
+                                const dName = obj.name[currentLang] || obj.name['id'];
+                                const dDesc = obj.desc[currentLang] || obj.desc['id'];
+                                itineraryText += `%0A     ▪️ ${dName} _(${dDesc})_`;
+                            }
+                        });
+                        if (custom !== '') {
+                            itineraryText += `%0A     ▪️ *[Request Custom]*: ${custom}`;
+                        }
+                    } else {
+                        itineraryText += `%0A  📅 *${isEn ? 'Day' : 'Hari'} ${i}${dateSubLabel}* (${areaText}): _${isEn ? 'Flexible / Not specified' : 'Fleksibel / Belum ditentukan'}_`;
+                    }
+                }
+            }
+
+            // Konstruksi Format Pesan WhatsApp
+            let text = isEn 
+                ? `Hello Admin, I would like to make a reservation / inquiry with the following details:%0A%0A`
+                : `Halo Admin, saya ingin melakukan reservasi / tanya ketersediaan armada dengan detail berikut:%0A%0A`;
+                
+            text += `📅 *JADWAL PERJALANAN*%0A`;
+            text += `• *${isEn ? 'Start Date' : 'Tanggal Mulai'}*: ${formattedStartDate || '-'}` + (pickupTimeVal ? ` (${pickupTimeVal} WIB)` : '') + `%0A`;
+            text += `• *${isEn ? 'Duration' : 'Durasi'}*: ${days} ${isEn ? 'Days' : 'Hari'}%0A%0A`;
+
+            text += `🚗 *DETAIL ARMADA DAN LAYANAN*%0A`;
+            text += `• *${isEn ? 'Vehicle' : 'Armada'}*: ${carName}%0A`;
+            text += `• *${isEn ? 'Total Passengers' : 'Jumlah Peserta'}*: ${pax} ${isEn ? 'Pax' : 'Orang'}%0A%0A`;
+
+            text += `📍 *LOKASI PENJEMPUTAN DAN TUJUAN*%0A`;
+            text += `• *Pickup*: ${pickupName}%0A  _(${pickupDetail})_%0A`;
+            text += `• *Drop Off*: ${dropName}%0A  _(${dropDetail})_%0A%0A`;
+            
+            text += `📝 *${isEn ? 'Special Notes' : 'Catatan Khusus'}*: ${custNotes}%0A%0A`;
+            
+            text += `🗺️ *RANGKAIAN ITINERARY PER HARI:*${itineraryText}%0A%0A`;
+            
+            text += `📊 *RINCIAN ESTIMASI BIAYA*%0A`;
+            text += `• ${isEn ? 'Vehicle Rental' : 'Sewa Transport'} (${days}x @ ${document.getElementById('carPriceDisplay').value}): ${detailTransport}%0A`;
+            if (pickupFee > 0) {
+                text += `• Pickup Charge: Rp ${pickupFee.toLocaleString('id-ID')}%0A`;
+            }
+            if (dropFee > 0) {
+                text += `• Drop Off Charge: Rp ${dropFee.toLocaleString('id-ID')}%0A`;
+            }
+            if (totalOutTownToll > 0) {
+                text += `• Inter-City Surcharge: Rp ${totalOutTownToll.toLocaleString('id-ID')}%0A`;
+            }
+            
+            text += `%0A💰 *ESTIMASI TOTAL BIAYA: ${total}*%0A%0A`;
+            text += isEn ? `Please check availability and confirm my booking. Thank you!` : `Mohon cek ketersediaan armada dan konfirmasi pesanan saya. Terima kasih!`;
+            
+            window.open(`https://api.whatsapp.com/send?phone=6282130640161&text=${text}`, '_blank');
+        }
+
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+
+        document.getElementById('calcDays').value = 0;
+        onPaxChange();
+        onDaysChange();
+    </script>
+</body>
+</html>
