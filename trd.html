@@ -128,6 +128,390 @@
         .analysis-detail {
             font-size: 0.75em;
             color: #888888;
+            margin-bottom: 10px;
+            line-height: 1.3;
+            height: 30px;
+        }
+        .signal {
+            font-size: 1.8em;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            margin-bottom: 12px;
+        }
+        .buy {
+            background-color: rgba(46, 204, 113, 0.15);
+            color: #2ecc71;
+            border: 1px solid #2ecc71;
+            box-shadow: 0 0 10px rgba(46, 204, 113, 0.2);
+        }
+        .sell {
+            background-color: rgba(231, 76, 60, 0.15);
+            color: #e74c3c;
+            border: 1px solid #e74c3c;
+            box-shadow: 0 0 10px rgba(231, 76, 60, 0.2);
+        }
+        .loading {
+            background-color: rgba(149, 165, 166, 0.15);
+            color: #95a5a6;
+            border: 1px solid #95a5a6;
+            font-size: 1.2em;
+        }
+
+        /* --- Styling Kekuatan Persentase BUY / SELL --- */
+        .strength-container {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .strength-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .strength-buy-text { color: #2ecc71; }
+        .strength-sell-text { color: #e74c3c; }
+        .strength-bar {
+            width: 100%;
+            height: 6px;
+            background-color: #e74c3c; /* Warna dasar merah (Sell) */
+            border-radius: 3px;
+            overflow: hidden;
+            display: flex;
+        }
+        .strength-bar-buy {
+            height: 100%;
+            background-color: #2ecc71; /* Warna hijau (Buy) */
+            transition: width 0.5s ease-in-out;
+        }
+        
+        /* Styling Progress Bar Timer */
+        .card-progress-container {
+            width: 100%;
+            background-color: #333;
+            border-radius: 4px;
+            height: 4px;
+            overflow: hidden;
+            margin-top: auto;
+            margin-bottom: 8px;
+        }
+        .card-progress-bar {
+            height: 100%;
+            background-color: #f3c912;
+            width: 100%;
+            transition: width 1s linear;
+        }
+        .countdown-text {
+            font-size: 0.85em;
+            color: #aaaaaa;
+        }
+        
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #777777;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Indikator Koneksi Internet -->
+    <div class="network-container">
+        <div id="network-status" class="network-status online">Memeriksa koneksi...</div>
+    </div>
+
+    <div class="header">
+        <h1>XAUUSD MARKET</h1>
+        <p>Prediksi Analisa Teknikal Jangka Pendek</p>
+    </div>
+
+    <!-- Live Price Section -->
+    <div class="live-price-container">
+        <div class="live-price-box">
+            <span id="live-price" class="live-price">2450.00</span>
+            <div class="live-price-label">Live Price XAU/USD</div>
+        </div>
+    </div>
+
+    <div class="dashboard" id="dashboard">
+        <!-- Kartu Timeframe akan di-generate di sini -->
+    </div>
+
+    <div class="footer">
+        <p>Sinyal, Persentase, dan Harga disimulasikan secara lokal.</p>
+    </div>
+
+    <script>
+        // --- 1. DETEKSI STATUS JARINGAN ---
+        const networkStatus = document.getElementById('network-status');
+
+        function updateOnlineStatus() {
+            if (navigator.onLine) {
+                networkStatus.textContent = '🟢 Online (Koneksi Stabil)';
+                networkStatus.className = 'network-status online';
+            } else {
+                networkStatus.textContent = '🔴 Offline (Koneksi Terputus)';
+                networkStatus.className = 'network-status offline';
+            }
+        }
+
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+        updateOnlineStatus();
+
+        // --- 2. LOGIKA LIVE PRICE (UPDATE 1 DETIK) ---
+        let currentPrice = 2450.00; 
+        const priceElement = document.getElementById('live-price');
+
+        function updateLivePrice() {
+            if (!navigator.onLine) return; 
+
+            const oldPrice = currentPrice;
+            const change = (Math.random() * 3) - 1.5; 
+            currentPrice = currentPrice + change;
+
+            priceElement.textContent = currentPrice.toFixed(2);
+            priceElement.classList.remove('price-up', 'price-down');
+            void priceElement.offsetWidth; 
+
+            if (currentPrice > oldPrice) {
+                priceElement.classList.add('price-up');
+            } else if (currentPrice < oldPrice) {
+                priceElement.classList.add('price-down');
+            }
+        }
+        setInterval(updateLivePrice, 1000);
+
+
+        // --- 3. LOGIKA DASHBOARD TIMEFRAME ---
+        const timeframes = [
+            { 
+                id: '1m', label: '1 Menit', interval: 10, currentTimer: 10, 
+                detail: 'Scalping: Stochastic & EMA' 
+            },
+            { 
+                id: '5m', label: '5 Menit', interval: 60, currentTimer: 60, 
+                detail: 'Momentum: RSI (14) & MACD' 
+            },
+            { 
+                id: '15m', label: '15 Menit', interval: 120, currentTimer: 120, 
+                detail: 'Trend: Bollinger Bands & EMA' 
+            },
+            { 
+                id: '30m', label: '30 Menit', interval: 180, currentTimer: 180, 
+                detail: 'Volume: VWAP & Parabolic SAR' 
+            },
+            { 
+                id: '1h', label: '1 Jam', interval: 300, currentTimer: 300, 
+                detail: 'Swing: Ichimoku & SMA(50)' 
+            }
+        ];
+
+        function formatTime(seconds) {
+            const m = Math.floor(seconds / 60);
+            const s = seconds % 60;
+            if (m > 0) return `${m}m ${s}s`;
+            return `${s}s`;
+        }
+
+        function initDashboard() {
+            const dashboard = document.getElementById('dashboard');
+            
+            timeframes.forEach(tf => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div class="timeframe">${tf.label}</div>
+                    <div class="analysis-detail">${tf.detail}</div>
+                    <div class="signal loading" id="signal-${tf.id}">...</div>
+                    
+                    <!-- Kekuatan Persentase Sinyal -->
+                    <div class="strength-container">
+                        <div class="strength-labels">
+                            <span class="strength-buy-text">Buy: <span id="buy-pct-${tf.id}">0</span>%</span>
+                            <span class="strength-sell-text">Sell: <span id="sell-pct-${tf.id}">0</span>%</span>
+                        </div>
+                        <div class="strength-bar">
+                            <div class="strength-bar-buy" id="strength-bar-${tf.id}" style="width: 50%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="card-progress-container">
+                        <div class="card-progress-bar" id="progress-${tf.id}"></div>
+                    </div>
+                    <div class="countdown-text" id="countdown-${tf.id}">Update: ${formatTime(tf.currentTimer)}</div>
+                `;
+                dashboard.appendChild(card);
+                updateSignal(tf);
+            });
+            
+            setInterval(processTimers, 1000);
+        }
+
+        // Generate nilai persentase secara acak namun realistis (antara 10% - 90%)
+        function getTechnicalAnalysis(timeframeId) {
+            const buyStrength = Math.floor(Math.random() * 81) + 10; // Angka acak 10 - 90
+            const sellStrength = 100 - buyStrength;
+            
+            // Sinyal ditentukan dari persentase mana yang lebih besar dari 50%
+            const signal = buyStrength > 50 ? 'BUY' : 'SELL';
+            
+            return { signal, buyStrength, sellStrength };
+        }
+
+        function updateSignal(tf) {
+            const signalElement = document.getElementById(`signal-${tf.id}`);
+            const buyPctEl = document.getElementById(`buy-pct-${tf.id}`);
+            const sellPctEl = document.getElementById(`sell-pct-${tf.id}`);
+            const strengthBar = document.getElementById(`strength-bar-${tf.id}`);
+            
+            if (!navigator.onLine) {
+                signalElement.textContent = 'OFFLINE';
+                signalElement.className = 'signal loading';
+                buyPctEl.textContent = '-';
+                sellPctEl.textContent = '-';
+                strengthBar.style.width = '50%';
+                return;
+            }
+
+            const analysis = getTechnicalAnalysis(tf.id);
+            
+            // Update teks Sinyal
+            signalElement.textContent = analysis.signal;
+            
+            // Update Angka Persentase & Lebar Bar
+            buyPctEl.textContent = analysis.buyStrength;
+            sellPctEl.textContent = analysis.sellStrength;
+            strengthBar.style.width = analysis.buyStrength + '%';
+            
+            if (analysis.signal === 'BUY') {
+                signalElement.className = 'signal buy';
+            } else {
+                signalElement.className = 'signal sell';
+            }
+        }
+
+        function processTimers() {
+            if (!navigator.onLine) return; 
+
+            timeframes.forEach(tf => {
+                tf.currentTimer--;
+                
+                const progressBar = document.getElementById(`progress-${tf.id}`);
+                const countdownText = document.getElementById(`countdown-${tf.id}`);
+                
+                countdownText.textContent = `Update: ${formatTime(tf.currentTimer)}`;
+                
+                const percentage = (tf.currentTimer / tf.interval) * 100;
+                progressBar.style.width = percentage + '%';
+
+                if (tf.currentTimer <= 0) {
+                    updateSignal(tf);
+                    tf.currentTimer = tf.interval; 
+                }
+            });
+        }
+
+        window.onload = initDashboard;
+    </script>
+</body>
+</html>            border: 1px solid #e74c3c;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0;
+            color: #f3c912;
+            font-size: 2.5em;
+            letter-spacing: 2px;
+        }
+        .header p {
+            color: #aaaaaa;
+            font-size: 1.1em;
+            margin-top: 5px;
+        }
+
+        /* Live Price Section */
+        .live-price-container {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .live-price-box {
+            display: inline-block;
+            background-color: #1e1e1e;
+            padding: 15px 40px;
+            border-radius: 15px;
+            border: 2px solid #333;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .live-price {
+            font-size: 3.5em;
+            font-weight: bold;
+            font-family: 'Courier New', Courier, monospace;
+            display: block;
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(255,255,255,0.1);
+        }
+        .live-price-label {
+            font-size: 0.9em;
+            color: #888;
+            margin-top: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Animasi Harga Naik/Turun */
+        @keyframes flashUp {
+            0% { background-color: rgba(46, 204, 113, 0.4); transform: scale(1.05); }
+            100% { background-color: transparent; transform: scale(1); }
+        }
+        @keyframes flashDown {
+            0% { background-color: rgba(231, 76, 60, 0.4); transform: scale(1.05); }
+            100% { background-color: transparent; transform: scale(1); }
+        }
+        .price-up {
+            color: #2ecc71 !important;
+            animation: flashUp 0.5s ease-out;
+            text-shadow: 0 0 15px rgba(46, 204, 113, 0.4);
+        }
+        .price-down {
+            color: #e74c3c !important;
+            animation: flashDown 0.5s ease-out;
+            text-shadow: 0 0 15px rgba(231, 76, 60, 0.4);
+        }
+        
+        .dashboard {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        .card {
+            background-color: #1e1e1e;
+            border-radius: 12px;
+            padding: 20px;
+            width: 200px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            border: 1px solid #333;
+            display: flex;
+            flex-direction: column;
+        }
+        .timeframe {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #cccccc;
+        }
+        .analysis-detail {
+            font-size: 0.75em;
+            color: #888888;
             margin-bottom: 15px;
             line-height: 1.3;
             height: 30px;
