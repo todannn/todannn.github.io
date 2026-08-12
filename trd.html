@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XAUUSD Scalping Dashboard</title>
+    <title>XAUUSD Scalping Dashboard - Dibuat oleh Dani</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -22,6 +22,12 @@
             color: #f3c912;
             font-size: 2.2em;
             letter-spacing: 2px;
+        }
+        .header p {
+            margin-top: 8px;
+            color: #8a93a6;
+            font-size: 0.85em;
+            font-style: italic;
         }
 
         /* --- Wrapper untuk Jam dan Ping --- */
@@ -87,11 +93,11 @@
         .ping-poor .ping-dot { background-color: #e74c3c; box-shadow: 0 0 10px #e74c3c; }
 
 
-        /* --- Headline News Ticker (Box Fix, Karakter Berjalan / Marquee) --- */
+        /* --- Headline News Ticker (Box Fix, Teks Berjalan) --- */
         .news-ticker-container {
             max-width: 500px;
-            height: 95px; /* Tinggi box dibuat fix agar tidak berubah-ubah */
-            margin: 0 auto 25px auto;
+            height: 95px;
+            margin: 0 auto 15px auto;
             background-color: #1e222d;
             border: 1px solid #2a2e39;
             border-left: 5px solid #f3c912;
@@ -105,6 +111,26 @@
             overflow: hidden;
             position: relative;
         }
+
+        /* --- Breaking News Ticker (Box Fix, Animasi Berjalan Efek Market) --- */
+        .breaking-ticker-container {
+            max-width: 500px;
+            height: 85px;
+            margin: 0 auto 25px auto;
+            background-color: #1e222d;
+            border: 1px solid #2a2e39;
+            border-left: 5px solid #e74c3c;
+            border-radius: 8px;
+            padding: 10px 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            position: relative;
+        }
+
         .news-header-row {
             display: flex;
             justify-content: space-between;
@@ -121,6 +147,22 @@
             border-radius: 4px;
             text-transform: uppercase;
         }
+        .breaking-badge {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            animation: pulseAlert 1.5s infinite;
+        }
+
+        @keyframes pulseAlert {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
         .news-meta-info {
             color: #8a93a6;
             display: flex;
@@ -147,12 +189,11 @@
             display: inline-block;
             font-size: 0.95em;
             color: #ffffff;
-            /* Durasi animasi teks berjalan (20 detik per putaran) */
             animation: tickerScroll 22s linear infinite; 
         }
         
-        /* Pause animasi saat kursor diarahkan ke box berita */
-        .news-ticker-container:hover .news-content-scroller {
+        .news-ticker-container:hover .news-content-scroller,
+        .breaking-ticker-container:hover .news-content-scroller {
             animation-play-state: paused;
         }
 
@@ -245,9 +286,12 @@
 
         .footer {
             text-align: center;
-            font-size: 0.85em;
-            color: #555;
+            font-size: 0.8em;
+            color: #777;
             padding-bottom: 30px;
+            line-height: 1.5;
+            max-width: 500px;
+            margin: 0 auto;
         }
     </style>
 </head>
@@ -255,6 +299,7 @@
 
     <div class="header">
         <h1>XAUUSD MARKET REAL-TIME</h1>
+        <p>Aplikasi ini murni buatan Dani sebagai media edukasi teknikal mandiri. Tidak ada unsur ajakan, paksaan, atau rekomendasi untuk melakukan transaksi finansial yang merugikan.</p>
     </div>
 
     <!-- Bagian Atas: Jam dan Ping Internet -->
@@ -271,7 +316,7 @@
         </div>
     </div>
 
-    <!-- --- Headline News Ticker (Box Fix, Teks Berjalan, Waktu, & Link Sumber) --- -->
+    <!-- --- 1. Headline News Ticker --- -->
     <div class="news-ticker-container">
         <div class="news-header-row">
             <span class="news-badge">⚡ LIVE NEWS</span>
@@ -282,6 +327,17 @@
         </div>
         <div class="news-scroll-wrapper">
             <div class="news-content-scroller" id="news-ticker-text">Memuat berita pasar terkini...</div>
+        </div>
+    </div>
+
+    <!-- --- 2. Breaking News Yang Akan Datang & Efek ke Market --- -->
+    <div class="breaking-ticker-container">
+        <div class="news-header-row">
+            <span class="breaking-badge">🚨 BREAKING / UPCOMING EVENT</span>
+            <span style="color: #e74c3c; font-size: 0.8em; font-weight: bold;" id="breaking-impact">Dampak: Volatilitas Tinggi</span>
+        </div>
+        <div class="news-scroll-wrapper">
+            <div class="news-content-scroller" id="breaking-ticker-text" style="color: #ff9999;">Memantau jadwal rilis data ekonomi berdampak tinggi...</div>
         </div>
     </div>
 
@@ -316,7 +372,7 @@
     </div>
 
     <div class="footer">
-        <p>DISCLAIMER: Prediksi kesimpulan disimulasikan dari algoritma. Trading emas memiliki risiko tinggi.</p>
+        <p><strong>DISCLAIMER:</strong> Seluruh data, indikator, teks berjalan, dan simulasi prediksi di dalam dashboard ini murni karya pribadi Dani semata-mata untuk tujuan pembelajaran bahasa pemrograman dan pemantauan data indikator. Halaman ini sama sekali tidak ditujukan untuk mengajak, membujuk, atau memerintahkan pembaca melakukan transaksi instrumen keuangan apa pun. Segala keputusan analisis berada di tangan masing-masing individu.</p>
     </div>
 
     <script>
@@ -372,7 +428,7 @@
         setInterval(checkPing, 2000);
 
 
-        // --- 3. SCRIPT HEADLINE NEWS TICKER (BOX FIX & TEKS BERJALAN) ---
+        // --- 3. SCRIPT HEADLINE NEWS TICKER ---
         const marketNews = [
             {
                 text: "Dolar AS (USD) melemah pasca rilis data inflasi, memicu lonjakan minat beli pada aset safe-haven Emas.",
@@ -391,25 +447,12 @@
                 time: "13:45 WIB",
                 source: "Financial Times",
                 url: "https://www.ft.com"
-            },
-            {
-                text: "Data Non-Farm Payrolls (NFP) AS melampaui estimasi pasar, memberikan tekanan sesaat pada pergerakan XAUUSD.",
-                time: "13:30 WIB",
-                source: "Dow Jones",
-                url: "https://www.dowjones.com"
-            },
-            {
-                text: "Aksi borong bank sentral dunia pada cadangan emas fisik tercatat masih bertahan di level tertinggi tahun ini.",
-                time: "13:10 WIB",
-                source: "Kitco News",
-                url: "https://www.kitco.com"
             }
         ];
 
         let newsIndex = 0;
         function updateNewsTicker() {
             const currentNews = marketNews[newsIndex];
-            
             document.getElementById('news-ticker-text').textContent = currentNews.text;
             document.getElementById('news-time').textContent = currentNews.time;
             
@@ -417,16 +460,45 @@
             linkEl.textContent = `Sumber: ${currentNews.source}`;
             linkEl.href = currentNews.url;
 
-            // Berpindah ke berita berikutnya setiap 22 detik (sesuai durasi teks berjalan)
             newsIndex = (newsIndex + 1) % marketNews.length;
         }
-
-        // Jalankan berita pertama kali, lalu ganti berkala
         updateNewsTicker();
         setInterval(updateNewsTicker, 22000);
 
 
-        // --- 4. SCRIPT SIMULASI PREDIKSI AKURAT DENGAN ALASAN DETAIL ---
+        // --- 4. SCRIPT BREAKING NEWS & EFEK KE MARKET YANG AKAN DATANG ---
+        const breakingEvents = [
+            {
+                text: "⚠️ [SEBENTAR LAGI] Rilis Data Consumer Price Index (CPI) AS. Efek Market: Potensi lonjakan arah dua arah (spike volatil tajam pada XAUUSD).",
+                impact: "Dampak: Sangat Tinggi"
+            },
+            {
+                text: "🚨 [JADWAL MENDEKATI] Pengumuman Suku Bunga dan Konferensi Pers FOMC. Efek Market: Pergerakan tren besar berpotensi mendobrak level breakout.",
+                impact: "Dampak: Ekstrem"
+            },
+            {
+                text: "⚠️ [PERHATIAN] Rilis Data Klaim Pengangguran Awal (Jobless Claims) AS. Efek Market: Koreksi harga cepat pada timeframe jangka pendek.",
+                impact: "Dampak: Menengah"
+            },
+            {
+                text: "🚨 [SEGERA RILIS] Pidato Gubernur Bank Sentral Utama (Fed Chair Speech). Efek Market: Reaksi instan pelemahan atau penguatan Dolar AS secara masif.",
+                impact: "Dampak: Tinggi"
+            }
+        ];
+
+        let breakingIndex = 0;
+        function updateBreakingTicker() {
+            const currentEvent = breakingEvents[breakingIndex];
+            document.getElementById('breaking-ticker-text').textContent = currentEvent.text;
+            document.getElementById('breaking-impact').textContent = currentEvent.impact;
+
+            breakingIndex = (breakingIndex + 1) % breakingEvents.length;
+        }
+        updateBreakingTicker();
+        setInterval(updateBreakingTicker, 24000);
+
+
+        // --- 5. SCRIPT SIMULASI PREDIKSI AKURAT DENGAN ALASAN DETAIL ---
         function updatePrediction() {
             const resultEl = document.getElementById('ai-result');
             const reasonEl = document.getElementById('ai-reasoning');
@@ -443,7 +515,7 @@
                 containerEl.style.boxShadow = '0 0 20px rgba(46, 204, 113, 0.15)';
                 
                 reasonEl.style.borderLeftColor = '#2ecc71';
-                reasonEl.innerHTML = "<strong>Alasan Detail:</strong><br>Harga berhasil menembus area <em>resistance</em> dinamis (EMA 20 & 50) dengan lonjakan volume beli yang signifikan. Sentimen berita makroekonomi turut mendukung penguatan aset <em>safe-haven</em>. Indikator MACD mencetak histogram hijau yang membesar, membuka potensi profitabilitas pada arah kenaikan (long).";
+                reasonEl.innerHTML = "<strong>Alasan Detail Analisa:</strong><br>Berdasarkan pemantauan indikator teknikal mandiri, harga terdeteksi menembus area <em>resistance</em> dinamis dengan dukungan volume pembeli. Namun, perhatikan selalu jadwal breaking news di atas karena rilis data fundamental dapat membalikkan arah secara mendadak.";
                 
             } else if (random < 0.4) {
                 resultEl.textContent = 'STRONG SELL';
@@ -454,7 +526,7 @@
                 containerEl.style.boxShadow = '0 0 20px rgba(231, 76, 60, 0.15)';
                 
                 reasonEl.style.borderLeftColor = '#e74c3c';
-                reasonEl.innerHTML = "<strong>Alasan Detail:</strong><br>Terjadi penolakan (<em>rejection</em>) yang keras pada level <em>supply</em> utama setelah rilis data ekonomi yang kuat bagi Dolar AS. RSI (Relative Strength Index) bergerak turun tajam dan menembus level tengah. Garis tren support telah dipatahkan, sehingga tekanan jual mendominasi penuh pasar saat ini.";
+                reasonEl.innerHTML = "<strong>Alasan Detail Analisa:</strong><br>Terdeteksi adanya penolakan (<em>rejection</em>) pada batas atas grafik dengan RSI yang mulai melandai turun. Harap waspadai volatilitas yang dipicu oleh berita ekonomi mendatang yang dapat mempercepat tekanan jual.";
                 
             } else {
                 resultEl.textContent = 'WAIT / HOLD';
@@ -465,7 +537,7 @@
                 containerEl.style.boxShadow = '0 0 20px rgba(243, 201, 18, 0.15)';
                 
                 reasonEl.style.borderLeftColor = '#f3c912';
-                reasonEl.innerHTML = "<strong>Alasan Detail:</strong><br>Pergerakan harga saat ini tertahan di dalam fase konsolidasi (<em>sideways</em>) menanti kejelasan rilis berita fundamental berikutnya. Tidak terlihat dominasi yang jelas antara buyer dan seller di zona sempit ini. Sangat disarankan untuk menghindari <em>entry</em> demi meminimalisir risiko <em>fakeout</em>.";
+                reasonEl.innerHTML = "<strong>Alasan Detail Analisa:</strong><br>Pergerakan pasar sedang berada di zona konsolidasi atau menanti rilis breaking news penting. Disarankan untuk memantau grafik tanpa melakukan tindakan gegabah demi menghindari risiko fluktuasi liar.";
             }
         }
         
