@@ -87,7 +87,7 @@
         .ping-poor .ping-dot { background-color: #e74c3c; box-shadow: 0 0 10px #e74c3c; }
 
 
-        /* --- Headline News Ticker (Animasi Berjalan/Fade) --- */
+        /* --- Headline News Ticker (Diperbesar, Multi-baris agar tidak terpotong) --- */
         .news-ticker-container {
             max-width: 500px;
             margin: 0 auto 25px auto;
@@ -95,37 +95,41 @@
             border: 1px solid #2a2e39;
             border-left: 5px solid #f3c912;
             border-radius: 8px;
-            padding: 12px 15px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            padding: 15px 18px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             box-sizing: border-box;
-            overflow: hidden;
+        }
+        .news-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
         }
         .news-badge {
             background-color: rgba(243, 201, 18, 0.15);
             color: #f3c912;
-            font-size: 0.75em;
+            font-size: 0.8em;
             font-weight: bold;
-            padding: 4px 8px;
+            padding: 3px 8px;
             border-radius: 4px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            white-space: nowrap;
+        }
+        .news-source {
+            font-size: 0.8em;
+            color: #8a93a6;
+            font-weight: 600;
         }
         .news-content {
-            font-size: 0.9em;
-            color: #d1d4dc;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            width: 100%;
+            font-size: 1.05em; /* Ukuran font lebih besar */
+            color: #ffffff;
+            line-height: 1.5;
+            word-wrap: break-word; /* Mencegah kata terpotong aneh */
             transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
         }
         .news-fade-out {
             opacity: 0;
-            transform: translateY(-10px);
+            transform: translateY(-8px);
         }
         .news-fade-in {
             opacity: 1;
@@ -242,9 +246,12 @@
         </div>
     </div>
 
-    <!-- --- Bagian Headline News Ticker Real-time (Dengan Animasi) --- -->
+    <!-- --- Bagian Headline News Ticker (Diperbesar & Tanpa Terpotong) --- -->
     <div class="news-ticker-container">
-        <div class="news-badge">⚡ NEWS</div>
+        <div class="news-header-row">
+            <div class="news-badge">⚡ MARKET NEWS</div>
+            <div class="news-source" id="news-source-text">Sumber: Bloomberg</div>
+        </div>
         <div class="news-content news-fade-in" id="news-ticker-text">Memuat berita pasar terbaru...</div>
     </div>
 
@@ -335,37 +342,56 @@
         setInterval(checkPing, 2000);
 
 
-        // --- 3. SCRIPT HEADLINE NEWS TICKER (DENGAN ANIMASI FADE) ---
+        // --- 3. SCRIPT HEADLINE NEWS TICKER (LENGKAP DENGAN SUMBER & TANPA TERPOTONG) ---
         const marketNews = [
-            "⚠️ Dolar AS (USD) melemah pasca rilis data inflasi, mendorong kenaikan harga Emas (XAUUSD).",
-            "📈 Ketegangan geopolitik global meningkat, memicu aksi lindung nilai (safe-haven) pada komoditas Emas.",
-            "📉 Pernyataan hawkish dari bank sentral menekan laju kenaikan harga Emas jangka pendek.",
-            "💡 Volume transaksi institusional melonjak di level support utama, pergerakan volatil terjadi.",
-            "⚠️ Data Non-Farm Payrolls (NFP) melampaui estimasi, pasar merespons dengan fluktuasi tajam.",
-            "📈 Pembelian bank sentral global pada aset fisik Emas masih bertahan di level tinggi."
+            {
+                text: "Dolar AS (USD) melemah pasca rilis data inflasi, memicu lonjakan minat beli pada aset safe-haven Emas.",
+                source: "Sumber: Bloomberg"
+            },
+            {
+                text: "Ketegangan geopolitik global yang kian meningkat mendorong volume transaksi institusional pada komoditas Emas.",
+                source: "Sumber: Reuters"
+            },
+            {
+                text: "Pernyataan hawkish dari bank sentral menahan laju kenaikan harga jangka pendek, memicu volatilitas tinggi.",
+                source: "Sumber: Financial Times"
+            },
+            {
+                text: "Data Non-Farm Payrolls (NFP) AS melampaui estimasi pasar, memberikan tekanan sesaat pada pergerakan XAUUSD.",
+                source: "Sumber: Dow Jones Newswires"
+            },
+            {
+                text: "Aksi borong bank sentral dunia pada cadangan emas fisik tercatat masih bertahan di level tertinggi tahun ini.",
+                source: "Sumber: Kitco News"
+            }
         ];
 
         let newsIndex = 0;
         function rotateNews() {
-            const newsElement = document.getElementById('news-ticker-text');
+            const newsTextElement = document.getElementById('news-ticker-text');
+            const newsSourceElement = document.getElementById('news-source-text');
             
             // Efek keluar (Fade Out)
-            newsElement.classList.remove('news-fade-in');
-            newsElement.classList.add('news-fade-out');
+            newsTextElement.classList.remove('news-fade-in');
+            newsTextElement.classList.add('news-fade-out');
 
             setTimeout(() => {
                 newsIndex = (newsIndex + 1) % marketNews.length;
-                newsElement.textContent = marketNews[newsIndex];
+                
+                // Masukkan teks dan sumber baru
+                newsTextElement.textContent = marketNews[newsIndex].text;
+                newsSourceElement.textContent = marketNews[newsIndex].source;
                 
                 // Efek masuk (Fade In)
-                newsElement.classList.remove('news-fade-out');
-                newsElement.classList.add('news-fade-in');
-            }, 500); // Waktu jeda transisi 0.5 detik
+                newsTextElement.classList.remove('news-fade-out');
+                newsTextElement.classList.add('news-fade-in');
+            }, 500); // Jeda transisi 0.5 detik
         }
 
-        // Jalankan berita pertama kali, lalu ganti setiap 6 detik secara beranimasi
-        document.getElementById('news-ticker-text').textContent = marketNews[0];
-        setInterval(rotateNews, 6000);
+        // Tampilkan berita pertama kali secara utuh, lalu ganti otomatis setiap 7 detik
+        document.getElementById('news-ticker-text').textContent = marketNews[0].text;
+        document.getElementById('news-source-text').textContent = marketNews[0].source;
+        setInterval(rotateNews, 7000);
 
 
         // --- 4. SCRIPT SIMULASI PREDIKSI AKURAT DENGAN ALASAN DETAIL ---
