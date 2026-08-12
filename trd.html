@@ -31,6 +31,7 @@
             align-items: center;
             gap: 15px;
             margin-bottom: 30px;
+            flex-wrap: wrap;
         }
 
         /* --- Jam Realtime dengan Milidetik --- */
@@ -64,7 +65,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            height: 32px; /* Menyamakan tinggi dengan box jam proporsional */
+            height: 32px; 
             box-shadow: 0 0 10px rgba(0,0,0,0.3);
             transition: all 0.3s ease;
         }
@@ -76,7 +77,6 @@
             transition: all 0.3s ease;
         }
         
-        /* Warna Status Ping */
         .ping-good { color: #2ecc71; border-color: rgba(46, 204, 113, 0.4); }
         .ping-good .ping-dot { background-color: #2ecc71; box-shadow: 0 0 10px #2ecc71; }
         
@@ -89,7 +89,7 @@
 
         /* Ticker Harga Realtime */
         .live-price-container {
-            max-width: 450px;
+            max-width: 460px;
             margin: 0 auto 30px auto;
             border-radius: 12px;
             overflow: hidden;
@@ -97,21 +97,20 @@
             border: 1px solid #2a2e39;
         }
 
-        /* Grid untuk Timeframe (Hanya 1m & 5m) */
+        /* Grid untuk Timeframe (Hanya 5m) */
         .dashboard {
             display: flex;
-            flex-wrap: wrap;
             justify-content: center;
-            gap: 20px;
-            max-width: 600px; 
             margin: 0 auto 30px auto;
+            width: 100%;
         }
         
         .card {
             background-color: #1e222d;
             border-radius: 12px;
-            width: 220px; 
-            height: 380px; 
+            width: 100%; 
+            max-width: 460px; /* Dinormalkan agar sejajar dengan Ticker & Prediksi */
+            height: 420px; /* Tinggi dinormalkan agar indikator terlihat jelas */
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
             border: 1px solid #2a2e39;
             overflow: hidden;
@@ -126,16 +125,16 @@
             background-color: #2a2e39;
             color: #ffffff;
             text-align: center;
-            padding: 6px 0;
+            padding: 8px 0;
             font-weight: bold;
-            font-size: 0.95em;
+            font-size: 1.05em;
             z-index: 10;
             border-bottom: 2px solid #f3c912;
         }
 
         .widget-wrapper {
-            margin-top: 32px; 
-            height: calc(100% - 32px);
+            margin-top: 38px; 
+            height: calc(100% - 38px);
         }
 
         /* --- Kotak Prediksi Kesimpulan --- */
@@ -150,6 +149,7 @@
             box-shadow: 0 0 20px rgba(46, 204, 113, 0.2);
             position: relative;
             overflow: hidden;
+            box-sizing: border-box;
         }
         
         .prediction-title {
@@ -228,34 +228,11 @@
         </div>
     </div>
 
-    <!-- Dashboard Sinyal Teknikal (1m & 5m) -->
+    <!-- Dashboard Sinyal Teknikal (Hanya 5m) -->
     <div class="dashboard">
-        <!-- Timeframe 1 Menit -->
-        <div class="card">
-            <div class="tf-label">1 Menit</div>
-            <div class="widget-wrapper">
-                <div class="tradingview-widget-container">
-                    <div class="tradingview-widget-container__widget"></div>
-                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js" async>
-                    {
-                    "interval": "1m",
-                    "width": "100%",
-                    "isTransparent": true,
-                    "height": "100%",
-                    "symbol": "OANDA:XAUUSD",
-                    "showIntervalTabs": false,
-                    "displayMode": "single",
-                    "locale": "id",
-                    "colorTheme": "dark"
-                    }
-                    </script>
-                </div>
-            </div>
-        </div>
-
         <!-- Timeframe 5 Menit -->
         <div class="card">
-            <div class="tf-label">5 Menit</div>
+            <div class="tf-label">Timeframe 5 Menit</div>
             <div class="widget-wrapper">
                 <div class="tradingview-widget-container">
                     <div class="tradingview-widget-container__widget"></div>
@@ -281,7 +258,7 @@
     <div class="prediction-container">
         <div class="prediction-title">🔥 Prediksi Arah Jangka Pendek</div>
         <div id="ai-result" class="prediction-result animate-pulse">STRONG BUY</div>
-        <div id="ai-detail" class="prediction-detail">Kompilasi Momentum 1M & 5M mengarah ke atas.</div>
+        <div id="ai-detail" class="prediction-detail">Momentum 5M mengarah ke atas.</div>
     </div>
 
     <div class="footer">
@@ -310,39 +287,33 @@
             const pingBox = document.getElementById('ping-box');
             const pingValue = document.getElementById('ping-value');
 
-            // Cek jika terdeteksi offline dari sistem perangkat
             if (!navigator.onLine) {
                 pingValue.textContent = 'Offline';
                 pingBox.className = 'ping-box ping-poor';
                 return;
             }
 
-            // Catat waktu mulai
             const startTime = performance.now();
             const img = new Image();
             
-            // Ketika file berhasil dipanggil atau gagal dipanggil
             img.onload = img.onerror = function() {
                 const endTime = performance.now();
                 const pingTime = Math.round(endTime - startTime);
                 
                 pingValue.textContent = `${pingTime} ms`;
                 
-                // Ubah warna berdasarkan kecepatan (Lateni)
                 if (pingTime < 100) {
-                    pingBox.className = 'ping-box ping-good'; // Hijau (Cepat)
+                    pingBox.className = 'ping-box ping-good'; 
                 } else if (pingTime < 250) {
-                    pingBox.className = 'ping-box ping-fair'; // Kuning (Sedang)
+                    pingBox.className = 'ping-box ping-fair'; 
                 } else {
-                    pingBox.className = 'ping-box ping-poor'; // Merah (Lambat)
+                    pingBox.className = 'ping-box ping-poor'; 
                 }
             };
             
-            // Panggil file kecil dengan angka acak agar tidak nyangkut di cache browser
             img.src = "https://www.google.com/favicon.ico?r=" + new Date().getTime();
         }
 
-        // Cek ping pertama kali, lalu ulangi setiap 2 detik
         checkPing();
         setInterval(checkPing, 2000);
 
@@ -361,21 +332,21 @@
                 resultEl.style.textShadow = '0 0 15px rgba(46, 204, 113, 0.4)';
                 containerEl.style.borderColor = '#2ecc71';
                 containerEl.style.boxShadow = '0 0 20px rgba(46, 204, 113, 0.2)';
-                detailEl.textContent = 'Volume pembeli mendominasi di timeframe 1M dan 5M.';
+                detailEl.textContent = 'Volume pembeli mendominasi di timeframe 5 Menit.';
             } else if (random < 0.4) {
                 resultEl.textContent = 'STRONG SELL';
                 resultEl.style.color = '#e74c3c';
                 resultEl.style.textShadow = '0 0 15px rgba(231, 76, 60, 0.4)';
                 containerEl.style.borderColor = '#e74c3c';
                 containerEl.style.boxShadow = '0 0 20px rgba(231, 76, 60, 0.2)';
-                detailEl.textContent = 'Tekanan jual sangat kuat menembus support jangka pendek.';
+                detailEl.textContent = 'Tekanan jual sangat kuat menembus support di timeframe 5 Menit.';
             } else {
                 resultEl.textContent = 'WAIT / HOLD';
                 resultEl.style.color = '#f3c912';
                 resultEl.style.textShadow = '0 0 15px rgba(243, 201, 18, 0.4)';
                 containerEl.style.borderColor = '#f3c912';
                 containerEl.style.boxShadow = '0 0 20px rgba(243, 201, 18, 0.2)';
-                detailEl.textContent = 'Pasar sedang konsolidasi (sideways), tunggu konfirmasi arah.';
+                detailEl.textContent = 'Pasar sedang konsolidasi (sideways), tunggu konfirmasi arah 5 Menit.';
             }
         }
         setInterval(updatePrediction, 15000);
