@@ -411,31 +411,4 @@
         window.onload = initDashboard;
     </script>
 </body>
-</html>            }
-        }
-
-        function processTimers() {
-            if (!navigator.onLine) return; 
-
-            timeframes.forEach(tf => {
-                tf.currentTimer--;
-                
-                const progressBar = document.getElementById(`progress-${tf.id}`);
-                const countdownText = document.getElementById(`countdown-${tf.id}`);
-                
-                countdownText.textContent = `Update: ${formatTime(tf.currentTimer)}`;
-                
-                const percentage = (tf.currentTimer / tf.interval) * 100;
-                progressBar.style.width = percentage + '%';
-
-                if (tf.currentTimer <= 0) {
-                    updateSignal(tf);
-                    tf.currentTimer = tf.interval; 
-                }
-            });
-        }
-
-        window.onload = initDashboard;
-    </script>
-</body>
 </html>
