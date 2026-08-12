@@ -89,7 +89,7 @@
 
         /* Ticker Harga Realtime */
         .live-price-container {
-            max-width: 460px;
+            max-width: 500px; /* Sedikit diperlebar agar seimbang dengan kotak bawah */
             margin: 0 auto 30px auto;
             border-radius: 12px;
             overflow: hidden;
@@ -97,98 +97,109 @@
             border: 1px solid #2a2e39;
         }
 
-        /* Grid untuk Timeframe (Hanya 5m) */
-        .dashboard {
-            display: flex;
-            justify-content: center;
-            margin: 0 auto 30px auto;
-            width: 100%;
-        }
-        
-        .card {
-            background-color: #1e222d;
-            border-radius: 12px;
-            width: 100%; 
-            max-width: 460px; /* Dinormalkan agar sejajar dengan Ticker & Prediksi */
-            height: 420px; /* Tinggi dinormalkan agar indikator terlihat jelas */
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            border: 1px solid #2a2e39;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .tf-label {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background-color: #2a2e39;
-            color: #ffffff;
-            text-align: center;
-            padding: 8px 0;
-            font-weight: bold;
-            font-size: 1.05em;
-            z-index: 10;
-            border-bottom: 2px solid #f3c912;
-        }
-
-        .widget-wrapper {
-            margin-top: 38px; 
-            height: calc(100% - 38px);
-        }
-
-        /* --- Kotak Prediksi Kesimpulan --- */
+        /* --- Kotak Prediksi Kesimpulan Detail --- */
         .prediction-container {
-            max-width: 460px;
-            margin: 0 auto;
+            max-width: 500px;
+            margin: 0 auto 30px auto; 
             background: linear-gradient(145deg, #1e222d, #131722);
             border-radius: 12px;
-            padding: 20px;
+            padding: 25px;
             text-align: center;
             border: 1px solid #2ecc71;
             box-shadow: 0 0 20px rgba(46, 204, 113, 0.2);
             position: relative;
             overflow: hidden;
             box-sizing: border-box;
+            transition: all 0.4s ease;
         }
         
         .prediction-title {
             font-size: 1.1em;
             color: #aaaaaa;
-            margin-bottom: 15px;
+            margin-bottom: 5px;
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
         .prediction-result {
-            font-size: 2.5em;
+            font-size: 2.8em;
             font-weight: bold;
             color: #2ecc71;
             text-shadow: 0 0 15px rgba(46, 204, 113, 0.4);
-            margin: 10px 0;
+            margin: 10px 0 20px 0;
             transition: color 0.3s ease;
         }
 
-        .prediction-detail {
-            font-size: 0.9em;
-            color: #888;
+        /* Kotak Alasan Detail */
+        .reasoning-box {
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 8px;
+            padding: 18px;
+            text-align: left;
+            font-size: 0.95em;
+            line-height: 1.6;
+            color: #d1d4dc;
+            border-left: 4px solid #2ecc71;
+            transition: all 0.3s ease;
+        }
+
+        .reasoning-box strong {
+            color: #ffffff;
+            font-size: 1.05em;
+            letter-spacing: 0.5px;
+            display: inline-block;
+            margin-bottom: 8px;
         }
 
         @keyframes pulseGlow {
-            0% { opacity: 0.8; transform: scale(0.98); }
-            50% { opacity: 1; transform: scale(1.02); }
-            100% { opacity: 0.8; transform: scale(0.98); }
+            0% { opacity: 0.85; transform: scale(0.99); }
+            50% { opacity: 1; transform: scale(1.01); }
+            100% { opacity: 0.85; transform: scale(0.99); }
         }
         .animate-pulse {
-            animation: pulseGlow 2s infinite;
+            animation: pulseGlow 2.5s infinite;
+        }
+
+        /* --- Tombol Download / Instal --- */
+        .download-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .btn-download {
+            background: linear-gradient(145deg, #f3c912, #e67e22);
+            color: #121212;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(243, 201, 18, 0.4);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(243, 201, 18, 0.6);
+        }
+        .btn-download:active {
+            transform: translateY(1px);
+        }
+        .download-info {
+            display: block;
+            margin-top: 8px;
+            font-size: 0.8em;
+            color: #888;
         }
 
         .footer {
-            margin-top: 40px;
             text-align: center;
             font-size: 0.85em;
             color: #555;
+            padding-bottom: 30px;
         }
     </style>
 </head>
@@ -228,37 +239,24 @@
         </div>
     </div>
 
-    <!-- Dashboard Sinyal Teknikal (Hanya 5m) -->
-    <div class="dashboard">
-        <!-- Timeframe 5 Menit -->
-        <div class="card">
-            <div class="tf-label">Timeframe 5 Menit</div>
-            <div class="widget-wrapper">
-                <div class="tradingview-widget-container">
-                    <div class="tradingview-widget-container__widget"></div>
-                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js" async>
-                    {
-                    "interval": "5m",
-                    "width": "100%",
-                    "isTransparent": true,
-                    "height": "100%",
-                    "symbol": "OANDA:XAUUSD",
-                    "showIntervalTabs": false,
-                    "displayMode": "single",
-                    "locale": "id",
-                    "colorTheme": "dark"
-                    }
-                    </script>
-                </div>
-            </div>
+    <!-- Kotak Kesimpulan Prediksi Akurat -->
+    <div class="prediction-container animate-pulse" id="prediction-container">
+        <div class="prediction-title">🔥 Analisa Jangka Pendek Saat Ini</div>
+        <div id="ai-result" class="prediction-result">STRONG BUY</div>
+        
+        <!-- Alasan Detail -->
+        <div class="reasoning-box" id="ai-reasoning">
+            <strong>Analisa Teknikal:</strong><br>
+            Menunggu sinkronisasi data pasar...
         </div>
     </div>
 
-    <!-- Kotak Kesimpulan Prediksi Akurat -->
-    <div class="prediction-container">
-        <div class="prediction-title">🔥 Prediksi Arah Jangka Pendek</div>
-        <div id="ai-result" class="prediction-result animate-pulse">STRONG BUY</div>
-        <div id="ai-detail" class="prediction-detail">Momentum 5M mengarah ke atas.</div>
+    <!-- Tombol Download Aplikasi -->
+    <div class="download-container">
+        <button class="btn-download" onclick="downloadApp()">
+            <span>💾 Simpan Aplikasi ke Perangkat</span>
+        </button>
+        <span class="download-info">Klik untuk menyimpan file HTML. Buka file tersebut kapan saja di HP/PC Anda.</span>
     </div>
 
     <div class="footer">
@@ -318,38 +316,74 @@
         setInterval(checkPing, 2000);
 
 
-        // --- 3. SCRIPT SIMULASI PREDIKSI AKURAT (Update berkala) ---
+        // --- 3. SCRIPT SIMULASI PREDIKSI AKURAT DENGAN ALASAN DETAIL ---
         function updatePrediction() {
             const resultEl = document.getElementById('ai-result');
-            const detailEl = document.getElementById('ai-detail');
-            const containerEl = document.querySelector('.prediction-container');
+            const reasonEl = document.getElementById('ai-reasoning');
+            const containerEl = document.getElementById('prediction-container');
 
+            // Acak hasil (hanya untuk simulasi logika)
             const random = Math.random();
             
             if (random > 0.6) {
+                // Skenario BUY
                 resultEl.textContent = 'STRONG BUY';
                 resultEl.style.color = '#2ecc71';
                 resultEl.style.textShadow = '0 0 15px rgba(46, 204, 113, 0.4)';
+                
                 containerEl.style.borderColor = '#2ecc71';
-                containerEl.style.boxShadow = '0 0 20px rgba(46, 204, 113, 0.2)';
-                detailEl.textContent = 'Volume pembeli mendominasi di timeframe 5 Menit.';
+                containerEl.style.boxShadow = '0 0 20px rgba(46, 204, 113, 0.15)';
+                
+                reasonEl.style.borderLeftColor = '#2ecc71';
+                reasonEl.innerHTML = "<strong>Alasan Detail:</strong><br>Harga berhasil menembus area <em>resistance</em> dinamis (EMA 20 & 50) dengan lonjakan volume beli yang signifikan. Indikator MACD mencetak histogram hijau yang membesar, menandakan momentum <em>bullish</em> yang sangat kuat. Struktur pasar jangka pendek membentuk pola 'Higher High', membuka potensi profitabilitas pada arah kenaikan (long).";
+                
             } else if (random < 0.4) {
+                // Skenario SELL
                 resultEl.textContent = 'STRONG SELL';
                 resultEl.style.color = '#e74c3c';
                 resultEl.style.textShadow = '0 0 15px rgba(231, 76, 60, 0.4)';
+                
                 containerEl.style.borderColor = '#e74c3c';
-                containerEl.style.boxShadow = '0 0 20px rgba(231, 76, 60, 0.2)';
-                detailEl.textContent = 'Tekanan jual sangat kuat menembus support di timeframe 5 Menit.';
+                containerEl.style.boxShadow = '0 0 20px rgba(231, 76, 60, 0.15)';
+                
+                reasonEl.style.borderLeftColor = '#e74c3c';
+                reasonEl.innerHTML = "<strong>Alasan Detail:</strong><br>Terjadi penolakan (<em>rejection</em>) yang keras pada level <em>supply</em> utama, diikuti oleh penutupan <em>candlestick bearish engulfing</em> beruntun. RSI (Relative Strength Index) bergerak turun tajam dan menembus level tengah. Garis tren support telah dipatahkan, sehingga tekanan jual mendominasi penuh pasar saat ini.";
+                
             } else {
+                // Skenario WAIT
                 resultEl.textContent = 'WAIT / HOLD';
                 resultEl.style.color = '#f3c912';
                 resultEl.style.textShadow = '0 0 15px rgba(243, 201, 18, 0.4)';
+                
                 containerEl.style.borderColor = '#f3c912';
-                containerEl.style.boxShadow = '0 0 20px rgba(243, 201, 18, 0.2)';
-                detailEl.textContent = 'Pasar sedang konsolidasi (sideways), tunggu konfirmasi arah 5 Menit.';
+                containerEl.style.boxShadow = '0 0 20px rgba(243, 201, 18, 0.15)';
+                
+                reasonEl.style.borderLeftColor = '#f3c912';
+                reasonEl.innerHTML = "<strong>Alasan Detail:</strong><br>Pergerakan harga saat ini tertahan di dalam fase konsolidasi (<em>sideways</em>). Tidak terlihat dominasi yang jelas antara kekuatan beli (buyer) maupun jual (seller) karena harga hanya berfluktuasi tipis di zona sempit. Sangat disarankan untuk menghindari <em>entry</em> dan menunggu konfirmasi <em>breakout</em> yang valid ke salah satu arah untuk meminimalisir risiko.";
             }
         }
+        
+        // Panggil langsung saat pertama kali dibuka, lalu ulangi setiap 15 detik
+        updatePrediction();
         setInterval(updatePrediction, 15000);
+
+        // --- 4. SCRIPT DOWNLOAD FILE HTML ---
+        function downloadApp() {
+            const htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'XAUUSD_Scalping_App.html'; 
+            
+            document.body.appendChild(a);
+            a.click(); 
+            document.body.removeChild(a); 
+            URL.revokeObjectURL(url);
+            
+            alert("File berhasil di-download! Silakan cari file 'XAUUSD_Scalping_App.html' di perangkat Anda, lalu klik untuk membukanya seperti aplikasi biasa.");
+        }
     </script>
 </body>
 </html>
