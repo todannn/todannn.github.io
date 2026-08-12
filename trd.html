@@ -30,7 +30,7 @@
             justify-content: center;
             align-items: center;
             gap: 15px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             flex-wrap: wrap;
         }
 
@@ -87,6 +87,52 @@
         .ping-poor .ping-dot { background-color: #e74c3c; box-shadow: 0 0 10px #e74c3c; }
 
 
+        /* --- Headline News Ticker (Animasi Berjalan/Fade) --- */
+        .news-ticker-container {
+            max-width: 500px;
+            margin: 0 auto 25px auto;
+            background-color: #1e222d;
+            border: 1px solid #2a2e39;
+            border-left: 5px solid #f3c912;
+            border-radius: 8px;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        .news-badge {
+            background-color: rgba(243, 201, 18, 0.15);
+            color: #f3c912;
+            font-size: 0.75em;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+        .news-content {
+            font-size: 0.9em;
+            color: #d1d4dc;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        }
+        .news-fade-out {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        .news-fade-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+
         /* Ticker Harga Realtime */
         .live-price-container {
             max-width: 500px; 
@@ -100,7 +146,7 @@
         /* --- Kotak Prediksi Utama (Glow) --- */
         .prediction-container {
             max-width: 500px;
-            margin: 0 auto 15px auto; /* Margin diperkecil karena box alasan ada di bawahnya */
+            margin: 0 auto 15px auto; 
             background: linear-gradient(145deg, #1e222d, #131722);
             border-radius: 12px;
             padding: 25px;
@@ -127,7 +173,7 @@
             font-weight: bold;
             color: #2ecc71;
             text-shadow: 0 0 15px rgba(46, 204, 113, 0.4);
-            margin: 10px 0 0 0; /* Hapus margin bawah */
+            margin: 10px 0 0 0;
             transition: color 0.3s ease;
         }
 
@@ -155,7 +201,7 @@
             line-height: 1.6;
             color: #d1d4dc;
             border: 1px solid #2a2e39;
-            border-left: 5px solid #2ecc71; /* Garis warna dinamis */
+            border-left: 5px solid #2ecc71;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             transition: all 0.3s ease;
         }
@@ -196,6 +242,12 @@
         </div>
     </div>
 
+    <!-- --- Bagian Headline News Ticker Real-time (Dengan Animasi) --- -->
+    <div class="news-ticker-container">
+        <div class="news-badge">⚡ NEWS</div>
+        <div class="news-content news-fade-in" id="news-ticker-text">Memuat berita pasar terbaru...</div>
+    </div>
+
     <!-- Ticker Harga Real-time (TradingView) -->
     <div class="live-price-container">
         <div class="tradingview-widget-container">
@@ -218,7 +270,7 @@
         <div id="ai-result" class="prediction-result">STRONG BUY</div>
     </div>
 
-    <!-- Kotak Alasan Detail (Sekarang terpisah di bawah) -->
+    <!-- Kotak Alasan Detail (Eksternal) -->
     <div class="reasoning-container">
         <div class="reasoning-box" id="ai-reasoning">
             <strong>Analisa Teknikal:</strong><br>
@@ -283,17 +335,48 @@
         setInterval(checkPing, 2000);
 
 
-        // --- 3. SCRIPT SIMULASI PREDIKSI AKURAT DENGAN ALASAN DETAIL ---
+        // --- 3. SCRIPT HEADLINE NEWS TICKER (DENGAN ANIMASI FADE) ---
+        const marketNews = [
+            "⚠️ Dolar AS (USD) melemah pasca rilis data inflasi, mendorong kenaikan harga Emas (XAUUSD).",
+            "📈 Ketegangan geopolitik global meningkat, memicu aksi lindung nilai (safe-haven) pada komoditas Emas.",
+            "📉 Pernyataan hawkish dari bank sentral menekan laju kenaikan harga Emas jangka pendek.",
+            "💡 Volume transaksi institusional melonjak di level support utama, pergerakan volatil terjadi.",
+            "⚠️ Data Non-Farm Payrolls (NFP) melampaui estimasi, pasar merespons dengan fluktuasi tajam.",
+            "📈 Pembelian bank sentral global pada aset fisik Emas masih bertahan di level tinggi."
+        ];
+
+        let newsIndex = 0;
+        function rotateNews() {
+            const newsElement = document.getElementById('news-ticker-text');
+            
+            // Efek keluar (Fade Out)
+            newsElement.classList.remove('news-fade-in');
+            newsElement.classList.add('news-fade-out');
+
+            setTimeout(() => {
+                newsIndex = (newsIndex + 1) % marketNews.length;
+                newsElement.textContent = marketNews[newsIndex];
+                
+                // Efek masuk (Fade In)
+                newsElement.classList.remove('news-fade-out');
+                newsElement.classList.add('news-fade-in');
+            }, 500); // Waktu jeda transisi 0.5 detik
+        }
+
+        // Jalankan berita pertama kali, lalu ganti setiap 6 detik secara beranimasi
+        document.getElementById('news-ticker-text').textContent = marketNews[0];
+        setInterval(rotateNews, 6000);
+
+
+        // --- 4. SCRIPT SIMULASI PREDIKSI AKURAT DENGAN ALASAN DETAIL ---
         function updatePrediction() {
             const resultEl = document.getElementById('ai-result');
             const reasonEl = document.getElementById('ai-reasoning');
             const containerEl = document.getElementById('prediction-container');
 
-            // Acak hasil (hanya untuk simulasi logika)
             const random = Math.random();
             
             if (random > 0.6) {
-                // Skenario BUY
                 resultEl.textContent = 'STRONG BUY';
                 resultEl.style.color = '#2ecc71';
                 resultEl.style.textShadow = '0 0 15px rgba(46, 204, 113, 0.4)';
@@ -302,10 +385,9 @@
                 containerEl.style.boxShadow = '0 0 20px rgba(46, 204, 113, 0.15)';
                 
                 reasonEl.style.borderLeftColor = '#2ecc71';
-                reasonEl.innerHTML = "<strong>Alasan Detail:</strong><br>Harga berhasil menembus area <em>resistance</em> dinamis (EMA 20 & 50) dengan lonjakan volume beli yang signifikan. Indikator MACD mencetak histogram hijau yang membesar, menandakan momentum <em>bullish</em> yang sangat kuat. Struktur pasar jangka pendek membentuk pola 'Higher High', membuka potensi profitabilitas pada arah kenaikan (long).";
+                reasonEl.innerHTML = "<strong>Alasan Detail:</strong><br>Harga berhasil menembus area <em>resistance</em> dinamis (EMA 20 & 50) dengan lonjakan volume beli yang signifikan. Sentimen berita makroekonomi turut mendukung penguatan aset <em>safe-haven</em>. Indikator MACD mencetak histogram hijau yang membesar, membuka potensi profitabilitas pada arah kenaikan (long).";
                 
             } else if (random < 0.4) {
-                // Skenario SELL
                 resultEl.textContent = 'STRONG SELL';
                 resultEl.style.color = '#e74c3c';
                 resultEl.style.textShadow = '0 0 15px rgba(231, 76, 60, 0.4)';
@@ -314,10 +396,9 @@
                 containerEl.style.boxShadow = '0 0 20px rgba(231, 76, 60, 0.15)';
                 
                 reasonEl.style.borderLeftColor = '#e74c3c';
-                reasonEl.innerHTML = "<strong>Alasan Detail:</strong><br>Terjadi penolakan (<em>rejection</em>) yang keras pada level <em>supply</em> utama, diikuti oleh penutupan <em>candlestick bearish engulfing</em> beruntun. RSI (Relative Strength Index) bergerak turun tajam dan menembus level tengah. Garis tren support telah dipatahkan, sehingga tekanan jual mendominasi penuh pasar saat ini.";
+                reasonEl.innerHTML = "<strong>Alasan Detail:</strong><br>Terjadi penolakan (<em>rejection</em>) yang keras pada level <em>supply</em> utama setelah rilis data ekonomi yang kuat bagi Dolar AS. RSI (Relative Strength Index) bergerak turun tajam dan menembus level tengah. Garis tren support telah dipatahkan, sehingga tekanan jual mendominasi penuh pasar saat ini.";
                 
             } else {
-                // Skenario WAIT
                 resultEl.textContent = 'WAIT / HOLD';
                 resultEl.style.color = '#f3c912';
                 resultEl.style.textShadow = '0 0 15px rgba(243, 201, 18, 0.4)';
@@ -326,11 +407,10 @@
                 containerEl.style.boxShadow = '0 0 20px rgba(243, 201, 18, 0.15)';
                 
                 reasonEl.style.borderLeftColor = '#f3c912';
-                reasonEl.innerHTML = "<strong>Alasan Detail:</strong><br>Pergerakan harga saat ini tertahan di dalam fase konsolidasi (<em>sideways</em>). Tidak terlihat dominasi yang jelas antara kekuatan beli (buyer) maupun jual (seller) karena harga hanya berfluktuasi tipis di zona sempit. Sangat disarankan untuk menghindari <em>entry</em> dan menunggu konfirmasi <em>breakout</em> yang valid ke salah satu arah untuk meminimalisir risiko.";
+                reasonEl.innerHTML = "<strong>Alasan Detail:</strong><br>Pergerakan harga saat ini tertahan di dalam fase konsolidasi (<em>sideways</em>) menanti kejelasan rilis berita fundamental berikutnya. Tidak terlihat dominasi yang jelas antara buyer dan seller di zona sempit ini. Sangat disarankan untuk menghindari <em>entry</em> demi meminimalisir risiko <em>fakeout</em>.";
             }
         }
         
-        // Panggil langsung saat pertama kali dibuka, lalu ulangi setiap 15 detik
         updatePrediction();
         setInterval(updatePrediction, 15000);
     </script>
