@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XAUUSD Prediksi Trading</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 40px 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .header h1 {
+            margin: 0;
+            color: #f3c912;
+            font-size: 2.5em;
+            letter-spacing: 2px;
+        }
+        .header p {
+            color: #aaaaaa;
+            font-size: 1.1em;
+        }
+        .dashboard {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        .card {
+            background-color: #1e1e1e;
+            border-radius: 12px;
+            padding: 25px 20px;
+            width: 160px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            border: 1px solid #333;
+        }
+        .timeframe {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #cccccc;
+        }
+        .signal {
+            font-size: 1.8em;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .buy {
+            background-color: rgba(46, 204, 113, 0.15);
+            color: #2ecc71;
+            border: 1px solid #2ecc71;
+            box-shadow: 0 0 10px rgba(46, 204, 113, 0.2);
+        }
+        .sell {
+            background-color: rgba(231, 76, 60, 0.15);
+            color: #e74c3c;
+            border: 1px solid #e74c3c;
+            box-shadow: 0 0 10px rgba(231, 76, 60, 0.2);
+        }
+        .loading {
+            background-color: rgba(149, 165, 166, 0.15);
+            color: #95a5a6;
+            border: 1px solid #95a5a6;
+            font-size: 1.2em;
+        }
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #777777;
+        }
+        .progress-container {
+            width: 100%;
+            max-width: 300px;
+            background-color: #333;
+            border-radius: 4px;
+            margin: 20px auto;
+            height: 6px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: #f3c912;
+            width: 0%;
+            transition: width 1s linear;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>XAUUSD MARKET</h1>
+        <p>Prediksi Analisa Teknikal Jangka Pendek</p>
+    </div>
+
+    <div class="dashboard" id="dashboard">
+        <!-- Kartu Timeframe akan di-generate oleh JavaScript -->
+    </div>
+
+    <div class="footer">
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        <div id="last-update">Mengambil data analisa...</div>
+    </div>
+
+    <script>
+        // Konfigurasi 5 Timeframe yang diminta
+        const timeframes = [
+            { id: '1m', label: '1 Menit' },
+            { id: '5m', label: '5 Menit' },
+            { id: '15m', label: '15 Menit' },
+            { id: '30m', label: '30 Menit' },
+            { id: '1h', label: '1 Jam' }
+        ];
+
+        let countdown = 60; // 60 detik (1 menit)
+
+        // Inisialisasi tampilan awal UI
+        function initDashboard() {
+            const dashboard = document.getElementById('dashboard');
+            timeframes.forEach(tf => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div class="timeframe">${tf.label}</div>
+                    <div class="signal loading" id="signal-${tf.id}">...</div>
+                `;
+                dashboard.appendChild(card);
+            });
+            
+            // Lakukan analisa pertama kali secara instan
+            updateAnalysis();
+            
+            // Set interval hitung mundur per 1 detik
+            setInterval(updateTimer, 1000);
+        }
+
+        // Fungsi ini bertindak sebagai placeholder untuk API teknikal riil
+        // Mengembalikan sinyal BUY atau SELL berdasarkan logika algoritma (simulasi)
+        function getTechnicalAnalysis(timeframeId) {
+            // Dalam implementasi nyata, di sini Anda melakukan:
+            // fetch('https://api.anda.com/xauusd?timeframe=' + timeframeId)
+            
+            // Simulasi pergerakan acak berdasarkan tren buatan
+            const randomValue = Math.random();
+            return randomValue > 0.5 ? 'BUY' : 'SELL';
+        }
+
+        // Fungsi untuk memperbarui seluruh sinyal di dashboard
+        function updateAnalysis() {
+            timeframes.forEach(tf => {
+                const signalElement = document.getElementById(`signal-${tf.id}`);
+                const prediction = getTechnicalAnalysis(tf.id);
+                
+                signalElement.textContent = prediction;
+                
+                // Ubah warna indikator
+                if (prediction === 'BUY') {
+                    signalElement.className = 'signal buy';
+                } else {
+                    signalElement.className = 'signal sell';
+                }
+            });
+
+            // Perbarui teks waktu terakhir update
+            const now = new Date();
+            document.getElementById('last-update').textContent = 'Terakhir diupdate: ' + now.toLocaleTimeString('id-ID') + ' WIB';
+            
+            // Reset timer kembali ke 60 detik
+            countdown = 60; 
+        }
+
+        // Fungsi untuk mengatur progress bar dan memicu update setiap 1 menit
+        function updateTimer() {
+            countdown--;
+            const progressBar = document.getElementById('progress-bar');
+            
+            // Hitung persentase progress (dari 60 ke 0)
+            const percentage = ((60 - countdown) / 60) * 100;
+            progressBar.style.width = percentage + '%';
+
+            if (countdown <= 0) {
+                updateAnalysis();
+            }
+        }
+
+        // Jalankan script setelah seluruh elemen halaman termuat
+        window.onload = initDashboard;
+    </script>
+</body>
+</html>
