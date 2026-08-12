@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #131722; /* Warna latar khas TradingView Dark Mode */
+            background-color: #131722; 
             color: #d1d4dc;
             margin: 0;
             padding: 20px;
@@ -20,19 +20,19 @@
         .header h1 {
             margin: 0;
             color: #f3c912;
-            font-size: 2.5em;
+            font-size: 2.2em;
             letter-spacing: 2px;
         }
         .header p {
             color: #8a93a6;
-            font-size: 1.1em;
+            font-size: 1em;
             margin-top: 5px;
         }
 
         /* Ticker Harga Realtime */
         .live-price-container {
-            max-width: 500px;
-            margin: 0 auto 40px auto;
+            max-width: 450px;
+            margin: 0 auto 30px auto;
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
@@ -44,15 +44,17 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 20px;
-            max-width: 1200px;
+            gap: 15px; /* Jarak antar kotak sedikit dirapatkan */
+            max-width: 1000px;
             margin: 0 auto;
         }
+        
+        /* Ukuran Kotak yang Diperkecil */
         .card {
             background-color: #1e222d;
             border-radius: 12px;
-            width: 280px;
-            height: 420px; /* Ukuran pas untuk widget teknikal */
+            width: 220px; /* Diperkecil dari 280px */
+            height: 380px; /* Diperkecil dari 420px */
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
             border: 1px solid #2a2e39;
             overflow: hidden;
@@ -68,23 +70,23 @@
             background-color: #2a2e39;
             color: #ffffff;
             text-align: center;
-            padding: 8px 0;
+            padding: 6px 0;
             font-weight: bold;
-            font-size: 1.1em;
+            font-size: 0.95em; /* Font disesuaikan */
             z-index: 10;
             border-bottom: 2px solid #f3c912;
         }
 
         /* Ruang agar widget tidak tertutup label */
         .widget-wrapper {
-            margin-top: 40px; 
-            height: calc(100% - 40px);
+            margin-top: 32px; 
+            height: calc(100% - 32px);
         }
 
         .footer {
             margin-top: 50px;
             text-align: center;
-            font-size: 0.9em;
+            font-size: 0.85em;
             color: #787b86;
         }
     </style>
