@@ -89,7 +89,7 @@
 
         /* Ticker Harga Realtime */
         .live-price-container {
-            max-width: 500px; /* Sedikit diperlebar agar seimbang dengan kotak bawah */
+            max-width: 500px; 
             margin: 0 auto 30px auto;
             border-radius: 12px;
             overflow: hidden;
@@ -97,10 +97,10 @@
             border: 1px solid #2a2e39;
         }
 
-        /* --- Kotak Prediksi Kesimpulan Detail --- */
+        /* --- Kotak Prediksi Utama (Glow) --- */
         .prediction-container {
             max-width: 500px;
-            margin: 0 auto 30px auto; 
+            margin: 0 auto 15px auto; /* Margin diperkecil karena box alasan ada di bawahnya */
             background: linear-gradient(145deg, #1e222d, #131722);
             border-radius: 12px;
             padding: 25px;
@@ -127,29 +127,8 @@
             font-weight: bold;
             color: #2ecc71;
             text-shadow: 0 0 15px rgba(46, 204, 113, 0.4);
-            margin: 10px 0 20px 0;
+            margin: 10px 0 0 0; /* Hapus margin bawah */
             transition: color 0.3s ease;
-        }
-
-        /* Kotak Alasan Detail */
-        .reasoning-box {
-            background: rgba(0, 0, 0, 0.25);
-            border-radius: 8px;
-            padding: 18px;
-            text-align: left;
-            font-size: 0.95em;
-            line-height: 1.6;
-            color: #d1d4dc;
-            border-left: 4px solid #2ecc71;
-            transition: all 0.3s ease;
-        }
-
-        .reasoning-box strong {
-            color: #ffffff;
-            font-size: 1.05em;
-            letter-spacing: 0.5px;
-            display: inline-block;
-            margin-bottom: 8px;
         }
 
         @keyframes pulseGlow {
@@ -161,38 +140,32 @@
             animation: pulseGlow 2.5s infinite;
         }
 
-        /* --- Tombol Download / Instal --- */
-        .download-container {
-            text-align: center;
-            margin-bottom: 30px;
+        /* --- Kotak Alasan Detail (Eksternal) --- */
+        .reasoning-container {
+            max-width: 500px;
+            margin: 0 auto 40px auto;
         }
-        .btn-download {
-            background: linear-gradient(145deg, #f3c912, #e67e22);
-            color: #121212;
-            border: none;
-            padding: 12px 25px;
-            font-size: 1.1em;
-            font-weight: bold;
-            border-radius: 25px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(243, 201, 18, 0.4);
+
+        .reasoning-box {
+            background-color: #1e222d;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: left;
+            font-size: 0.95em;
+            line-height: 1.6;
+            color: #d1d4dc;
+            border: 1px solid #2a2e39;
+            border-left: 5px solid #2ecc71; /* Garis warna dinamis */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
         }
-        .btn-download:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(243, 201, 18, 0.6);
-        }
-        .btn-download:active {
-            transform: translateY(1px);
-        }
-        .download-info {
-            display: block;
-            margin-top: 8px;
-            font-size: 0.8em;
-            color: #888;
+
+        .reasoning-box strong {
+            color: #ffffff;
+            font-size: 1.05em;
+            letter-spacing: 0.5px;
+            display: inline-block;
+            margin-bottom: 8px;
         }
 
         .footer {
@@ -243,20 +216,14 @@
     <div class="prediction-container animate-pulse" id="prediction-container">
         <div class="prediction-title">🔥 Analisa Jangka Pendek Saat Ini</div>
         <div id="ai-result" class="prediction-result">STRONG BUY</div>
-        
-        <!-- Alasan Detail -->
+    </div>
+
+    <!-- Kotak Alasan Detail (Sekarang terpisah di bawah) -->
+    <div class="reasoning-container">
         <div class="reasoning-box" id="ai-reasoning">
             <strong>Analisa Teknikal:</strong><br>
             Menunggu sinkronisasi data pasar...
         </div>
-    </div>
-
-    <!-- Tombol Download Aplikasi -->
-    <div class="download-container">
-        <button class="btn-download" onclick="downloadApp()">
-            <span>💾 Simpan Aplikasi ke Perangkat</span>
-        </button>
-        <span class="download-info">Klik untuk menyimpan file HTML. Buka file tersebut kapan saja di HP/PC Anda.</span>
     </div>
 
     <div class="footer">
@@ -366,24 +333,6 @@
         // Panggil langsung saat pertama kali dibuka, lalu ulangi setiap 15 detik
         updatePrediction();
         setInterval(updatePrediction, 15000);
-
-        // --- 4. SCRIPT DOWNLOAD FILE HTML ---
-        function downloadApp() {
-            const htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-            const blob = new Blob([htmlContent], { type: 'text/html' });
-            const url = URL.createObjectURL(blob);
-            
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'XAUUSD_Scalping_App.html'; 
-            
-            document.body.appendChild(a);
-            a.click(); 
-            document.body.removeChild(a); 
-            URL.revokeObjectURL(url);
-            
-            alert("File berhasil di-download! Silakan cari file 'XAUUSD_Scalping_App.html' di perangkat Anda, lalu klik untuk membukanya seperti aplikasi biasa.");
-        }
     </script>
 </body>
 </html>
