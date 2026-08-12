@@ -87,53 +87,78 @@
         .ping-poor .ping-dot { background-color: #e74c3c; box-shadow: 0 0 10px #e74c3c; }
 
 
-        /* --- Headline News Ticker (Diperbesar, Multi-baris agar tidak terpotong) --- */
+        /* --- Headline News Ticker (Box Fix, Karakter Berjalan / Marquee) --- */
         .news-ticker-container {
             max-width: 500px;
+            height: 95px; /* Tinggi box dibuat fix agar tidak berubah-ubah */
             margin: 0 auto 25px auto;
             background-color: #1e222d;
             border: 1px solid #2a2e39;
             border-left: 5px solid #f3c912;
             border-radius: 8px;
-            padding: 15px 18px;
+            padding: 12px 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            position: relative;
         }
         .news-header-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
+            font-size: 0.8em;
+            border-bottom: 1px solid #2a2e39;
+            padding-bottom: 5px;
         }
         .news-badge {
             background-color: rgba(243, 201, 18, 0.15);
             color: #f3c912;
-            font-size: 0.8em;
             font-weight: bold;
-            padding: 3px 8px;
+            padding: 2px 6px;
             border-radius: 4px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
-        .news-source {
-            font-size: 0.8em;
+        .news-meta-info {
             color: #8a93a6;
+            display: flex;
+            gap: 10px;
+        }
+        .news-source-link {
+            color: #4da6ff;
+            text-decoration: none;
             font-weight: 600;
         }
-        .news-content {
-            font-size: 1.05em; /* Ukuran font lebih besar */
+        .news-source-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Area Teks Berjalan (Marquee Effect) */
+        .news-scroll-wrapper {
+            overflow: hidden;
+            width: 100%;
+            white-space: nowrap;
+            position: relative;
+            margin-top: 5px;
+        }
+        .news-content-scroller {
+            display: inline-block;
+            font-size: 0.95em;
             color: #ffffff;
-            line-height: 1.5;
-            word-wrap: break-word; /* Mencegah kata terpotong aneh */
-            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+            /* Durasi animasi teks berjalan (20 detik per putaran) */
+            animation: tickerScroll 22s linear infinite; 
         }
-        .news-fade-out {
-            opacity: 0;
-            transform: translateY(-8px);
+        
+        /* Pause animasi saat kursor diarahkan ke box berita */
+        .news-ticker-container:hover .news-content-scroller {
+            animation-play-state: paused;
         }
-        .news-fade-in {
-            opacity: 1;
-            transform: translateY(0);
+
+        @keyframes tickerScroll {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
         }
 
 
@@ -246,13 +271,18 @@
         </div>
     </div>
 
-    <!-- --- Bagian Headline News Ticker (Diperbesar & Tanpa Terpotong) --- -->
+    <!-- --- Headline News Ticker (Box Fix, Teks Berjalan, Waktu, & Link Sumber) --- -->
     <div class="news-ticker-container">
         <div class="news-header-row">
-            <div class="news-badge">⚡ MARKET NEWS</div>
-            <div class="news-source" id="news-source-text">Sumber: Bloomberg</div>
+            <span class="news-badge">⚡ LIVE NEWS</span>
+            <div class="news-meta-info">
+                <span id="news-time">--:-- WIB</span>
+                <a href="#" id="news-link" class="news-source-link" target="_blank">Sumber: --</a>
+            </div>
         </div>
-        <div class="news-content news-fade-in" id="news-ticker-text">Memuat berita pasar terbaru...</div>
+        <div class="news-scroll-wrapper">
+            <div class="news-content-scroller" id="news-ticker-text">Memuat berita pasar terkini...</div>
+        </div>
     </div>
 
     <!-- Ticker Harga Real-time (TradingView) -->
@@ -342,56 +372,58 @@
         setInterval(checkPing, 2000);
 
 
-        // --- 3. SCRIPT HEADLINE NEWS TICKER (LENGKAP DENGAN SUMBER & TANPA TERPOTONG) ---
+        // --- 3. SCRIPT HEADLINE NEWS TICKER (BOX FIX & TEKS BERJALAN) ---
         const marketNews = [
             {
                 text: "Dolar AS (USD) melemah pasca rilis data inflasi, memicu lonjakan minat beli pada aset safe-haven Emas.",
-                source: "Sumber: Bloomberg"
+                time: "14:20 WIB",
+                source: "Bloomberg",
+                url: "https://www.bloomberg.com"
             },
             {
                 text: "Ketegangan geopolitik global yang kian meningkat mendorong volume transaksi institusional pada komoditas Emas.",
-                source: "Sumber: Reuters"
+                time: "14:05 WIB",
+                source: "Reuters",
+                url: "https://www.reuters.com"
             },
             {
                 text: "Pernyataan hawkish dari bank sentral menahan laju kenaikan harga jangka pendek, memicu volatilitas tinggi.",
-                source: "Sumber: Financial Times"
+                time: "13:45 WIB",
+                source: "Financial Times",
+                url: "https://www.ft.com"
             },
             {
                 text: "Data Non-Farm Payrolls (NFP) AS melampaui estimasi pasar, memberikan tekanan sesaat pada pergerakan XAUUSD.",
-                source: "Sumber: Dow Jones Newswires"
+                time: "13:30 WIB",
+                source: "Dow Jones",
+                url: "https://www.dowjones.com"
             },
             {
                 text: "Aksi borong bank sentral dunia pada cadangan emas fisik tercatat masih bertahan di level tertinggi tahun ini.",
-                source: "Sumber: Kitco News"
+                time: "13:10 WIB",
+                source: "Kitco News",
+                url: "https://www.kitco.com"
             }
         ];
 
         let newsIndex = 0;
-        function rotateNews() {
-            const newsTextElement = document.getElementById('news-ticker-text');
-            const newsSourceElement = document.getElementById('news-source-text');
+        function updateNewsTicker() {
+            const currentNews = marketNews[newsIndex];
             
-            // Efek keluar (Fade Out)
-            newsTextElement.classList.remove('news-fade-in');
-            newsTextElement.classList.add('news-fade-out');
+            document.getElementById('news-ticker-text').textContent = currentNews.text;
+            document.getElementById('news-time').textContent = currentNews.time;
+            
+            const linkEl = document.getElementById('news-link');
+            linkEl.textContent = `Sumber: ${currentNews.source}`;
+            linkEl.href = currentNews.url;
 
-            setTimeout(() => {
-                newsIndex = (newsIndex + 1) % marketNews.length;
-                
-                // Masukkan teks dan sumber baru
-                newsTextElement.textContent = marketNews[newsIndex].text;
-                newsSourceElement.textContent = marketNews[newsIndex].source;
-                
-                // Efek masuk (Fade In)
-                newsTextElement.classList.remove('news-fade-out');
-                newsTextElement.classList.add('news-fade-in');
-            }, 500); // Jeda transisi 0.5 detik
+            // Berpindah ke berita berikutnya setiap 22 detik (sesuai durasi teks berjalan)
+            newsIndex = (newsIndex + 1) % marketNews.length;
         }
 
-        // Tampilkan berita pertama kali secara utuh, lalu ganti otomatis setiap 7 detik
-        document.getElementById('news-ticker-text').textContent = marketNews[0].text;
-        document.getElementById('news-source-text').textContent = marketNews[0].source;
-        setInterval(rotateNews, 7000);
+        // Jalankan berita pertama kali, lalu ganti berkala
+        updateNewsTicker();
+        setInterval(updateNewsTicker, 22000);
 
 
         // --- 4. SCRIPT SIMULASI PREDIKSI AKURAT DENGAN ALASAN DETAIL ---
