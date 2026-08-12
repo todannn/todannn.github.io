@@ -10,8 +10,33 @@
             background-color: #121212;
             color: #ffffff;
             margin: 0;
-            padding: 40px 20px;
+            padding: 20px;
         }
+        
+        /* Status Koneksi */
+        .network-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .network-status {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .online {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+            border: 1px solid #2ecc71;
+        }
+        .offline {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+            border: 1px solid #e74c3c;
+        }
+
         .header {
             text-align: center;
             margin-bottom: 40px;
@@ -25,7 +50,9 @@
         .header p {
             color: #aaaaaa;
             font-size: 1.1em;
+            margin-top: 5px;
         }
+        
         .dashboard {
             display: flex;
             flex-wrap: wrap;
@@ -35,8 +62,8 @@
         .card {
             background-color: #1e1e1e;
             border-radius: 12px;
-            padding: 25px 20px;
-            width: 170px;
+            padding: 20px;
+            width: 200px; /* Diperlebar sedikit untuk teks detail */
             text-align: center;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
             border: 1px solid #333;
@@ -46,8 +73,15 @@
         .timeframe {
             font-size: 1.2em;
             font-weight: 600;
-            margin-bottom: 15px;
+            margin-bottom: 5px;
             color: #cccccc;
+        }
+        .analysis-detail {
+            font-size: 0.75em;
+            color: #888888;
+            margin-bottom: 15px;
+            line-height: 1.3;
+            height: 30px; /* Menjaga tinggi agar sejajar */
         }
         .signal {
             font-size: 1.8em;
@@ -76,7 +110,7 @@
             font-size: 1.2em;
         }
         
-        /* Styling untuk progress bar per card */
+        /* Styling Progress Bar */
         .card-progress-container {
             width: 100%;
             background-color: #333;
@@ -94,7 +128,7 @@
         }
         .countdown-text {
             font-size: 0.85em;
-            color: #888;
+            color: #aaaaaa;
         }
         
         .footer {
@@ -107,27 +141,68 @@
 </head>
 <body>
 
+    <!-- Indikator Koneksi Internet -->
+    <div class="network-container">
+        <div id="network-status" class="network-status online">Memeriksa koneksi...</div>
+    </div>
+
     <div class="header">
         <h1>XAUUSD MARKET</h1>
         <p>Prediksi Analisa Teknikal Jangka Pendek</p>
     </div>
 
     <div class="dashboard" id="dashboard">
-        <!-- Kartu Timeframe akan di-generate oleh JavaScript -->
+        <!-- Kartu Timeframe akan di-generate di sini -->
     </div>
 
     <div class="footer">
-        <p>Sinyal akan diperbarui secara otomatis sesuai jadwal masing-masing timeframe.</p>
+        <p>Sinyal disimulasikan secara lokal. Sinyal akan berhenti memperbarui jika koneksi offline.</p>
     </div>
 
     <script>
-        // Konfigurasi Timeframe dengan interval masing-masing (dalam hitungan detik)
+        // Deteksi Status Koneksi Internet Real-time
+        const networkStatus = document.getElementById('network-status');
+
+        function updateOnlineStatus() {
+            if (navigator.onLine) {
+                networkStatus.textContent = '🟢 Online (Koneksi Stabil)';
+                networkStatus.className = 'network-status online';
+            } else {
+                networkStatus.textContent = '🔴 Offline (Koneksi Terputus)';
+                networkStatus.className = 'network-status offline';
+            }
+        }
+
+        // Listener untuk memantau perubahan jaringan secara otomatis
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+        
+        // Panggil saat pertama kali dimuat
+        updateOnlineStatus();
+
+
+        // Konfigurasi Timeframe dengan Interval (detik) dan Detail Analisa
         const timeframes = [
-            { id: '1m', label: '1 Menit', interval: 10, currentTimer: 10 },        // Update per 10 detik
-            { id: '5m', label: '5 Menit', interval: 60, currentTimer: 60 },        // Update per 1 menit
-            { id: '15m', label: '15 Menit', interval: 120, currentTimer: 120 },    // Update per 2 menit
-            { id: '30m', label: '30 Menit', interval: 180, currentTimer: 180 },    // Update per 3 menit
-            { id: '1h', label: '1 Jam', interval: 300, currentTimer: 300 }         // Update per 5 menit
+            { 
+                id: '1m', label: '1 Menit', interval: 10, currentTimer: 10, 
+                detail: 'Scalping: Stochastic (5,3,3) & EMA (9)' 
+            },
+            { 
+                id: '5m', label: '5 Menit', interval: 60, currentTimer: 60, 
+                detail: 'Momentum: RSI (14) & MACD Crossover' 
+            },
+            { 
+                id: '15m', label: '15 Menit', interval: 120, currentTimer: 120, 
+                detail: 'Intraday Trend: Bollinger Bands & EMA (21)' 
+            },
+            { 
+                id: '30m', label: '30 Menit', interval: 180, currentTimer: 180, 
+                detail: 'Volume & Trend: VWAP & Parabolic SAR' 
+            },
+            { 
+                id: '1h', label: '1 Jam', interval: 300, currentTimer: 300, 
+                detail: 'Swing: Ichimoku Cloud & SMA (50, 200)' 
+            }
         ];
 
         // Format waktu agar lebih mudah dibaca (contoh: 1m 30s)
@@ -149,6 +224,7 @@
                 card.className = 'card';
                 card.innerHTML = `
                     <div class="timeframe">${tf.label}</div>
+                    <div class="analysis-detail">${tf.detail}</div>
                     <div class="signal loading" id="signal-${tf.id}">...</div>
                     <div class="card-progress-container">
                         <div class="card-progress-bar" id="progress-${tf.id}"></div>
@@ -157,29 +233,35 @@
                 `;
                 dashboard.appendChild(card);
                 
-                // Panggil analisa pertama kali secara instan saat web dibuka
+                // Analisa awal saat web dibuka
                 updateSignal(tf);
             });
             
-            // Set interval master per 1 detik untuk menjalankan semua timer
+            // Interval berjalan setiap 1 detik
             setInterval(processTimers, 1000);
         }
 
-        // Fungsi Simulasi / Placeholder untuk mendapatkan sinyal BUY atau SELL
+        // Fungsi Simulasi / Placeholder sinyal BUY/SELL
         function getTechnicalAnalysis(timeframeId) {
-            // Simulasi pergerakan acak
             const randomValue = Math.random();
             return randomValue > 0.5 ? 'BUY' : 'SELL';
         }
 
-        // Memperbarui sinyal hanya untuk timeframe tertentu
+        // Memperbarui sinyal
         function updateSignal(tf) {
             const signalElement = document.getElementById(`signal-${tf.id}`);
-            const prediction = getTechnicalAnalysis(tf.id);
             
+            // Jika status sedang offline, jangan perbarui sinyal
+            if (!navigator.onLine) {
+                signalElement.textContent = 'OFFLINE';
+                signalElement.className = 'signal loading';
+                return;
+            }
+
+            const prediction = getTechnicalAnalysis(tf.id);
             signalElement.textContent = prediction;
             
-            // Animasi transisi warna
+            // Transisi warna indikator
             if (prediction === 'BUY') {
                 signalElement.className = 'signal buy';
             } else {
@@ -187,12 +269,14 @@
             }
         }
 
-        // Loop utama yang berjalan setiap detik
+        // Proses timer mundur
         function processTimers() {
+            // Hentikan proses hitung mundur jika offline
+            if (!navigator.onLine) return; 
+
             timeframes.forEach(tf => {
                 tf.currentTimer--;
                 
-                // Ambil elemen HTML
                 const progressBar = document.getElementById(`progress-${tf.id}`);
                 const countdownText = document.getElementById(`countdown-${tf.id}`);
                 
@@ -203,15 +287,14 @@
                 const percentage = (tf.currentTimer / tf.interval) * 100;
                 progressBar.style.width = percentage + '%';
 
-                // Jika timer habis, update sinyal lalu reset timer
+                // Jika timer habis
                 if (tf.currentTimer <= 0) {
                     updateSignal(tf);
-                    tf.currentTimer = tf.interval; // Reset kembali ke interval awal
+                    tf.currentTimer = tf.interval; // Reset interval
                 }
             });
         }
 
-        // Jalankan script setelah seluruh elemen halaman termuat
         window.onload = initDashboard;
     </script>
 </body>
