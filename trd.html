@@ -287,26 +287,23 @@
 
 
         // --- 3. LOGIKA DASHBOARD TIMEFRAME ---
+        // Semua interval sekarang diatur menjadi 10 detik, dan 1 Jam telah dihapus
         const timeframes = [
             { 
                 id: '1m', label: '1 Menit', interval: 10, currentTimer: 10, 
                 detail: 'Scalping: Stochastic & EMA' 
             },
             { 
-                id: '5m', label: '5 Menit', interval: 60, currentTimer: 60, 
+                id: '5m', label: '5 Menit', interval: 10, currentTimer: 10, 
                 detail: 'Momentum: RSI (14) & MACD' 
             },
             { 
-                id: '15m', label: '15 Menit', interval: 120, currentTimer: 120, 
+                id: '15m', label: '15 Menit', interval: 10, currentTimer: 10, 
                 detail: 'Trend: Bollinger Bands & EMA' 
             },
             { 
-                id: '30m', label: '30 Menit', interval: 180, currentTimer: 180, 
+                id: '30m', label: '30 Menit', interval: 10, currentTimer: 10, 
                 detail: 'Volume: VWAP & Parabolic SAR' 
-            },
-            { 
-                id: '1h', label: '1 Jam', interval: 300, currentTimer: 300, 
-                detail: 'Swing: Ichimoku & SMA(50)' 
             }
         ];
 
@@ -351,12 +348,10 @@
             setInterval(processTimers, 1000);
         }
 
-        // Generate nilai persentase secara acak namun realistis (antara 10% - 90%)
         function getTechnicalAnalysis(timeframeId) {
-            const buyStrength = Math.floor(Math.random() * 81) + 10; // Angka acak 10 - 90
+            const buyStrength = Math.floor(Math.random() * 81) + 10; 
             const sellStrength = 100 - buyStrength;
             
-            // Sinyal ditentukan dari persentase mana yang lebih besar dari 50%
             const signal = buyStrength > 50 ? 'BUY' : 'SELL';
             
             return { signal, buyStrength, sellStrength };
@@ -379,10 +374,8 @@
 
             const analysis = getTechnicalAnalysis(tf.id);
             
-            // Update teks Sinyal
             signalElement.textContent = analysis.signal;
             
-            // Update Angka Persentase & Lebar Bar
             buyPctEl.textContent = analysis.buyStrength;
             sellPctEl.textContent = analysis.sellStrength;
             strengthBar.style.width = analysis.buyStrength + '%';
@@ -392,6 +385,33 @@
             } else {
                 signalElement.className = 'signal sell';
             }
+        }
+
+        function processTimers() {
+            if (!navigator.onLine) return; 
+
+            timeframes.forEach(tf => {
+                tf.currentTimer--;
+                
+                const progressBar = document.getElementById(`progress-${tf.id}`);
+                const countdownText = document.getElementById(`countdown-${tf.id}`);
+                
+                countdownText.textContent = `Update: ${formatTime(tf.currentTimer)}`;
+                
+                const percentage = (tf.currentTimer / tf.interval) * 100;
+                progressBar.style.width = percentage + '%';
+
+                if (tf.currentTimer <= 0) {
+                    updateSignal(tf);
+                    tf.currentTimer = tf.interval; 
+                }
+            });
+        }
+
+        window.onload = initDashboard;
+    </script>
+</body>
+</html>            }
         }
 
         function processTimers() {
