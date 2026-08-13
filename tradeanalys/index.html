@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="refresh" content="60">
-    <title>XAU/USD 1-Minute Pattern Detector - Live</title>
+    <title>XAU/USD 1-Minute Pattern Detector - Live + Alert</title>
     <style>
         :root {
             --bg: #0a0e1a;
@@ -15,48 +15,71 @@
             --bearish: #ef4444;
             --accent: #f59e0b;
             --border: #1e293b;
-            --hover: #1e293b;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-        }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
         .container { max-width: 1440px; margin: 0 auto; padding: 20px; }
 
-        header {
-            text-align: center;
-            padding: 25px 20px;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 25px;
-            position: relative;
-        }
-        header h1 { 
-            font-size: 2rem; margin-bottom: 6px; 
-            background: linear-gradient(90deg, #fbbf24, #f59e0b, #fbbf24);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: shine 3s linear infinite;
-        }
-        @keyframes shine { to { background-position: 200% center; } }
+        header { text-align: center; padding: 25px 20px; border-bottom: 1px solid var(--border); margin-bottom: 25px; position: relative; }
+        header h1 { font-size: 2rem; margin-bottom: 6px; background: linear-gradient(90deg, #fbbf24, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         header p { color: var(--muted); font-size: 0.95rem; }
 
-        .live-badge {
-            display: inline-flex; align-items: center; gap: 6px;
-            background: rgba(16,185,129,0.12); color: var(--bullish);
-            padding: 5px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 700;
-            border: 1px solid rgba(16,185,129,0.25); margin-bottom: 10px;
-            text-transform: uppercase; letter-spacing: 1px;
-        }
-        .live-dot {
-            width: 8px; height: 8px; background: var(--bullish);
-            border-radius: 50%; animation: pulse 1.5s infinite;
-            box-shadow: 0 0 8px var(--bullish);
-        }
+        .live-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(16,185,129,0.12); color: var(--bullish); padding: 5px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; border: 1px solid rgba(16,185,129,0.25); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .live-dot { width: 8px; height: 8px; background: var(--bullish); border-radius: 50%; animation: pulse 1.5s infinite; box-shadow: 0 0 8px var(--bullish); }
         @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.8)} }
+
+        .sound-toggle {
+            position: fixed; top: 20px; right: 20px; z-index: 1000;
+            display: flex; align-items: center; gap: 8px;
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 10px; padding: 10px 16px; cursor: pointer;
+            transition: all 0.3s; user-select: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+        .sound-toggle:hover { border-color: var(--accent); transform: scale(1.05); }
+        .sound-toggle.active { border-color: var(--bullish); background: rgba(16,185,129,0.1); }
+        .sound-toggle.muted { border-color: var(--muted); opacity: 0.6; }
+        .sound-icon { font-size: 1.3rem; }
+        .sound-label { font-size: 0.8rem; font-weight: 600; }
+        .sound-status { font-size: 0.7rem; color: var(--muted); }
+
+        .toast-container {
+            position: fixed; top: 80px; right: 20px; z-index: 999;
+            display: flex; flex-direction: column; gap: 10px;
+            max-width: 380px;
+        }
+        .toast {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 12px; padding: 16px 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+            animation: slideIn 0.4s ease, glow 2s infinite;
+            display: flex; align-items: flex-start; gap: 12px;
+            position: relative; overflow: hidden;
+        }
+        .toast::before {
+            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+            background: var(--accent);
+        }
+        .toast.bullish::before { background: var(--bullish); }
+        .toast.bearish::before { background: var(--bearish); }
+        .toast-icon { font-size: 1.5rem; flex-shrink: 0; }
+        .toast-content { flex: 1; }
+        .toast-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
+        .toast-msg { color: var(--muted); font-size: 0.85rem; }
+        .toast-time { color: var(--muted); font-size: 0.75rem; margin-top: 6px; font-family: monospace; }
+        .toast-close {
+            background: none; border: none; color: var(--muted); cursor: pointer;
+            font-size: 1.2rem; padding: 0; line-height: 1; transition: color 0.2s;
+        }
+        .toast-close:hover { color: var(--text); }
+        @keyframes slideIn {
+            from { transform: translateX(120%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 8px 30px rgba(0,0,0,0.5); }
+            50% { box-shadow: 0 8px 30px rgba(245,158,11,0.15); }
+        }
 
         .refresh-bar {
             display: flex; align-items: center; justify-content: center;
@@ -70,16 +93,9 @@
             background: rgba(245,158,11,0.1); padding: 4px 12px;
             border-radius: 6px; border: 1px solid rgba(245,158,11,0.2);
         }
-        .refresh-bar .last-update { color: var(--muted); }
-        .refresh-bar .updating {
-            display: none; color: var(--accent); font-weight: 600;
-            animation: blink 0.8s infinite;
-        }
-        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
         .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 12px; margin-bottom: 25px;
         }
         .stat-card {
@@ -87,35 +103,21 @@
             border-radius: 12px; padding: 18px; text-align: center;
             transition: all 0.25s ease; position: relative; overflow: hidden;
         }
-        .stat-card::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-            background: linear-gradient(90deg, var(--accent), transparent);
-            opacity: 0; transition: opacity 0.3s;
-        }
         .stat-card:hover { transform: translateY(-3px); border-color: #334155; }
-        .stat-card:hover::before { opacity: 1; }
         .stat-label { color: var(--muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.2px; }
         .stat-value { font-size: 1.5rem; font-weight: 800; margin-top: 4px; }
         .stat-change { font-size: 0.85rem; margin-top: 3px; font-weight: 600; }
         .up { color: var(--bullish); } .down { color: var(--bearish); }
 
         .section { margin-bottom: 25px; }
-        .section-title {
-            font-size: 1.15rem; font-weight: 700; margin-bottom: 12px;
-            display: flex; align-items: center; gap: 10px; color: var(--text);
-        }
-        .section-title::before {
-            content: ''; width: 4px; height: 22px;
-            background: linear-gradient(180deg, var(--accent), #fbbf24);
-            border-radius: 2px;
-        }
+        .section-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; color: var(--text); }
+        .section-title::before { content: ''; width: 4px; height: 22px; background: linear-gradient(180deg, var(--accent), #fbbf24); border-radius: 2px; }
 
         .tv-widget {
             background: var(--card); border: 1px solid var(--border);
             border-radius: 12px; overflow: hidden; height: 520px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
-
         .chart-container {
             background: var(--card); border: 1px solid var(--border);
             border-radius: 12px; padding: 12px; overflow: hidden;
@@ -135,9 +137,18 @@
             text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.8px;
             border-bottom: 1px solid var(--border);
         }
-        .pattern-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); }
-        .pattern-table tr { transition: background 0.2s; }
+        .pattern-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); transition: all 0.3s; }
+        .pattern-table tr { transition: all 0.3s; }
         .pattern-table tr:hover { background: rgba(255,255,255,0.04); }
+        .pattern-table tr.new-pattern { 
+            background: linear-gradient(90deg, rgba(245,158,11,0.1), rgba(245,158,11,0.02)) !important;
+            animation: highlightNew 3s ease forwards;
+        }
+        .pattern-table tr.new-pattern td { border-bottom-color: rgba(245,158,11,0.3); }
+        @keyframes highlightNew {
+            0% { background: linear-gradient(90deg, rgba(245,158,11,0.2), rgba(245,158,11,0.05)); }
+            100% { background: transparent; }
+        }
         .pattern-table tr:last-child td { border-bottom: none; }
         .num { color: var(--muted); font-weight: 700; width: 40px; font-size: 0.9rem; }
         .pattern-name { font-weight: 700; font-size: 0.92rem; }
@@ -157,49 +168,65 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
         .guide-box p { margin-bottom: 10px; color: var(--muted); font-size: 0.9rem; line-height: 1.7; }
-        .guide-box p:last-child { margin-bottom: 0; }
         .guide-box strong { color: var(--accent); }
 
-        .footer {
-            text-align: center; padding: 25px; color: var(--muted);
-            border-top: 1px solid var(--border); margin-top: 15px;
-            font-size: 0.8rem;
+        .alert-log {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 12px; padding: 16px; max-height: 200px; overflow-y: auto;
+            font-family: 'Courier New', monospace; font-size: 0.8rem;
         }
-        .footer p { margin-bottom: 6px; }
+        .alert-log-item {
+            padding: 6px 0; border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .alert-log-item:last-child { border-bottom: none; }
+        .alert-log-time { color: var(--muted); font-size: 0.75rem; }
+        .alert-log-msg { color: var(--text); }
+        .alert-log-msg.bullish { color: var(--bullish); }
+        .alert-log-msg.bearish { color: var(--bearish); }
+
+        .footer { text-align: center; padding: 25px; color: var(--muted); border-top: 1px solid var(--border); margin-top: 15px; font-size: 0.8rem; }
 
         @media (max-width: 768px) {
             header h1 { font-size: 1.4rem; }
             .tv-widget { height: 380px; }
-            .pattern-table { font-size: 0.8rem; }
-            .pattern-table th, .pattern-table td { padding: 10px 8px; }
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .refresh-bar { flex-direction: column; gap: 8px; }
+            .sound-toggle { top: 10px; right: 10px; padding: 8px 12px; }
+            .toast-container { right: 10px; max-width: calc(100vw - 20px); }
         }
     </style>
 <base target="_blank">
 </head>
 <body>
+    <div class="sound-toggle active" id="soundToggle" onclick="toggleSound()">
+        <span class="sound-icon" id="soundIcon">🔊</span>
+        <div>
+            <div class="sound-label" id="soundLabel">Alert ON</div>
+            <div class="sound-status" id="soundStatus">Suara aktif</div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
     <div class="container">
         <header>
             <div class="live-badge"><span class="live-dot"></span> Live 1-Minute</div>
             <h1>🥇 XAU/USD Pattern Detector</h1>
-            <p>Real-Time 1-Minute Pattern Analysis for Gold | Auto-Refresh Every 60s</p>
+            <p>Real-Time 1-Minute Pattern Analysis + Sound Alert | Auto-Refresh 60s</p>
         </header>
 
         <div class="refresh-bar">
-            <span>⏱️ Next refresh in:</span>
+            <span>⏱️ Next refresh:</span>
             <span class="timer" id="countdown">60</span>
-            <span class="last-update">🕐 Last update: 2026-08-13 02:18 UTC UTC</span>
-            <span class="updating" id="updating">🔄 Updating...</span>
+            <span>🕐 Last: 2026-08-13 02:18 UTC UTC</span>
+            <span id="alertCount" style="color:var(--accent);font-weight:700;"></span>
         </div>
 
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-label">Harga Live</div>
                 <div class="stat-value">$4,469.60</div>
-                <div class="stat-change down">
-                    -0.40 (-0.009%)
-                </div>
+                <div class="stat-change down">-0.40 (-0.009%)</div>
             </div>
             <div class="stat-card">
                 <div class="stat-label">High 5D</div>
@@ -211,18 +238,14 @@
             </div>
             <div class="stat-card">
                 <div class="stat-label">Pattern Aktif</div>
-                <div class="stat-value">9</div>
+                <div class="stat-value" id="patternCount">9</div>
             </div>
         </div>
 
         <div class="section">
             <div class="section-title">📊 TradingView Chart - 1 Minute</div>
             <div class="tv-widget">
-                <iframe id="tv-chart" 
-                    src="https://www.tradingview.com/widgetembed/?frameElementId=tradingview_chart&symbol=OANDA%3AXAUUSD&interval=1&hidesidetoolbar=0&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=%5B%5D&theme=dark&style=1&timezone=Asia%2FJakarta&studies_overrides=%7B%7D&overrides=%7B%7D&enabled_features=%5B%5D&disabled_features=%5B%5D&locale=id&utm_source=localhost&utm_medium=widget&utm_campaign=chart&utm_term=OANDA%3AXAUUSD"
-                    style="width:100%;height:100%;border:none;" 
-                    allowtransparency="true" scrolling="no" allowfullscreen="true">
-                </iframe>
+                <iframe id="tv-chart" src="https://www.tradingview.com/widgetembed/?frameElementId=tradingview_chart&symbol=OANDA%3AXAUUSD&interval=1&hidesidetoolbar=0&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=%5B%5D&theme=dark&style=1&timezone=Asia%2FJakarta&studies_overrides=%7B%7D&overrides=%7B%7D&enabled_features=%5B%5D&disabled_features=%5B%5D&locale=id&utm_source=localhost&utm_medium=widget&utm_campaign=chart&utm_term=OANDA%3AXAUUSD" style="width:100%;height:100%;border:none;" allowtransparency="true" scrolling="no" allowfullscreen="true"></iframe>
             </div>
         </div>
 
@@ -235,19 +258,13 @@
 
         <div class="section">
             <div class="section-title">📋 Hasil Deteksi Pola (Real-Time)</div>
-            <table class="pattern-table">
+            <table class="pattern-table" id="patternTable">
                 <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Pola</th>
-                        <th>Sinyal</th>
-                        <th>Waktu</th>
-                        <th>Detail</th>
-                    </tr>
+                    <tr><th>#</th><th>Pola</th><th>Sinyal</th><th>Waktu</th><th>Detail</th></tr>
                 </thead>
                 <tbody>
                     
-        <tr>
+        <tr data-pid="Double_Top_4461_4455">
             <td class="num">1</td>
             <td class="pattern-name">📉 Double Top</td>
             <td><span class="badge bearish">Bearish Reversal</span></td>
@@ -255,7 +272,7 @@
             <td><span class='target-tag'>Neckline: 4461.90 | Target: 4455.80</span></td>
         </tr>
     
-        <tr>
+        <tr data-pid="Double_Bottom_4468_4473">
             <td class="num">2</td>
             <td class="pattern-name">📈 Double Bottom</td>
             <td><span class="badge bullish">Bullish Reversal</span></td>
@@ -263,7 +280,7 @@
             <td><span class='target-tag'>Neckline: 4468.00 | Target: 4473.70</span></td>
         </tr>
     
-        <tr>
+        <tr data-pid="Head_&_Shoulders_4465_4459">
             <td class="num">3</td>
             <td class="pattern-name">📉 Head & Shoulders</td>
             <td><span class="badge bearish">Bearish Reversal</span></td>
@@ -271,7 +288,7 @@
             <td><span class='target-tag'>Neckline: 4465.80 | Target: 4459.90</span></td>
         </tr>
     
-        <tr>
+        <tr data-pid="Inverse_Head_&_Shoulders_4469_4476">
             <td class="num">4</td>
             <td class="pattern-name">📈 Inverse Head & Shoulders</td>
             <td><span class="badge bullish">Bullish Reversal</span></td>
@@ -279,7 +296,7 @@
             <td><span class='target-tag'>Neckline: 4469.00 | Target: 4476.10</span></td>
         </tr>
     
-        <tr>
+        <tr data-pid="Hammer_202608130152_4468">
             <td class="num">5</td>
             <td class="pattern-name">📈 Hammer</td>
             <td><span class="badge bullish">Bullish Reversal</span></td>
@@ -287,7 +304,7 @@
             <td><span class='price-tag'>$4468.10</span></td>
         </tr>
     
-        <tr>
+        <tr data-pid="Morning_Star_202608130153_4473">
             <td class="num">6</td>
             <td class="pattern-name">📈 Morning Star</td>
             <td><span class="badge bullish">Bullish Reversal</span></td>
@@ -295,7 +312,7 @@
             <td><span class='price-tag'>$4473.40</span></td>
         </tr>
     
-        <tr>
+        <tr data-pid="Hammer_202608130158_4464">
             <td class="num">7</td>
             <td class="pattern-name">📈 Hammer</td>
             <td><span class="badge bullish">Bullish Reversal</span></td>
@@ -303,7 +320,7 @@
             <td><span class='price-tag'>$4464.70</span></td>
         </tr>
     
-        <tr>
+        <tr data-pid="Evening_Star_202608130159_4467">
             <td class="num">8</td>
             <td class="pattern-name">📉 Evening Star</td>
             <td><span class="badge bearish">Bearish Reversal</span></td>
@@ -311,7 +328,7 @@
             <td><span class='price-tag'>$4467.00</span></td>
         </tr>
     
-        <tr>
+        <tr data-pid="Shooting_Star_202608130211_4472">
             <td class="num">9</td>
             <td class="pattern-name">📉 Shooting Star</td>
             <td><span class="badge bearish">Bearish Reversal</span></td>
@@ -324,53 +341,256 @@
         </div>
 
         <div class="section">
+            <div class="section-title">🔔 Alert Log</div>
+            <div class="alert-log" id="alertLog">
+                <div class="alert-log-item" style="color:var(--muted);">
+                    <span>⏳</span> Menunggu pola baru...
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
             <div class="section-title">⚡ Panduan Trading</div>
             <div class="guide-box">
                 <p><strong>Double Top:</strong> Dua puncak di level sama + neckline break = entry SELL. Target = jarak peak ke neckline, diukur dari titik break.</p>
                 <p><strong>Double Bottom:</strong> Dua lembah di level sama + neckline break = entry BUY. Target = jarak valley ke neckline, diukur dari titik break.</p>
-                <p><strong>Head & Shoulders:</strong> Bahu kiri + kepala (lebih tinggi) + bahu kanan. Break neckline = SELL. Konfirmasi volume sangat penting.</p>
-                <p><strong>Candlestick:</strong> Hammer (rejection bawah, bullish), Shooting Star (rejection atas, bearish), Morning/Evening Star (3-candle reversal pattern).</p>
+                <p><strong>Head & Shoulders:</strong> Bahu kiri + kepala (lebih tinggi) + bahu kanan. Break neckline = SELL. Volume konfirmasi penting.</p>
+                <p><strong>Candlestick:</strong> Hammer (rejection bawah, bullish), Shooting Star (rejection atas, bearish), Morning/Evening Star (3-candle reversal).</p>
             </div>
         </div>
 
         <div class="footer">
-            <p>⚠️ Disclaimer: Analisis ini hanya untuk edukasi. Trading melibatkan risiko finansial. Selalu gunakan stop loss dan risk management.</p>
-            <p>Generated by Pattern Detector v1.0 | Data: Yahoo Finance 1-Minute | Auto-Refresh: 60s | Last Update: 2026-08-13 02:18 UTC UTC</p>
+            <p>⚠️ Disclaimer: Analisis ini hanya untuk edukasi. Trading melibatkan risiko finansial. Selalu gunakan stop loss.</p>
+            <p>Generated by Pattern Detector v1.0 | Data: Yahoo Finance 1-Minute | Auto-Refresh: 60s | Last: 2026-08-13 02:18 UTC UTC</p>
         </div>
     </div>
 
     <script>
-        // Countdown timer for auto-refresh
-        let seconds = 60;
-        const countdownEl = document.getElementById('countdown');
-        const updatingEl = document.getElementById('updating');
+        // ============================================
+        // SOUND ALERT SYSTEM
+        // ============================================
 
+        let soundEnabled = true;
+        let audioCtx = null;
+
+        // Current pattern IDs from server
+        const currentPatternIds = ["Double_Top_4461_4455","Double_Bottom_4468_4473","Head_&_Shoulders_4465_4459","Inverse_Head_&_Shoulders_4469_4476","Hammer_202608130152_4468","Morning_Star_202608130153_4473","Hammer_202608130158_4464","Evening_Star_202608130159_4467","Shooting_Star_202608130211_4472"];
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playAlertSound(type) {
+            if (!soundEnabled || !audioCtx) return;
+
+            const now = audioCtx.currentTime;
+            const isChartPattern = type.includes('Double') || type.includes('Head');
+            const baseFreq = type.includes('Bullish') ? 880 : 440;
+            const freq2 = type.includes('Bullish') ? 1100 : 330;
+
+            // Oscillator 1
+            const osc1 = audioCtx.createOscillator();
+            const gain1 = audioCtx.createGain();
+            osc1.connect(gain1);
+            gain1.connect(audioCtx.destination);
+
+            osc1.type = isChartPattern ? 'sawtooth' : 'sine';
+            osc1.frequency.setValueAtTime(baseFreq, now);
+            osc1.frequency.exponentialRampToValueAtTime(freq2, now + 0.3);
+
+            gain1.gain.setValueAtTime(0.3, now);
+            gain1.gain.exponentialRampToValueAtTime(0.01, now + (isChartPattern ? 0.8 : 0.4));
+
+            osc1.start(now);
+            osc1.stop(now + (isChartPattern ? 0.8 : 0.4));
+
+            // Oscillator 2 (harmony for chart patterns)
+            if (isChartPattern) {
+                const osc2 = audioCtx.createOscillator();
+                const gain2 = audioCtx.createGain();
+                osc2.connect(gain2);
+                gain2.connect(audioCtx.destination);
+
+                osc2.type = 'sine';
+                osc2.frequency.setValueAtTime(baseFreq * 1.5, now + 0.1);
+                osc2.frequency.exponentialRampToValueAtTime(baseFreq * 1.2, now + 0.6);
+
+                gain2.gain.setValueAtTime(0, now);
+                gain2.gain.linearRampToValueAtTime(0.2, now + 0.15);
+                gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.7);
+
+                osc2.start(now + 0.1);
+                osc2.stop(now + 0.7);
+            }
+        }
+
+        function toggleSound() {
+            initAudio();
+            soundEnabled = !soundEnabled;
+            const toggle = document.getElementById('soundToggle');
+            const icon = document.getElementById('soundIcon');
+            const label = document.getElementById('soundLabel');
+            const status = document.getElementById('soundStatus');
+
+            if (soundEnabled) {
+                toggle.classList.add('active');
+                toggle.classList.remove('muted');
+                icon.textContent = '🔊';
+                label.textContent = 'Alert ON';
+                status.textContent = 'Suara aktif';
+                localStorage.setItem('patternSoundEnabled', 'true');
+            } else {
+                toggle.classList.remove('active');
+                toggle.classList.add('muted');
+                icon.textContent = '🔇';
+                label.textContent = 'Alert OFF';
+                status.textContent = 'Suara dimatikan';
+                localStorage.setItem('patternSoundEnabled', 'false');
+            }
+        }
+
+        function loadSoundPreference() {
+            const saved = localStorage.getItem('patternSoundEnabled');
+            if (saved === 'false') {
+                soundEnabled = false;
+                document.getElementById('soundToggle').classList.remove('active');
+                document.getElementById('soundToggle').classList.add('muted');
+                document.getElementById('soundIcon').textContent = '🔇';
+                document.getElementById('soundLabel').textContent = 'Alert OFF';
+                document.getElementById('soundStatus').textContent = 'Suara dimatikan';
+            }
+        }
+
+        // ============================================
+        // TOAST NOTIFICATION
+        // ============================================
+
+        function showToast(pattern, type, detail) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            const isBullish = type.includes('Bullish');
+            const icon = isBullish ? '📈' : '📉';
+            const titleColor = isBullish ? 'var(--bullish)' : 'var(--bearish)';
+
+            toast.className = 'toast ' + (isBullish ? 'bullish' : 'bearish');
+            toast.innerHTML = '<span class="toast-icon">' + icon + '</span>' +
+                '<div class="toast-content">' +
+                '<div class="toast-title" style="color:' + titleColor + '">' + pattern + ' Terdeteksi!</div>' +
+                '<div class="toast-msg">' + type + ' | ' + detail + '</div>' +
+                '<div class="toast-time">' + new Date().toLocaleTimeString('id-ID') + '</div>' +
+                '</div>' +
+                '<button class="toast-close" onclick="this.parentElement.remove()">×</button>';
+
+            container.appendChild(toast);
+
+            setTimeout(function() {
+                if (toast.parentElement) {
+                    toast.style.animation = 'slideIn 0.4s ease reverse';
+                    setTimeout(function() { toast.remove(); }, 400);
+                }
+            }, 8000);
+        }
+
+        // ============================================
+        // ALERT LOG
+        // ============================================
+
+        function addAlertLog(pattern, type, detail) {
+            const log = document.getElementById('alertLog');
+            const isBullish = type.includes('Bullish');
+            const item = document.createElement('div');
+            item.className = 'alert-log-item';
+            item.innerHTML = '<span>' + (isBullish ? '📈' : '📉') + '</span>' +
+                '<span class="alert-log-time">' + new Date().toLocaleTimeString('id-ID') + '</span>' +
+                '<span class="alert-log-msg ' + (isBullish ? 'bullish' : 'bearish') + '">' + pattern + ' - ' + detail + '</span>';
+
+            if (log.children.length === 1 && log.children[0].textContent.includes('Menunggu')) {
+                log.innerHTML = '';
+            }
+
+            log.insertBefore(item, log.firstChild);
+
+            while (log.children.length > 20) {
+                log.removeChild(log.lastChild);
+            }
+        }
+
+        // ============================================
+        // PATTERN DETECTION ALERT
+        // ============================================
+
+        function checkNewPatterns() {
+            const savedIds = JSON.parse(localStorage.getItem('patternIds') || '[]');
+            const newPatterns = [];
+
+            currentPatternIds.forEach(function(pid, idx) {
+                if (savedIds.indexOf(pid) === -1) {
+                    newPatterns.push(idx);
+                }
+            });
+
+            if (newPatterns.length > 0) {
+                const alertCount = document.getElementById('alertCount');
+                alertCount.textContent = '🔔 ' + newPatterns.length + ' pola baru!';
+
+                newPatterns.forEach(function(idx) {
+                    const row = document.querySelector('tr[data-pid="' + currentPatternIds[idx] + '"]');
+                    if (row) {
+                        row.classList.add('new-pattern');
+
+                        const pattern = row.querySelector('.pattern-name').textContent.trim().replace(/^[📈📉]\s*/, '');
+                        const type = row.querySelector('.badge').textContent;
+                        const detail = row.querySelector('td:last-child').textContent;
+
+                        playAlertSound(type);
+                        showToast(pattern, type, detail);
+                        addAlertLog(pattern, type, detail);
+                    }
+                });
+
+                localStorage.setItem('patternIds', JSON.stringify(currentPatternIds));
+            } else {
+                document.getElementById('alertCount').textContent = '';
+            }
+        }
+
+        // ============================================
+        // COUNTDOWN TIMER
+        // ============================================
+
+        let seconds = 60;
         function updateTimer() {
             seconds--;
             if (seconds <= 0) {
                 seconds = 60;
-                updatingEl.style.display = 'inline';
-                countdownEl.style.display = 'none';
-                // Refresh iframe to keep TradingView live without full page reload
                 const iframe = document.getElementById('tv-chart');
                 iframe.src = iframe.src;
-            } else {
-                countdownEl.textContent = seconds;
-                updatingEl.style.display = 'none';
-                countdownEl.style.display = 'inline';
             }
+            document.getElementById('countdown').textContent = seconds;
         }
-
         setInterval(updateTimer, 1000);
 
-        // Flash effect on stats when price changes (simulated)
-        setInterval(() => {
-            const cards = document.querySelectorAll('.stat-card');
-            cards[0].style.borderColor = 'rgba(245,158,11,0.3)';
-            setTimeout(() => {
-                cards[0].style.borderColor = 'var(--border)';
+        // ============================================
+        // INIT
+        // ============================================
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSoundPreference();
+            document.body.addEventListener('click', initAudio, { once: true });
+            setTimeout(function() {
+                checkNewPatterns();
             }, 500);
-        }, 30000);
+
+            setInterval(function() {
+                const cards = document.querySelectorAll('.stat-card');
+                cards[0].style.borderColor = 'rgba(245,158,11,0.3)';
+                setTimeout(function() {
+                    cards[0].style.borderColor = 'var(--border)';
+                }, 500);
+            }, 30000);
+        });
     </script>
 </body>
 </html>
