@@ -93,7 +93,7 @@
         .ping-poor .ping-dot { background-color: #e74c3c; box-shadow: 0 0 10px #e74c3c; }
 
 
-        /* --- Headline News Ticker (Box Fix, Teks Berjalan) --- */
+        /* --- Headline News Ticker --- */
         .news-ticker-container {
             max-width: 500px;
             height: 95px;
@@ -112,7 +112,7 @@
             position: relative;
         }
 
-        /* --- Breaking News Ticker (Box Fix, Animasi Berjalan Efek Market) --- */
+        /* --- Breaking News Ticker --- */
         .breaking-ticker-container {
             max-width: 500px;
             height: 85px;
@@ -177,7 +177,7 @@
             text-decoration: underline;
         }
 
-        /* Area Teks Berjalan (Marquee Effect) */
+        /* Area Teks Berjalan */
         .news-scroll-wrapper {
             overflow: hidden;
             width: 100%;
@@ -203,9 +203,10 @@
         }
 
 
-        /* Ticker Harga Realtime */
+        /* --- Advanced Chart Real-time (TradingView) --- */
         .live-price-container {
             max-width: 500px; 
+            height: 420px;
             margin: 0 auto 30px auto;
             border-radius: 12px;
             overflow: hidden;
@@ -256,7 +257,7 @@
             animation: pulseGlow 2.5s infinite;
         }
 
-        /* --- Kotak Alasan Detail (Eksternal) --- */
+        /* --- Kotak Alasan Detail --- */
         .reasoning-container {
             max-width: 500px;
             margin: 0 auto 40px auto;
@@ -341,18 +342,29 @@
         </div>
     </div>
 
-    <!-- Ticker Harga Real-time (TradingView) -->
+    <!-- --- 3. Chart Real-time Advanced (TradingView) --- -->
     <div class="live-price-container">
-        <div class="tradingview-widget-container">
-            <div class="tradingview-widget-container__widget"></div>
-            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js" async>
+        <div class="tradingview-widget-container" style="height:100%;width:100%">
+            <div id="tradingview_chart" style="height:100%;width:100%"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+            <script type="text/javascript">
+            new TradingView.widget(
             {
-            "symbol": "OANDA:XAUUSD",
-            "width": "100%",
-            "colorTheme": "dark",
-            "isTransparent": true,
-            "locale": "id"
+              "autosize": true,
+              "symbol": "OANDA:XAUUSD",
+              "interval": "1",
+              "timezone": "Asia/Jakarta",
+              "theme": "dark",
+              "style": "1",
+              "locale": "id",
+              "toolbar_bg": "#1e222d",
+              "enable_publishing": false,
+              "withdateranges": true,
+              "hide_side_toolbar": false,
+              "allow_symbol_change": true,
+              "container_id": "tradingview_chart"
             }
+            );
             </script>
         </div>
     </div>
