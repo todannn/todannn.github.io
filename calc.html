@@ -18,7 +18,6 @@
         }
     </script>
 <base target="_blank">
-<base target="_blank">
 </head>
 <body class="bg-gray-50 text-navy-900 dark:bg-navy-900 dark:text-gray-100 min-h-screen flex flex-col justify-center items-center p-4 transition-colors duration-300 font-sans">
 
@@ -143,7 +142,7 @@
                         <option value="700000" data-maxpax="6" data-name-id="Toyota Avanza / Xenia (Maks 6 Pax)" data-name-en="Toyota Avanza / Xenia (Max 6 Pax)" selected>Toyota Avanza / Xenia (Maks 6 Orang)</option>
                         <option value="900000" data-maxpax="7" data-name-id="Innova Reborn Diesel (Maks 7 Pax)" data-name-en="Innova Reborn Diesel (Max 7 Pax)">Innova Reborn Diesel (Maks 7 Orang)</option>
                         <option value="1100000" data-maxpax="7" data-name-id="Toyota Innova Zenix (Maks 7 Pax)" data-name-en="Toyota Innova Zenix (Max 7 Pax)">Toyota Innova Zenix (Maks 7 Orang)</option>
-                        <option value="1200000" data-maxpax="10" data-name-id="H1 / Starex (Maks 10 Pax)" data-name-en="H1 / Starex (Maks 10 Pax)" selected>H1 / Starex (Maks 10 Pax)</option>
+                        <option value="1200000" data-maxpax="10" data-name-id="H1 / Starex (Maks 10 Pax)" data-name-en="H1 / Starex (Maks 10 Pax)">H1 / Starex (Maks 10 Pax)</option>
                         <option value="1200000" data-maxpax="14" data-name-id="Toyota HiAce Commuter (Maks 14 Pax)" data-name-en="Toyota HiAce Commuter (Max 14 Pax)">Toyota HiAce Commuter (Maks 14 Orang)</option>
                         <option value="1700000" data-maxpax="11" data-name-id="Toyota HiAce Premio (Maks 11 Pax)" data-name-en="Toyota HiAce Premio (Max 11 Pax)">Toyota HiAce Premio (Maks 11 Orang)</option>
                         <option value="1900000" data-maxpax="19" data-name-id="Isuzu Elf Long (Maks 19 Pax)" data-name-en="Isuzu Elf Long (Max 19 Pax)">Isuzu Elf Long (Maks 19 Orang)</option>
@@ -540,10 +539,16 @@
 
         function applyLanguage() {
             const dict = i18nDict[currentLang];
-            
+
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
-                if (dict[key]) el.innerHTML = dict[key];
+                if (!dict[key]) return;
+                const tag = el.tagName;
+                if (tag === 'INPUT' || tag === 'TEXTAREA') {
+                    el.placeholder = dict[key];
+                } else {
+                    el.innerHTML = dict[key];
+                }
             });
 
             document.querySelectorAll('[data-i18n-ph]').forEach(el => {
@@ -690,7 +695,6 @@
             }
 
             let startDate = new Date(startDateVal);
-            // Tambah hari sewa (-1 karena hari pertama sudah dihitung)
             startDate.setDate(startDate.getDate() + (days - 1));
             
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -721,7 +725,6 @@
                     ? 'bg-amber-500 text-navy-900 font-extrabold shadow' 
                     : 'bg-gray-200 dark:bg-navy-900 text-gray-700 dark:text-gray-300 font-semibold hover:bg-gray-300';
 
-                // Hitung tanggal spesifik per hari jika startDate terisi
                 let dateStrLabel = `${dict.dayText} ${i}`;
                 const startDateVal = document.getElementById('startDate').value;
                 if (startDateVal) {
@@ -759,7 +762,6 @@
             const days = parseInt(document.getElementById('calcDays').value) || 0;
             if (days === 0) return;
 
-            // Clear search saat ganti area manual
             document.getElementById('destSearch').value = '';
 
             const selectedArea = document.getElementById('calcAreaDay').value;
@@ -798,13 +800,6 @@
 
             if (days === 0) {
                 container.innerHTML = `<span class="text-xs text-gray-400 italic">${dict.daysWarning}</span>`;
-                return;
-            }
-
-            // Kalau search tidak kosong, biarkan filterDestinations yang handle
-            const searchQuery = document.getElementById('destSearch').value.trim();
-            if (searchQuery) {
-                filterDestinations();
                 return;
             }
 
@@ -879,9 +874,6 @@
                 return;
             }
 
-            container.innerHTML = '';
-            let resultCount = 0;
-
             let usedInOtherDays = {};
             for (let day in dayData) {
                 if (parseInt(day) !== currentActiveDay) {
@@ -892,12 +884,14 @@
             }
             const currentDayDestIds = (dayData[currentActiveDay] && dayData[currentActiveDay].dests) ? dayData[currentActiveDay].dests : [];
 
-            // Mapping area key ke label
             const areaLabels = {};
             const areaSelect = document.getElementById('calcAreaDay');
             for (let opt of areaSelect.options) {
                 areaLabels[opt.value] = opt.text.split('-')[0].split('(')[0].trim();
             }
+
+            let html = '';
+            let resultCount = 0;
 
             for (let areaKey in destData) {
                 if (areaKey === 'DropOnlyBandung') continue;
@@ -909,7 +903,7 @@
                 });
 
                 if (matchedItems.length > 0) {
-                    container.innerHTML += `<div class="col-span-1 sm:col-span-2 text-[10px] font-bold text-amber-600 dark:text-amber-400 mt-2 mb-1 uppercase tracking-wide">${areaLabels[areaKey] || areaKey}</div>`;
+                    html += `<div class="col-span-1 sm:col-span-2 text-[10px] font-bold text-amber-600 dark:text-amber-400 mt-2 mb-1 uppercase tracking-wide">${areaLabels[areaKey] || areaKey}</div>`;
 
                     matchedItems.forEach(item => {
                         const isSelected = currentDayDestIds.includes(item.id);
@@ -918,7 +912,7 @@
                         const displayDesc = item.desc[currentLang] || item.desc['id'];
 
                         if (chosenDay) {
-                            container.innerHTML += `
+                            html += `
                                 <div class="flex items-center justify-between p-2 rounded-lg bg-gray-200/60 dark:bg-navy-900/40 border border-dashed border-gray-300 dark:border-gray-700">
                                     <div class="flex items-center space-x-2 overflow-hidden">
                                         <input type="checkbox" disabled class="rounded text-gray-400 w-4 h-4 cursor-not-allowed flex-shrink-0">
@@ -934,7 +928,7 @@
                             `;
                         } else {
                             const checkedAttr = isSelected ? 'checked' : '';
-                            container.innerHTML += `
+                            html += `
                                 <label class="flex items-start space-x-2 p-2 rounded-lg hover:bg-amber-500/10 dark:hover:bg-navy-800/50 cursor-pointer border border-transparent hover:border-amber-500/20 transition">
                                     <input type="checkbox" value="${item.id}" data-area="${areaKey}" ${checkedAttr} onchange="toggleDestinationFromSearch('${item.id}', '${areaKey}', this.checked)" class="dest-checkbox rounded text-amber-500 focus:ring-amber-500 w-4 h-4 mt-0.5 flex-shrink-0">
                                     <div class="leading-tight">
@@ -950,25 +944,24 @@
             }
 
             if (resultCount === 0) {
-                container.innerHTML = `<span class="text-xs text-gray-400 italic col-span-1 sm:col-span-2">${isEn ? 'No destinations found.' : 'Tidak ditemukan tempat wisata.'}</span>`;
+                html = `<span class="text-xs text-gray-400 italic col-span-1 sm:col-span-2">${isEn ? 'No destinations found.' : 'Tidak ditemukan tempat wisata.'}</span>`;
             }
+
+            container.innerHTML = html;
         }
 
         function toggleDestinationFromSearch(destId, areaKey, isChecked) {
             const days = parseInt(document.getElementById('calcDays').value) || 0;
             if (days === 0) return;
 
-            // Update area hari ini ke areaKey
             if (!dayData[currentActiveDay]) {
                 dayData[currentActiveDay] = { area: areaKey, dests: [], customText: '' };
             } else {
                 dayData[currentActiveDay].area = areaKey;
             }
 
-            // Update select wilayah
             document.getElementById('calcAreaDay').value = areaKey;
 
-            // Toggle destinasi
             if (isChecked) {
                 if (!dayData[currentActiveDay].dests.includes(destId)) {
                     dayData[currentActiveDay].dests.push(destId);
@@ -979,6 +972,7 @@
 
             updateItinerarySummary();
             calculateTotal();
+            filterDestinations();
         }
 
         function toggleDestination(destId, isChecked) {
@@ -1018,6 +1012,7 @@
             const days = parseInt(document.getElementById('calcDays').value) || 0;
             const areaSelectElem = document.getElementById('calcAreaDay');
             const startDateVal = document.getElementById('startDate').value;
+            const pickupTimeVal = document.getElementById('pickupTime').value;
             const dict = i18nDict[currentLang];
 
             if (days === 0) {
@@ -1025,9 +1020,21 @@
                 return;
             }
 
-            // Info Jadwal & Waktu Perjalanan
-            const startDateVal = document.getElementById('startDate').value;
-                       // Ambil info pickup dan drop off
+            if (startDateVal && days > 0) {
+                let startD = new Date(startDateVal);
+                const fmtStart = startD.toLocaleDateString(isEn ? 'en-US' : 'id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                let endD = new Date(startDateVal);
+                endD.setDate(endD.getDate() + (days - 1));
+                const fmtEnd = endD.toLocaleDateString(isEn ? 'en-US' : 'id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+                html += `<div class="mb-3 pb-2 border-b border-gray-200 dark:border-gray-700">
+                    <p class="font-bold text-gray-700 dark:text-gray-300 text-[11px]">📅 ${isEn ? 'Trip Schedule' : 'Jadwal Perjalanan'}:</p>
+                    <p class="text-[11px] text-gray-600 dark:text-gray-400">• ${isEn ? 'Start Date' : 'Tanggal Mulai'}: ${fmtStart} ${pickupTimeVal ? '(' + pickupTimeVal + ' WIB)' : ''}</p>
+                    <p class="text-[11px] text-gray-600 dark:text-gray-400">• ${isEn ? 'End Date' : 'Tanggal Selesai'}: ${fmtEnd}</p>
+                    <p class="text-[11px] text-gray-600 dark:text-gray-400">• ${isEn ? 'Duration' : 'Durasi'}: ${days} ${isEn ? 'Days' : 'Hari'}</p>
+                </div>`;
+            }
+
             const pickupSelect = document.getElementById('calcPickup');
             const pickupName = isEn ? pickupSelect.options[pickupSelect.selectedIndex].getAttribute('data-name-en') : pickupSelect.options[pickupSelect.selectedIndex].getAttribute('data-name-id');
             const pickupDetail = document.getElementById('pickupDetail').value || (isEn ? "Not specified" : "Belum diisi");
@@ -1181,7 +1188,6 @@
             updateEndDateDisplay();
         }
 
-        // Pengiriman Pesan WhatsApp Utuh
         function sendOrderWA() {
             const days = parseInt(document.getElementById('calcDays').value) || 0;
             if (days === 0) {
@@ -1222,11 +1228,9 @@
             let totalOutTownToll = 0;
             const areaSelectElem = document.getElementById('calcAreaDay');
 
-            // Ekstraksi Itinerary Summary secara Utuh Per Hari dengan Format Baru
             let itineraryText = "";
-            // Info Jadwal & Waktu Perjalanan
-            const startDateVal = document.getElementById('startDate').value;
-         for (let i = 1; i <= days; i++) {
+            
+            for (let i = 1; i <= days; i++) {
                 const dayObj = dayData[i] || { area: 'BandungKota', dests: [], customText: '' };
                 
                 let areaText = dayObj.area;
@@ -1272,7 +1276,6 @@
                 }
             }
 
-            // Konstruksi Format Pesan WhatsApp
             let text = isEn 
                 ? `Hello Admin, I would like to make a reservation / inquiry with the following details:%0A%0A`
                 : `Halo Admin, saya ingin melakukan reservasi / tanya ketersediaan armada dengan detail berikut:%0A%0A`;
@@ -1316,7 +1319,6 @@
                 return;
             }
 
-            // Reset semua input
             document.getElementById('startDate').value = new Date().toISOString().split('T')[0];
             document.getElementById('pickupTime').value = '08:00';
             document.getElementById('calcPickup').selectedIndex = 0;
@@ -1329,11 +1331,9 @@
             document.getElementById('calcCar').selectedIndex = 1;
             document.getElementById('destSearch').value = '';
 
-            // Reset day data
             dayData = {};
             currentActiveDay = 1;
 
-            // Re-initialize
             onPaxChange();
             onDaysChange();
             updateEndDateDisplay();
