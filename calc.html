@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Sewa dan Custom Itinerary Multi-Hari</title>
+    <title>Kalkulator Sewa dan Custom Itinerary Multi-Hari by TSHOLIDAY</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -39,7 +39,7 @@
 
         <!-- Judul -->
         <div class="text-center mb-6 mt-2">
-            <h1 class="text-2xl font-black text-navy-900 dark:text-white" data-i18n="title">🧮 Kalkulator Sewa dan Custom Itinerary</h1>
+            <h1 class="text-2xl font-black text-navy-900 dark:text-white" data-i18n="title">🧮 Kalkulator Sewa dan Custom Itinerary by TSHOLIDAY</h1>
             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1" data-i18n="subtitle">Hitung estimasi biaya dan susun itinerary perjalanan Anda per hari</p>
         </div>
 
@@ -269,7 +269,7 @@
 
         const i18nDict = {
             id: {
-                title: "🧮 Kalkulator Sewa dan Custom Itinerary",
+                title: "🧮 Kalkulator Sewa dan Custom Itinerary by TSHOLIDAY",
                 subtitle: "Hitung estimasi biaya dan susun itinerary perjalanan Anda per hari",
                 dateTimeTitle: "📅 Jadwal & Waktu Perjalanan:",
                 startDateLabel: "Tanggal Mulai (Start Date):",
@@ -396,37 +396,37 @@
 
         const destData = {
             BandungKota: [
-                { id: "bk_1", name: { id: "Gedung Sate", en: "Gedung Sate" }, desc: { id: "Gedung ikonik bergaya arsitektur kolonial Belanda dengan ciri khas tusuk sate di menaranya yang menjadi pusat pemerintahan Jawa Barat", en: "Iconic building with Dutch colonial architecture featuring distinctive satay skewer ornament on its tower, serving as West Java government center" } },
+                { id: "bk_1", isFavorite: true, name: { id: "Gedung Sate", en: "Gedung Sate" }, desc: { id: "Gedung ikonik bergaya arsitektur kolonial Belanda dengan ciri khas tusuk sate di menaranya yang menjadi pusat pemerintahan Jawa Barat", en: "Iconic building with Dutch colonial architecture featuring distinctive satay skewer ornament on its tower, serving as West Java government center" } },
                 { id: "bk_2", name: { id: "Alun-Alun Kota Bandung", en: "Bandung City Square" }, desc: { id: "Pusat kota yang dilengkapi lapangan rumput sintetis luas dan dikelilingi Masjid Raya Bandung yang megah", en: "City center equipped with large synthetic grass field and surrounded by the magnificent Bandung Grand Mosque" } },
-                { id: "bk_3", name: { id: "Jalan Braga", en: "Braga Street" }, desc: { id: "Kawasan jalan bersejarah yang dipenuhi bangunan bergaya art deco era kolonial, kafe estetik, dan seniman jalanan", en: "Historic street area filled with colonial-era art deco style buildings, aesthetic cafes, and street artists" } },
+                { id: "bk_3", isFavorite: true, name: { id: "Jalan Braga", en: "Braga Street" }, desc: { id: "Kawasan jalan bersejarah yang dipenuhi bangunan bergaya art deco era kolonial, kafe estetik, dan seniman jalanan", en: "Historic street area filled with colonial-era art deco style buildings, aesthetic cafes, and street artists" } },
                 { id: "bk_4", name: { id: "Jalan Cihampelas (Ciwalk)", en: "Cihampelas Street (Ciwalk)" }, desc: { id: "Pusat perbelanjaan dan wisata belanja ikonik yang terkenal dengan skywalk pedestrian di atas jalan raya", en: "Iconic shopping center and shopping tourism famous for its pedestrian skywalk above the main road" } },
-                { id: "bk_5", name: { id: "Trans Studio Bandung", en: "Trans Studio Bandung" }, desc: { id: "Taman bermain indoor terbesar di Indonesia yang menawarkan berbagai wahana seru dan atraksi kelas dunia", en: "Indonesia's largest indoor amusement park offering various exciting rides and world-class attractions" } },
-                { id: "bk_6", name: { id: "Saung Angklung Udjo", en: "Saung Angklung Udjo" }, desc: { id: "Pusat seni dan budaya Sunda interaktif yang terkenal dengan pertunjukan musik angklung dan orkestra bambu", en: "Interactive Sundanese art and culture center famous for angklung music performances and bamboo orchestra" } },
+                { id: "bk_5", isFavorite: true, name: { id: "Trans Studio Bandung", en: "Trans Studio Bandung" }, desc: { id: "Taman bermain indoor terbesar di Indonesia yang menawarkan berbagai wahana seru dan atraksi kelas dunia", en: "Indonesia's largest indoor amusement park offering various exciting rides and world-class attractions" } },
+                { id: "bk_6", isFavorite: true, name: { id: "Saung Angklung Udjo", en: "Saung Angklung Udjo" }, desc: { id: "Pusat seni dan budaya Sunda interaktif yang terkenal dengan pertunjukan musik angklung dan orkestra bambu", en: "Interactive Sundanese art and culture center famous for angklung music performances and bamboo orchestra" } },
                 { id: "bk_7", name: { id: "Museum Konferensi Asia Afrika", en: "Asian-African Conference Museum" }, desc: { id: "Gedung bersejarah tempat digelarnya Konferensi Asia-Afrika 1955 yang memamerkan arsip dan artefak internasional", en: "Historic building where the 1955 Asian-African Conference was held, displaying international archives and artifacts" } },
                 { id: "bk_8", name: { id: "Kebun Binatang Bandung", en: "Bandung Zoo" }, desc: { id: "Kawasan konservasi flora dan fauna di tengah kota yang memiliki koleksi ratusan jenis satwa", en: "Flora and fauna conservation area in the city center with a collection of hundreds of animal species" } },
                 { id: "bk_9", name: { id: "Taman Hutan Raya Ir. H. Djuanda (Tahura)", en: "Tahura Djuanda Forest Park" }, desc: { id: "Kawasan hutan konservasi luas di utara kota yang menyimpan Goa Jepang, Goa Belanda, dan Curug Dago", en: "Vast forest conservation area in the north of the city housing Japanese Cave, Dutch Cave, and Dago Waterfall" } },
-                { id: "bk_10", name: { id: "Pasar Baru Trade Center", en: "Pasar Baru Trade Center" }, desc: { id: "Pusat grosir legendaris di pusat kota yang menjadi surga belanja pakaian, tekstil, dan busana Muslim terlengkap dengan harga miring", en: "Legendary wholesale center in the city center that is a paradise for clothing, textile, and Muslim fashion shopping at affordable prices" } },
-                { id: "bk_11", name: { id: "Rumah Mode Factory Outlet", en: "Rumah Mode Factory Outlet" }, desc: { id: "Salah satu factory outlet paling ikonik dan populer di Bandung dengan koleksi pakaian tren terkini yang sangat lengkap", en: "One of the most iconic and popular factory outlets in Bandung with a very complete collection of latest fashion trends" } },
+                { id: "bk_10", isFavorite: true, name: { id: "Pasar Baru Trade Center", en: "Pasar Baru Trade Center" }, desc: { id: "Pusat grosir legendaris di pusat kota yang menjadi surga belanja pakaian, tekstil, dan busana Muslim terlengkap dengan harga miring", en: "Legendary wholesale center in the city center that is a paradise for clothing, textile, and Muslim fashion shopping at affordable prices" } },
+                { id: "bk_11", isFavorite: true, name: { id: "Rumah Mode Factory Outlet", en: "Rumah Mode Factory Outlet" }, desc: { id: "Salah satu factory outlet paling ikonik dan populer di Bandung dengan koleksi pakaian tren terkini yang sangat lengkap", en: "One of the most iconic and popular factory outlets in Bandung with a very complete collection of latest fashion trends" } },
                 { id: "bk_12", name: { id: "The Secret Factory Outlet", en: "The Secret Factory Outlet" }, desc: { id: "Pusat perbelanjaan mode terkenal di Jalan R.E. Martadinata yang menawarkan berbagai produk fashion bermerek", en: "Famous fashion shopping center on R.E. Martadinata Street offering various branded fashion products" } },
-                { id: "bk_13", name: { id: "Heritage Factory Outlet", en: "Heritage Factory Outlet" }, desc: { id: "Destinasi belanja pakaian bergaya klasik di dalam gedung kolonial yang menyediakan beragam koleksi fesyen pria dan wanita", en: "Classic-style clothing shopping destination inside a colonial building providing various men's and women's fashion collections" } },
-                { id: "bk_14", name: { id: "Paskal Hypersquare", en: "Paskal Hypersquare" }, desc: { id: "Kawasan pusat gaya hidup dan kuliner modern yang dipenuhi butik pakaian hits serta sentra jajanan populer", en: "Modern lifestyle and culinary hub filled with trendy clothing boutiques and popular snack centers" } },
-                { id: "bk_15", name: { id: "Toko Oleh-Oleh Tiga Rasa", en: "Toko Oleh-Oleh Tiga Rasa" }, desc: { id: "Pusat oleh-oleh legendaris di Jalan Leuwi Panjang yang menyediakan aneka keripik tradisional, keripik oncom, sale pisang, dan dodol khas", en: "Legendary souvenir center on Leuwi Panjang Street providing various traditional chips, oncom chips, banana sale, and local dodol" } },
-                { id: "bk_16", name: { id: "Kartika Sari", en: "Kartika Sari" }, desc: { id: "Pusat oleh-oleh legendaris di Bandung yang sangat terkenal dengan kue brownies panggang dan pisang bolennya", en: "Legendary souvenir center in Bandung very famous for its baked brownies and banana bolen cakes" } },
+                { id: "bk_13", isFavorite: true, name: { id: "Heritage Factory Outlet", en: "Heritage Factory Outlet" }, desc: { id: "Destinasi belanja pakaian bergaya klasik di dalam gedung kolonial yang menyediakan beragam koleksi fesyen pria dan wanita", en: "Classic-style clothing shopping destination inside a colonial building providing various men's and women's fashion collections" } },
+                { id: "bk_14", isFavorite: true, name: { id: "Paskal Hypersquare", en: "Paskal Hypersquare" }, desc: { id: "Kawasan pusat gaya hidup dan kuliner modern yang dipenuhi butik pakaian hits serta sentra jajanan populer", en: "Modern lifestyle and culinary hub filled with trendy clothing boutiques and popular snack centers" } },
+                { id: "bk_15", isFavorite: true, name: { id: "Toko Oleh-Oleh Tiga Rasa", en: "Toko Oleh-Oleh Tiga Rasa" }, desc: { id: "Pusat oleh-oleh legendaris di Jalan Leuwi Panjang yang menyediakan aneka keripik tradisional, keripik oncom, sale pisang, dan dodol khas", en: "Legendary souvenir center on Leuwi Panjang Street providing various traditional chips, oncom chips, banana sale, and local dodol" } },
+                { id: "bk_16", isFavorite: true, name: { id: "Kartika Sari", en: "Kartika Sari" }, desc: { id: "Pusat oleh-oleh legendaris di Bandung yang sangat terkenal dengan kue brownies panggang dan pisang bolennya", en: "Legendary souvenir center in Bandung very famous for its baked brownies and banana bolen cakes" } },
                 { id: "bk_17", name: { id: "Prima Rasa", en: "Prima Rasa" }, desc: { id: "Toko roti dan kue favorit yang menyediakan beragam pilihan jajanan tradisional, pastry, dan oleh-oleh khas", en: "Favorite bakery and cake shop providing various choices of traditional snacks, pastries, and local souvenirs" } },
                 { id: "bk_18", name: { id: "Amanda Brownies", en: "Amanda Brownies" }, desc: { id: "Toko oleh-oleh pelopor brownies kukus lembut dengan aneka varian rasa favorit yang selalu dicari wisatawan", en: "Pioneer souvenir shop of soft steamed brownies with various favorite flavor variants always sought by tourists" } },
                 { id: "bk_19", name: { id: "Bolu Susu Lembang (Official Store Kota)", en: "Bolu Susu Lembang (City Official Store)" }, desc: { id: "Sentra oleh-oleh kue bolu susu lembut dan legit yang sangat digemari sebagai buah tangan kekinian", en: "Souvenir center for soft and delicious milk sponge cake very popular as a modern gift" } },
                 { id: "bk_20", name: { id: "Toko Kue Bawean", en: "Toko Kue Bawean" }, desc: { id: "Toko roti klasik legendaris di pusat kota yang terkenal dengan kue-kue kering dan mocca tart autentiknya", en: "Legendary classic bakery in the city center famous for its dry cakes and authentic mocca tart" } }
             ],
             BandungUtara: [
-                { id: "bu_1", name: { id: "The Lodge Maribaya", en: "The Lodge Maribaya" }, desc: { id: "Kawasan wisata alam di hutan pinus dengan berbagai wahana petualangan dan spot foto ikonik seperti sky tree", en: "Nature tourism area in pine forest with various adventure rides and iconic photo spots such as sky tree" } },
-                { id: "bu_2", name: { id: "Farmhouse Susu Lembang", en: "Farmhouse Susu Lembang" }, desc: { id: "Destinasi wisata populer bergaya perkampungan Eropa klasik dengan kebun binatang mini dan rumah hobbit", en: "Popular tourist destination in classic European village style with mini zoo and hobbit house" } },
-                { id: "bu_3", name: { id: "Floating Market Lembang", en: "Floating Market Lembang" }, desc: { id: "Kawasan wisata rekreasi keluarga di pinggir danau dengan pasar kuliner apung dan beragam wahana permainan", en: "Family recreation area by the lake with floating culinary market and various amusement rides" } },
+                { id: "bu_1", isFavorite: true, name: { id: "The Lodge Maribaya", en: "The Lodge Maribaya" }, desc: { id: "Kawasan wisata alam di hutan pinus dengan berbagai wahana petualangan dan spot foto ikonik seperti sky tree", en: "Nature tourism area in pine forest with various adventure rides and iconic photo spots such as sky tree" } },
+                { id: "bu_2", isFavorite: true, name: { id: "Farmhouse Susu Lembang", en: "Farmhouse Susu Lembang" }, desc: { id: "Destinasi wisata populer bergaya perkampungan Eropa klasik dengan kebun binatang mini dan rumah hobbit", en: "Popular tourist destination in classic European village style with mini zoo and hobbit house" } },
+                { id: "bu_3", isFavorite: true, name: { id: "Floating Market Lembang", en: "Floating Market Lembang" }, desc: { id: "Kawasan wisata rekreasi keluarga di pinggir danau dengan pasar kuliner apung dan beragam wahana permainan", en: "Family recreation area by the lake with floating culinary market and various amusement rides" } },
                 { id: "bu_4", name: { id: "Terminal Wisata Grafika Cikole", en: "Terminal Wisata Grafika Cikole" }, desc: { id: "Resor dan tempat wisata di tengah hutan pinus yang menawarkan fasilitas penginapan, restoran, dan aktivitas outbound", en: "Resort and tourist spot in the middle of pine forest offering accommodation, restaurant, and outbound activities" } },
-                { id: "bu_5", name: { id: "Tangkuban Perahu", en: "Tangkuban Perahu" }, desc: { id: "Gunung berapi aktif ikonik yang terkenal dengan pemandangan kawah besarnya yang menakjubkan", en: "Iconic active volcano famous for its stunning large crater view" } },
+                { id: "bu_5", isFavorite: true, name: { id: "Tangkuban Perahu", en: "Tangkuban Perahu" }, desc: { id: "Gunung berapi aktif ikonik yang terkenal dengan pemandangan kawah besarnya yang menakjubkan", en: "Iconic active volcano famous for its stunning large crater view" } },
                 { id: "bu_6", name: { id: "De' Ranch Lembang", en: "De' Ranch Lembang" }, desc: { id: "Wisata keluarga bertema koboi di mana pengunjung dapat menikmati pengalaman berkuda dan menunggangi kuda poni", en: "Cowboy-themed family attraction where visitors can enjoy horse riding and pony riding experiences" } },
-                { id: "bu_7", name: { id: "Orchid Forest Cikole", en: "Orchid Forest Cikole" }, desc: { id: "Hutan konservasi anggrek terluas di Indonesia yang dilengkapi jembatan gantung bercahaya di malam hari", en: "Indonesia's largest orchid conservation forest equipped with illuminated hanging bridge at night" } },
-                { id: "bu_8", name: { id: "The Great Asia Afrika", en: "The Great Asia Afrika" }, desc: { id: "Taman rekreasi tematik yang menampilkan replika arsitektur dan budaya khas dari berbagai negara di Asia dan Afrika", en: "Thematic recreation park displaying replica architecture and culture from various countries in Asia and Africa" } },
-                { id: "bu_9", name: { id: "Lembang Park & Zoo", en: "Lembang Park & Zoo" }, desc: { id: "Kebun binatang modern luas yang menampung ratusan jenis satwa serta menyediakan area bermain ramah anak", en: "Large modern zoo housing hundreds of animal species and providing child-friendly play areas" } },
+                { id: "bu_7", isFavorite: true, name: { id: "Orchid Forest Cikole", en: "Orchid Forest Cikole" }, desc: { id: "Hutan konservasi anggrek terluas di Indonesia yang dilengkapi jembatan gantung bercahaya di malam hari", en: "Indonesia's largest orchid conservation forest equipped with illuminated hanging bridge at night" } },
+                { id: "bu_8", isFavorite: true, name: { id: "The Great Asia Afrika", en: "The Great Asia Afrika" }, desc: { id: "Taman rekreasi tematik yang menampilkan replika arsitektur dan budaya khas dari berbagai negara di Asia dan Afrika", en: "Thematic recreation park displaying replica architecture and culture from various countries in Asia and Africa" } },
+                { id: "bu_9", isFavorite: true, name: { id: "Lembang Park & Zoo", en: "Lembang Park & Zoo" }, desc: { id: "Kebun binatang modern luas yang menampung ratusan jenis satwa serta menyediakan area bermain ramah anak", en: "Large modern zoo housing hundreds of animal species and providing child-friendly play areas" } },
                 { id: "bu_10", name: { id: "Bosscha Observatory", en: "Bosscha Observatory" }, desc: { id: "Observatorium astronomi tertua di Indonesia yang menawarkan wisata edukasi mengenai ilmu perbintangan", en: "Indonesia's oldest astronomical observatory offering educational tours about astronomy" } },
                 { id: "bu_11", name: { id: "Pine Forest Camp", en: "Pine Forest Camp" }, desc: { id: "Area perkemahan eksklusif di tengah rindangnya hutan pinus untuk kegiatan luar ruangan dan outbound", en: "Exclusive camping area in the middle of lush pine forest for outdoor and outbound activities" } },
                 { id: "bu_12", name: { id: "Kampung Elephant Wonderland", en: "Kampung Elephant Wonderland" }, desc: { id: "Bekas taman rekreasi keluarga yang areanya luas dengan pemandangan perbukitan hijau", en: "Former family recreation park with vast area and green hills view" } },
@@ -445,13 +445,13 @@
                 { id: "bu_25", name: { id: "Curug Pelangi", en: "Curug Pelangi" }, desc: { id: "Air terjun tinggi yang dilengkapi lampu warna-warni sehingga tampak indah saat malam hari", en: "Tall waterfall equipped with colorful lights so it looks beautiful at night" } }
             ],
             BandungSelatan1: [
-                { id: "bs1_1", name: { id: "Kawah Putih", en: "Kawah Putih (White Crater)" }, desc: { id: "Danau vulkanik eksotis dengan air berwarna putih kehijauan dan hamparan pasir putih di sekitarnya", en: "Exotic volcanic lake with whitish-green water and white sand surroundings" } },
-                { id: "bs1_2", name: { id: "Situ Patenggang", en: "Situ Patenggang Lake" }, desc: { id: "Danau alam yang asri di kelilingi kebun teh, terkenal dengan Pulau Cinta dan perahu sewa", en: "Beautiful natural lake surrounded by tea plantations, famous for Love Island and boat rentals" } },
-                { id: "bs1_3", name: { id: "Glamping Lakeside Rancabali", en: "Glamping Lakeside Rancabali" }, desc: { id: "Resor dan area wisata pinggir danau dengan restoran berbentuk kapal pinisi raksasa", en: "Resort and lakeside tourist area with giant pinisi ship-shaped restaurant" } },
-                { id: "bs1_4", name: { id: "Ranca Upas", en: "Ranca Upas Deer Park" }, desc: { id: "Bumi perkemahan luas yang terkenal sebagai habitat penangkaran rusa ramah dan kolam pemandian air panas", en: "Vast camping ground famous as a friendly deer breeding habitat and hot spring bathing pool" } },
-                { id: "bs1_5", name: { id: "Kawah Rengganis", en: "Kawah Rengganis" }, desc: { id: "Destinasi wisata pemandian air panas belerang alami lengkap dengan jembatan gantung terpanjang di Asia Tenggara", en: "Natural sulfur hot spring tourist destination complete with the longest suspension bridge in Southeast Asia" } },
+                { id: "bs1_1", isFavorite: true, name: { id: "Kawah Putih", en: "Kawah Putih (White Crater)" }, desc: { id: "Danau vulkanik eksotis dengan air berwarna putih kehijauan dan hamparan pasir putih di sekitarnya", en: "Exotic volcanic lake with whitish-green water and white sand surroundings" } },
+                { id: "bs1_2", isFavorite: true, name: { id: "Situ Patenggang", en: "Situ Patenggang Lake" }, desc: { id: "Danau alam yang asri di kelilingi kebun teh, terkenal dengan Pulau Cinta dan perahu sewa", en: "Beautiful natural lake surrounded by tea plantations, famous for Love Island and boat rentals" } },
+                { id: "bs1_3", isFavorite: true, name: { id: "Glamping Lakeside Rancabali", en: "Glamping Lakeside Rancabali" }, desc: { id: "Resor dan area wisata pinggir danau dengan restoran berbentuk kapal pinisi raksasa", en: "Resort and lakeside tourist area with giant pinisi ship-shaped restaurant" } },
+                { id: "bs1_4", isFavorite: true, name: { id: "Ranca Upas", en: "Ranca Upas Deer Park" }, desc: { id: "Bumi perkemahan luas yang terkenal sebagai habitat penangkaran rusa ramah dan kolam pemandian air panas", en: "Vast camping ground famous as a friendly deer breeding habitat and hot spring bathing pool" } },
+                { id: "bs1_5", isFavorite: true, name: { id: "Kawah Rengganis", en: "Kawah Rengganis" }, desc: { id: "Destinasi wisata pemandian air panas belerang alami lengkap dengan jembatan gantung terpanjang di Asia Tenggara", en: "Natural sulfur hot spring tourist destination complete with the longest suspension bridge in Southeast Asia" } },
                 { id: "bs1_6", name: { id: "Barusen Hills", en: "Barusen Hills" }, desc: { id: "Taman rekreasi keluarga dengan kolam renang, spot foto tematik, dan taman bunga yang indah", en: "Family recreation park with swimming pool, thematic photo spots, and beautiful flower garden" } },
-                { id: "bs1_7", name: { id: "Kebun Teh Rancabali", en: "Rancabali Tea Plantation" }, desc: { id: "Hamparan perkebunan teh hijau yang sejuk dan menyegarkan mata di sepanjang jalur utama Ciwidey", en: "Expansive green tea plantation that is cool and refreshing to the eyes along Ciwidey's main route" } },
+                { id: "bs1_7", isFavorite: true, name: { id: "Kebun Teh Rancabali", en: "Rancabali Tea Plantation" }, desc: { id: "Hamparan perkebunan teh hijau yang sejuk dan menyegarkan mata di sepanjang jalur utama Ciwidey", en: "Expansive green tea plantation that is cool and refreshing to the eyes along Ciwidey's main route" } },
                 { id: "bs1_8", name: { id: "Tepi Danau Ciwidey", en: "Tepi Danau Ciwidey" }, desc: { id: "Destinasi wisata kuliner dan rekreasi bergaya pedesaan ala Eropa yang ramah keluarga", en: "Family-friendly culinary and recreation destination in European-style village atmosphere" } },
                 { id: "bs1_9", name: { id: "Kampung Cai Ranca Upas", en: "Kampung Cai Ranca Upas" }, desc: { id: "Kawasan wisata alam terpadu untuk outbound, berkemah, dan berinteraksi langsung dengan rusa", en: "Integrated nature tourism area for outbound, camping, and direct interaction with deer" } },
                 { id: "bs1_10", name: { id: "Batu Patenjang", en: "Batu Patenjang" }, desc: { id: "Batuan unik berbentuk perahu di pinggir Situ Patenggang yang sarat akan legenda lokal", en: "Unique boat-shaped rock on the edge of Situ Patenggang rich in local legends" } },
@@ -461,22 +461,22 @@
                 { id: "bs1_14", name: { id: "Situ Patenggang Glamping", en: "Situ Patenggang Glamping" }, desc: { id: "Area penginapan mewah berkonsep tenda di pinggir danau dengan pemandangan alam yang asri", en: "Luxury tent-concept accommodation area by the lake with beautiful natural scenery" } },
                 { id: "bs1_15", name: { id: "Kampung Sunda Ciwidey", en: "Kampung Sunda Ciwidey" }, desc: { id: "Destinasi wisata kuliner dan budaya yang menyajikan suasana perkampungan tradisional Sunda", en: "Culinary and cultural tourism destination presenting traditional Sundanese village atmosphere" } },
                 { id: "bs1_16", name: { id: "Pemandian Air Panas Cimanggu", en: "Cimanggu Hot Spring" }, desc: { id: "Kawasan pemandian air panas alami belerang yang dikelilingi oleh hutan tropis yang rindang", en: "Natural sulfur hot spring bathing area surrounded by lush tropical forest" } },
-                { id: "bs1_17", name: { id: "Kawah Cibuni Rengganis", en: "Kawah Cibuni Rengganis" }, desc: { id: "Kawasan kawah vulkanik aktif yang dikelilingi sumber air panas belerang dan panorama perbukitan hijau", en: "Active volcanic crater area surrounded by sulfur hot springs and green hills panorama" } },
+                { id: "bs1_17", isFavorite: true, name: { id: "Kawah Cibuni Rengganis", en: "Kawah Cibuni Rengganis" }, desc: { id: "Kawasan kawah vulkanik aktif yang dikelilingi sumber air panas belerang dan panorama perbukitan hijau", en: "Active volcanic crater area surrounded by sulfur hot springs and green hills panorama" } },
                 { id: "bs1_18", name: { id: "Jembatan Gantung Rengganis", en: "Rengganis Suspension Bridge" }, desc: { id: "Jembatan gantung ikonik yang melintasi jurang dan lembah hijau menuju area kawah vulkanik", en: "Iconic suspension bridge crossing ravine and green valley towards volcanic crater area" } },
                 { id: "bs1_19", name: { id: "Bumi Perkemahan Ranca Cangkuang", en: "Ranca Cangkuang Camping Ground" }, desc: { id: "Alternatif lokasi berkemah yang tenang dan jauh dari keramaian di tengah alam Ciwidey", en: "Alternative quiet camping spot away from crowds in the middle of Ciwidey nature" } }
             ],
             BandungSelatan2: [
-                { id: "bs2_1", name: { id: "Situ Cileunca", en: "Situ Cileunca Lake" }, desc: { id: "Danau buatan yang luas dikelilingi perbukitan hijau, populer untuk aktivitas naik perahu, arung jeram, dan berkemah", en: "Large artificial lake surrounded by green hills, popular for boating, river rafting, and camping" } },
-                { id: "bs2_2", name: { id: "Nimo Highland", en: "Nimo Highland" }, desc: { id: "Destinasi wisata hits di puncak perkebunan teh dengan jembatan kaca berbentuk huruf U yang menawarkan pemandangan 360 derajat", en: "Trendy tourist destination at the top of tea plantation with U-shaped glass bridge offering 360-degree views" } },
-                { id: "bs2_3", name: { id: "Wayang Windu Panenjoan", en: "Wayang Windu Panenjoan" }, desc: { id: "Area perkebunan teh luas yang dilengkapi jembatan kayu panjang untuk menikmati panorama matahari terbit dan terbenam", en: "Vast tea plantation area equipped with long wooden bridge to enjoy sunrise and sunset panorama" } },
-                { id: "bs2_4", name: { id: "Taman Langit Pangalengan", en: "Taman Langit Pangalengan" }, desc: { id: "Spot wisata di atas bukit perkebunan teh yang terkenal sebagai lokasi terbaik untuk menikmati lautan awan di pagi hari", en: "Tourist spot on tea plantation hill famous as the best location to enjoy sea of clouds in the morning" } },
-                { id: "bs2_5", name: { id: "Sunrise Point Cukul", en: "Sunrise Point Cukul" }, desc: { id: "Titik pemandangan tertinggi di perkebunan teh Cukul yang sangat ikonik untuk berburu matahari terbit dan latar vila bergaya Eropa", en: "Highest viewpoint at Cukul tea plantation very iconic for sunrise hunting with European-style villa backdrop" } },
+                { id: "bs2_1", isFavorite: true, name: { id: "Situ Cileunca", en: "Situ Cileunca Lake" }, desc: { id: "Danau buatan yang luas dikelilingi perbukitan hijau, populer untuk aktivitas naik perahu, arung jeram, dan berkemah", en: "Large artificial lake surrounded by green hills, popular for boating, river rafting, and camping" } },
+                { id: "bs2_2", isFavorite: true, name: { id: "Nimo Highland", en: "Nimo Highland" }, desc: { id: "Destinasi wisata hits di puncak perkebunan teh dengan jembatan kaca berbentuk huruf U yang menawarkan pemandangan 360 derajat", en: "Trendy tourist destination at the top of tea plantation with U-shaped glass bridge offering 360-degree views" } },
+                { id: "bs2_3", isFavorite: true, name: { id: "Wayang Windu Panenjoan", en: "Wayang Windu Panenjoan" }, desc: { id: "Area perkebunan teh luas yang dilengkapi jembatan kayu panjang untuk menikmati panorama matahari terbit dan terbenam", en: "Vast tea plantation area equipped with long wooden bridge to enjoy sunrise and sunset panorama" } },
+                { id: "bs2_4", isFavorite: true, name: { id: "Taman Langit Pangalengan", en: "Taman Langit Pangalengan" }, desc: { id: "Spot wisata di atas bukit perkebunan teh yang terkenal sebagai lokasi terbaik untuk menikmati lautan awan di pagi hari", en: "Tourist spot on tea plantation hill famous as the best location to enjoy sea of clouds in the morning" } },
+                { id: "bs2_5", isFavorite: true, name: { id: "Sunrise Point Cukul", en: "Sunrise Point Cukul" }, desc: { id: "Titik pemandangan tertinggi di perkebunan teh Cukul yang sangat ikonik untuk berburu matahari terbit dan latar vila bergaya Eropa", en: "Highest viewpoint at Cukul tea plantation very iconic for sunrise hunting with European-style villa backdrop" } },
                 { id: "bs2_6", name: { id: "Hutan Pinus Rahong", en: "Rahong Pine Forest" }, desc: { id: "Kawasan hutan pinus rindang di tepi sungai yang sering digunakan untuk kegiatan arung jeram, flying fox, dan camping", en: "Shady pine forest area by the river often used for river rafting, flying fox, and camping activities" } },
                 { id: "bs2_7", name: { id: "Kampung Singkur", en: "Kampung Singkur" }, desc: { id: "Destinasi wisata petualangan di tepi Sungai Palayangan yang menawarkan aktivitas tubing dan outbound seru", en: "Adventure tourism destination on the banks of Palayangan River offering tubing and fun outbound activities" } },
                 { id: "bs2_8", name: { id: "Pinus Tilu Pangalengan", en: "Pinus Tilu Pangalengan" }, desc: { id: "Wisata alam hutan pinus asri yang menyediakan area bersantai, kafe estetik, dan tempat berkemah", en: "Beautiful pine forest nature tourism providing relaxation area, aesthetic cafe, and camping spot" } },
                 { id: "bs2_9", name: { id: "Cileunca Lakeside", en: "Cileunca Lakeside" }, desc: { id: "Kawasan tepi danau yang menyediakan fasilitas glamping mewah, kafe, serta wahana air yang menyenangkan", en: "Lakeside area providing luxury glamping facilities, cafe, and fun water rides" } },
                 { id: "bs2_10", name: { id: "Cibolang Hot Spring Water", en: "Cibolang Hot Spring Water" }, desc: { id: "Pemandian air panas alami belerang yang dikelilingi oleh pemandangan kebun teh yang menenangkan", en: "Natural sulfur hot spring bath surrounded by calming tea garden scenery" } },
-                { id: "bs2_11", name: { id: "Rumah Pengabdi Setan", en: "Rumah Pengabdi Setan" }, desc: { id: "Bangunan tua peninggalan Belanda di tengah perkebunan teh Malabar yang terkenal sebagai lokasi syuting film horor populer", en: "Old Dutch heritage building in the middle of Malabar tea plantation famous as filming location for popular horror movie" } },
+                { id: "bs2_11", isFavorite: true, name: { id: "Rumah Pengabdi Setan", en: "Rumah Pengabdi Setan" }, desc: { id: "Bangunan tua peninggalan Belanda di tengah perkebunan teh Malabar yang terkenal sebagai lokasi syuting film horor populer", en: "Old Dutch heritage building in the middle of Malabar tea plantation famous as filming location for popular horror movie" } },
                 { id: "bs2_12", name: { id: "Kebun Teh Malabar", en: "Malabar Tea Estate" }, desc: { id: "Salah satu perkebunan teh tertua di Bandung yang bersejarah dengan udara pegunungan yang sangat dingin dan segar", en: "One of the oldest tea plantations in Bandung with historical value and very cool, fresh mountain air" } },
                 { id: "bs2_13", name: { id: "Bumi Perkemahan Cileunca", en: "Cileunca Camping Ground" }, desc: { id: "Lokasi camping favorit di tepi danau dengan pemandangan air yang tenang dan latar belakang pegunungan", en: "Favorite camping spot by the lake with calm water view and mountain backdrop" } },
                 { id: "bs2_14", name: { id: "Pemandian Air Panas Cikole", en: "Cikole Hot Spring" }, desc: { id: "Sumber air panas alami di tengah kesejukan alam Pangalengan yang cocok untuk relaksasi", en: "Natural hot spring in the middle of Pangalengan's cool nature suitable for relaxation" } },
@@ -832,10 +832,14 @@
                 const chosenDay = usedInOtherDays[item.id];
                 const displayName = item.name[currentLang] || item.name['id'];
                 const displayDesc = item.desc[currentLang] || item.desc['id'];
+                
+                // Label Favorit Pojok Kanan Atas
+                const favBadge = item.isFavorite ? `<span class="absolute top-1.5 right-1.5 bg-amber-500 text-navy-900 text-[9px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider shadow-sm flex items-center gap-0.5">⭐ FAVORIT</span>` : '';
 
                 if (chosenDay) {
                     container.innerHTML += `
-                        <div class="flex items-center justify-between p-2 rounded-lg bg-gray-200/60 dark:bg-navy-900/40 border border-dashed border-gray-300 dark:border-gray-700">
+                        <div class="relative flex items-center justify-between p-2 rounded-lg bg-gray-200/60 dark:bg-navy-900/40 border border-dashed border-gray-300 dark:border-gray-700 ${item.isFavorite ? 'pt-6' : ''}">
+                            ${favBadge}
                             <div class="flex items-center space-x-2 overflow-hidden">
                                 <input type="checkbox" disabled class="rounded text-gray-400 w-4 h-4 cursor-not-allowed flex-shrink-0">
                                 <div class="truncate">
@@ -851,12 +855,13 @@
                 } else {
                     const checkedAttr = isSelectedInCurrentDay ? 'checked' : '';
                     container.innerHTML += `
-                        <label class="flex items-start space-x-2 p-2 rounded-lg hover:bg-amber-500/10 dark:hover:bg-navy-800/50 cursor-pointer border border-transparent hover:border-amber-500/20 transition">
+                        <label class="relative flex items-start space-x-2 p-2 rounded-lg hover:bg-amber-500/10 dark:hover:bg-navy-800/50 cursor-pointer border border-transparent hover:border-amber-500/20 transition ${item.isFavorite ? 'pr-20' : ''}">
                             <input type="checkbox" value="${item.id}" ${checkedAttr} onchange="toggleDestination('${item.id}', this.checked)" class="dest-checkbox rounded text-amber-500 focus:ring-amber-500 w-4 h-4 mt-0.5 flex-shrink-0">
                             <div class="leading-tight">
                                 <span class="text-gray-700 dark:text-gray-300 font-semibold text-xs block">${displayName}</span>
                                 <span class="text-[10px] text-gray-500 dark:text-gray-400 block mt-0.5">${displayDesc}</span>
                             </div>
+                            ${favBadge}
                         </label>
                     `;
                 }
@@ -910,10 +915,14 @@
                         const chosenDay = usedInOtherDays[item.id];
                         const displayName = item.name[currentLang] || item.name['id'];
                         const displayDesc = item.desc[currentLang] || item.desc['id'];
+                        
+                        // Label Favorit Pojok Kanan Atas saat Pencarian
+                        const favBadge = item.isFavorite ? `<span class="absolute top-1.5 right-1.5 bg-amber-500 text-navy-900 text-[9px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider shadow-sm flex items-center gap-0.5">⭐ FAVORIT</span>` : '';
 
                         if (chosenDay) {
                             html += `
-                                <div class="flex items-center justify-between p-2 rounded-lg bg-gray-200/60 dark:bg-navy-900/40 border border-dashed border-gray-300 dark:border-gray-700">
+                                <div class="relative flex items-center justify-between p-2 rounded-lg bg-gray-200/60 dark:bg-navy-900/40 border border-dashed border-gray-300 dark:border-gray-700 ${item.isFavorite ? 'pt-6' : ''}">
+                                    ${favBadge}
                                     <div class="flex items-center space-x-2 overflow-hidden">
                                         <input type="checkbox" disabled class="rounded text-gray-400 w-4 h-4 cursor-not-allowed flex-shrink-0">
                                         <div class="truncate">
@@ -929,12 +938,13 @@
                         } else {
                             const checkedAttr = isSelected ? 'checked' : '';
                             html += `
-                                <label class="flex items-start space-x-2 p-2 rounded-lg hover:bg-amber-500/10 dark:hover:bg-navy-800/50 cursor-pointer border border-transparent hover:border-amber-500/20 transition">
+                                <label class="relative flex items-start space-x-2 p-2 rounded-lg hover:bg-amber-500/10 dark:hover:bg-navy-800/50 cursor-pointer border border-transparent hover:border-amber-500/20 transition ${item.isFavorite ? 'pr-20' : ''}">
                                     <input type="checkbox" value="${item.id}" data-area="${areaKey}" ${checkedAttr} onchange="toggleDestinationFromSearch('${item.id}', '${areaKey}', this.checked)" class="dest-checkbox rounded text-amber-500 focus:ring-amber-500 w-4 h-4 mt-0.5 flex-shrink-0">
                                     <div class="leading-tight">
                                         <span class="text-gray-700 dark:text-gray-300 font-semibold text-xs block">${displayName}</span>
                                         <span class="text-[10px] text-gray-500 dark:text-gray-400 block mt-0.5">${displayDesc}</span>
                                     </div>
+                                    ${favBadge}
                                 </label>
                             `;
                         }
@@ -1309,7 +1319,7 @@
             }
             
             text += `%0A💰 *ESTIMASI TOTAL BIAYA: ${total}*%0A%0A`;
-            text += isEn ? `Please check availability and confirm my booking. Thank you!` : `Mohon cek ketersediaan armada dan konfirmasi pesanan saya. Terima kasih!`;
+            text += isEn ? `Please check availability and confirm my booking. Thank you` : `Mohon cek ketersediaan armada dan konfirmasi pesanan saya. Terima kasih`;
             
             window.open(`https://api.whatsapp.com/send?phone=6282130640161&text=${text}`, '_blank');
         }
