@@ -1027,23 +1027,7 @@
 
             // Info Jadwal & Waktu Perjalanan
             const startDateVal = document.getElementById('startDate').value;
-            const pickupTimeVal = document.getElementById('pickupTime').value;
-            if (startDateVal && days > 0) {
-                let startD = new Date(startDateVal);
-                const fmtStart = startD.toLocaleDateString(isEn ? 'en-US' : 'id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-                let endD = new Date(startDateVal);
-                endD.setDate(endD.getDate() + (days - 1));
-                const fmtEnd = endD.toLocaleDateString(isEn ? 'en-US' : 'id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-
-                html += `<div class="mb-3 pb-2 border-b border-gray-200 dark:border-gray-700">
-                    <p class="font-bold text-gray-700 dark:text-gray-300 text-[11px]">📅 ${isEn ? 'Trip Schedule' : 'Jadwal Perjalanan'}:</p>
-                    <p class="text-[11px] text-gray-600 dark:text-gray-400">• ${isEn ? 'Start Date' : 'Tanggal Mulai'}: ${fmtStart} ${pickupTimeVal ? '(' + pickupTimeVal + ' WIB)' : ''}</p>
-                    <p class="text-[11px] text-gray-600 dark:text-gray-400">• ${isEn ? 'End Date' : 'Tanggal Selesai'}: ${fmtEnd}</p>
-                    <p class="text-[11px] text-gray-600 dark:text-gray-400">• ${isEn ? 'Duration' : 'Durasi'}: ${days} ${isEn ? 'Days' : 'Hari'}</p>
-                </div>`;
-            }
-
-            // Ambil info pickup dan drop off
+                       // Ambil info pickup dan drop off
             const pickupSelect = document.getElementById('calcPickup');
             const pickupName = isEn ? pickupSelect.options[pickupSelect.selectedIndex].getAttribute('data-name-en') : pickupSelect.options[pickupSelect.selectedIndex].getAttribute('data-name-id');
             const pickupDetail = document.getElementById('pickupDetail').value || (isEn ? "Not specified" : "Belum diisi");
