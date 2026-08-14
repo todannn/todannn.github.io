@@ -18,6 +18,7 @@
         }
     </script>
 <base target="_blank">
+<base target="_blank">
 </head>
 <body class="bg-gray-50 text-navy-900 dark:bg-navy-900 dark:text-gray-100 min-h-screen flex flex-col justify-center items-center p-4 transition-colors duration-300 font-sans">
 
@@ -537,10 +538,16 @@
 
         function applyLanguage() {
             const dict = i18nDict[currentLang];
-            
+
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
-                if (dict[key]) el.innerHTML = dict[key];
+                if (!dict[key]) return;
+                const tag = el.tagName;
+                if (tag === 'INPUT' || tag === 'TEXTAREA') {
+                    el.placeholder = dict[key];
+                } else {
+                    el.innerHTML = dict[key];
+                }
             });
 
             document.querySelectorAll('[data-i18n-ph]').forEach(el => {
@@ -860,9 +867,9 @@
         function filterDestinations() {
             const query = document.getElementById('destSearch').value.toLowerCase().trim();
             const container = document.getElementById('destinationOptions');
-            const items = container.querySelectorAll('label, div');
+            const items = container.children;
 
-            items.forEach(item => {
+            Array.from(items).forEach(item => {
                 const text = item.innerText.toLowerCase();
                 if (text.includes(query)) {
                     item.style.display = '';
@@ -1113,21 +1120,6 @@
 
             // Ekstraksi Itinerary Summary secara Utuh Per Hari dengan Format Baru
             let itineraryText = "";
-            // Ambil info pickup dan drop off
-            const pickupSelect = document.getElementById('calcPickup');
-            const pickupName = isEn ? pickupSelect.options[pickupSelect.selectedIndex].getAttribute('data-name-en') : pickupSelect.options[pickupSelect.selectedIndex].getAttribute('data-name-id');
-            const pickupDetail = document.getElementById('pickupDetail').value || (isEn ? "Not specified" : "Belum diisi");
-
-            const dropSelect = document.getElementById('calcDrop');
-            const dropName = isEn ? dropSelect.options[dropSelect.selectedIndex].getAttribute('data-name-en') : dropSelect.options[dropSelect.selectedIndex].getAttribute('data-name-id');
-            const dropDetail = document.getElementById('dropDetail').value || (isEn ? "Not specified" : "Belum diisi");
-
-            html += `<div class="mb-3 pb-2 border-b border-gray-200 dark:border-gray-700">
-                <p class="font-bold text-gray-700 dark:text-gray-300 text-[11px]">📍 ${isEn ? 'Pickup' : 'Penjemputan'}:</p>
-                <p class="text-[11px] text-gray-600 dark:text-gray-400">${pickupName} <span class="text-gray-400">(${pickupDetail})</span></p>
-                <p class="font-bold text-gray-700 dark:text-gray-300 text-[11px] mt-1">🏁 ${isEn ? 'Drop Off' : 'Pengantaran'}:</p>
-                <p class="text-[11px] text-gray-600 dark:text-gray-400">${dropName} <span class="text-gray-400">(${dropDetail})</span></p>
-            </div>`;
 
             for (let i = 1; i <= days; i++) {
                 const dayObj = dayData[i] || { area: 'BandungKota', dests: [], customText: '' };
@@ -1195,7 +1187,13 @@
             text += `📝 *${isEn ? 'Special Notes' : 'Catatan Khusus'}*: ${custNotes}%0A%0A`;
             
             text += `🗺️ *RANGKAIAN ITINERARY PER HARI:*${itineraryText}%0A%0A`;
-            
+
+            text += `ℹ️ *KETENTUAN OPERASIONAL*%0A`;
+            text += `• ${isEn ? 'Maximum service duration is 12 Hours per day (ends by 09:00 PM WIB).' : 'Durasi pelayanan maksimal 12 Jam per hari (maksimal selesai pukul 21.00 WIB).'}%0A`;
+            text += `• ${isEn ? 'CGK Airport (Jakarta/Tangerang) pickup/drop fee is IDR 600,000 / one way.' : 'Layanan antar/jemput Bandara CGK (Jakarta/Tangerang) dikenakan Rp 600.000 / sekali jalan.'}%0A`;
+            text += `• ${isEn ? 'Local drop/pickup in Bandung City (Hotel to Station/vice versa) is IDR 200,000.' : 'Layanan Drop/Jemput lokal area Kota Bandung (Hotel ke Stasiun/sebaliknya) Rp 200.000.'}%0A`;
+            text += `• ${isEn ? 'Out of city / inter-city destinations incur additional operational fees.' : 'Destinasi luar kota / beda kota dikenakan tambahan biaya operasional antar-kota.'}%0A%0A`;
+
             text += `📊 *RINCIAN ESTIMASI BIAYA*%0A`;
             text += `• ${isEn ? 'Vehicle Rental' : 'Sewa Transport'} (${days}x @ ${document.getElementById('carPriceDisplay').value}): ${detailTransport}%0A`;
             if (pickupFee > 0) {
