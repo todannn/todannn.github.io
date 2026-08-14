@@ -170,6 +170,12 @@
                 <!-- Tab Pilih Hari -->
                 <div id="dayTabsContainer" class="flex flex-wrap gap-1.5 border-b border-gray-200 dark:border-gray-700 pb-2"></div>
 
+                <!-- Search Destinasi Cross-Area -->
+                <div class="relative mb-2">
+                    <input type="text" id="destSearch" onkeyup="filterDestinations()" placeholder="Cari tempat wisata di semua wilayah..." data-i18n-ph="searchDestPh" class="w-full bg-white dark:bg-navy-800 border border-gray-300 dark:border-gray-700 rounded-xl pl-9 pr-3 py-2 text-xs font-medium focus:outline-none focus:border-amber-500">
+                    <svg class="absolute left-3 top-2.5 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </div>
+
                 <!-- Select Wilayah Utama Khusus Hari Aktif -->
                 <div class="pt-1">
                     <label class="block text-[11px] font-bold mb-1 text-gray-700 dark:text-gray-300"><span data-i18n="selectRegion">Pilih Wilayah Tour / Layanan untuk</span> <span id="labelWilayahHari" class="text-amber-500">-</span>:</label>
@@ -188,10 +194,6 @@
                 <!-- Checklist Destinasi Hari Ini -->
                 <div id="destinationSection" class="pt-1 space-y-2">
                     <label class="block text-[11px] font-bold text-gray-600 dark:text-gray-400" data-i18n="selectDest">Pilih Tempat Wisata yang Ingin Dikunjungi:</label>
-                    <div class="relative mb-2">
-                        <input type="text" id="destSearch" onkeyup="filterDestinations()" placeholder="Cari tempat wisata..." data-i18n-ph="searchDestPh" class="w-full bg-white dark:bg-navy-800 border border-gray-300 dark:border-gray-700 rounded-xl pl-9 pr-3 py-2 text-xs font-medium focus:outline-none focus:border-amber-500">
-                        <svg class="absolute left-3 top-2.5 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                    </div>
                     <div id="destinationOptions" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs"></div>
 
                     <!-- Input Request Destinasi / Tempat Lainnya Per Hari -->
@@ -325,7 +327,7 @@
                 editInDay: "Edit di Hari",
                 daysWarning: "⚠️ Silakan isi durasi hari sewa terlebih dahulu!",
                 exceededCap: "⚠️ Peringatan Kapasitas: Jumlah peserta ({pax} Orang) melebihi kapasitas armada sebelumnya. Sistem telah otomatis menyesuaikan ke {car}.",
-                searchDestPh: "Cari tempat wisata...",
+                searchDestPh: "Cari tempat wisata di semua wilayah...",
                 destNote: "* Tidak dipastikan semua pilihan tempat dikunjungi, jika cukup waktu dalam sehari.",
                 btnReset: "🗑️ Reset / Hapus Semua Pengisian"
             },
@@ -387,7 +389,7 @@
                 editInDay: "Edit in Day",
                 daysWarning: "⚠️ Please fill in the rental duration first!",
                 exceededCap: "⚠️ Capacity Warning: Number of passengers ({pax} Pax) exceeds previous vehicle capacity. System automatically adjusted to {car}.",
-                searchDestPh: "Search destinations...",
+                searchDestPh: "Search destinations across all regions...",
                 destNote: "* Not all selected places are guaranteed to be visited, depending on available time in a day.",
                 btnReset: "🗑️ Reset / Clear All Entries"
             }
@@ -538,16 +540,10 @@
 
         function applyLanguage() {
             const dict = i18nDict[currentLang];
-
+            
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
-                if (!dict[key]) return;
-                const tag = el.tagName;
-                if (tag === 'INPUT' || tag === 'TEXTAREA') {
-                    el.placeholder = dict[key];
-                } else {
-                    el.innerHTML = dict[key];
-                }
+                if (dict[key]) el.innerHTML = dict[key];
             });
 
             document.querySelectorAll('[data-i18n-ph]').forEach(el => {
@@ -763,6 +759,9 @@
             const days = parseInt(document.getElementById('calcDays').value) || 0;
             if (days === 0) return;
 
+            // Clear search saat ganti area manual
+            document.getElementById('destSearch').value = '';
+
             const selectedArea = document.getElementById('calcAreaDay').value;
             const autoDests = [...(defaultSelectedDestinations[selectedArea] || [])];
 
@@ -793,14 +792,19 @@
 
         function renderDestinations() {
             const days = parseInt(document.getElementById('calcDays').value) || 0;
-            const searchInput = document.getElementById('destSearch');
-            if (searchInput) searchInput.value = '';
             const container = document.getElementById('destinationOptions');
             const destSection = document.getElementById('destinationSection');
             const dict = i18nDict[currentLang];
 
             if (days === 0) {
                 container.innerHTML = `<span class="text-xs text-gray-400 italic">${dict.daysWarning}</span>`;
+                return;
+            }
+
+            // Kalau search tidak kosong, biarkan filterDestinations yang handle
+            const searchQuery = document.getElementById('destSearch').value.trim();
+            if (searchQuery) {
+                filterDestinations();
                 return;
             }
 
@@ -867,16 +871,114 @@
         function filterDestinations() {
             const query = document.getElementById('destSearch').value.toLowerCase().trim();
             const container = document.getElementById('destinationOptions');
-            const items = container.children;
+            const dict = i18nDict[currentLang];
+            const isEn = currentLang === 'en';
 
-            Array.from(items).forEach(item => {
-                const text = item.innerText.toLowerCase();
-                if (text.includes(query)) {
-                    item.style.display = '';
-                } else {
-                    item.style.display = 'none';
+            if (!query) {
+                renderDestinations();
+                return;
+            }
+
+            container.innerHTML = '';
+            let resultCount = 0;
+
+            let usedInOtherDays = {};
+            for (let day in dayData) {
+                if (parseInt(day) !== currentActiveDay) {
+                    (dayData[day].dests || []).forEach(destId => {
+                        usedInOtherDays[destId] = day;
+                    });
                 }
-            });
+            }
+            const currentDayDestIds = (dayData[currentActiveDay] && dayData[currentActiveDay].dests) ? dayData[currentActiveDay].dests : [];
+
+            // Mapping area key ke label
+            const areaLabels = {};
+            const areaSelect = document.getElementById('calcAreaDay');
+            for (let opt of areaSelect.options) {
+                areaLabels[opt.value] = opt.text.split('-')[0].split('(')[0].trim();
+            }
+
+            for (let areaKey in destData) {
+                if (areaKey === 'DropOnlyBandung') continue;
+                const items = destData[areaKey];
+                const matchedItems = items.filter(item => {
+                    const name = (item.name[currentLang] || item.name['id']).toLowerCase();
+                    const desc = (item.desc[currentLang] || item.desc['id']).toLowerCase();
+                    return name.includes(query) || desc.includes(query);
+                });
+
+                if (matchedItems.length > 0) {
+                    container.innerHTML += `<div class="col-span-1 sm:col-span-2 text-[10px] font-bold text-amber-600 dark:text-amber-400 mt-2 mb-1 uppercase tracking-wide">${areaLabels[areaKey] || areaKey}</div>`;
+
+                    matchedItems.forEach(item => {
+                        const isSelected = currentDayDestIds.includes(item.id);
+                        const chosenDay = usedInOtherDays[item.id];
+                        const displayName = item.name[currentLang] || item.name['id'];
+                        const displayDesc = item.desc[currentLang] || item.desc['id'];
+
+                        if (chosenDay) {
+                            container.innerHTML += `
+                                <div class="flex items-center justify-between p-2 rounded-lg bg-gray-200/60 dark:bg-navy-900/40 border border-dashed border-gray-300 dark:border-gray-700">
+                                    <div class="flex items-center space-x-2 overflow-hidden">
+                                        <input type="checkbox" disabled class="rounded text-gray-400 w-4 h-4 cursor-not-allowed flex-shrink-0">
+                                        <div class="truncate">
+                                            <span class="text-gray-500 dark:text-gray-400 font-medium text-xs line-through block truncate" title="${displayName}">${displayName}</span>
+                                            <span class="text-[10px] text-gray-400 block truncate">${displayDesc}</span>
+                                        </div>
+                                    </div>
+                                    <button type="button" onclick="switchDay(${chosenDay})" class="text-[10px] bg-amber-500/20 text-amber-600 dark:text-amber-400 font-bold px-2 py-0.5 rounded hover:bg-amber-500/30 transition flex-shrink-0 ml-1">
+                                        ${dict.editInDay} ${chosenDay}
+                                    </button>
+                                </div>
+                            `;
+                        } else {
+                            const checkedAttr = isSelected ? 'checked' : '';
+                            container.innerHTML += `
+                                <label class="flex items-start space-x-2 p-2 rounded-lg hover:bg-amber-500/10 dark:hover:bg-navy-800/50 cursor-pointer border border-transparent hover:border-amber-500/20 transition">
+                                    <input type="checkbox" value="${item.id}" data-area="${areaKey}" ${checkedAttr} onchange="toggleDestinationFromSearch('${item.id}', '${areaKey}', this.checked)" class="dest-checkbox rounded text-amber-500 focus:ring-amber-500 w-4 h-4 mt-0.5 flex-shrink-0">
+                                    <div class="leading-tight">
+                                        <span class="text-gray-700 dark:text-gray-300 font-semibold text-xs block">${displayName}</span>
+                                        <span class="text-[10px] text-gray-500 dark:text-gray-400 block mt-0.5">${displayDesc}</span>
+                                    </div>
+                                </label>
+                            `;
+                        }
+                    });
+                    resultCount += matchedItems.length;
+                }
+            }
+
+            if (resultCount === 0) {
+                container.innerHTML = `<span class="text-xs text-gray-400 italic col-span-1 sm:col-span-2">${isEn ? 'No destinations found.' : 'Tidak ditemukan tempat wisata.'}</span>`;
+            }
+        }
+
+        function toggleDestinationFromSearch(destId, areaKey, isChecked) {
+            const days = parseInt(document.getElementById('calcDays').value) || 0;
+            if (days === 0) return;
+
+            // Update area hari ini ke areaKey
+            if (!dayData[currentActiveDay]) {
+                dayData[currentActiveDay] = { area: areaKey, dests: [], customText: '' };
+            } else {
+                dayData[currentActiveDay].area = areaKey;
+            }
+
+            // Update select wilayah
+            document.getElementById('calcAreaDay').value = areaKey;
+
+            // Toggle destinasi
+            if (isChecked) {
+                if (!dayData[currentActiveDay].dests.includes(destId)) {
+                    dayData[currentActiveDay].dests.push(destId);
+                }
+            } else {
+                dayData[currentActiveDay].dests = dayData[currentActiveDay].dests.filter(id => id !== destId);
+            }
+
+            updateItinerarySummary();
+            calculateTotal();
         }
 
         function toggleDestination(destId, isChecked) {
@@ -921,6 +1023,24 @@
             if (days === 0) {
                 summaryBox.innerText = dict.daysWarning;
                 return;
+            }
+
+            // Info Jadwal & Waktu Perjalanan
+            const startDateVal = document.getElementById('startDate').value;
+            const pickupTimeVal = document.getElementById('pickupTime').value;
+            if (startDateVal && days > 0) {
+                let startD = new Date(startDateVal);
+                const fmtStart = startD.toLocaleDateString(isEn ? 'en-US' : 'id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                let endD = new Date(startDateVal);
+                endD.setDate(endD.getDate() + (days - 1));
+                const fmtEnd = endD.toLocaleDateString(isEn ? 'en-US' : 'id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+                html += `<div class="mb-3 pb-2 border-b border-gray-200 dark:border-gray-700">
+                    <p class="font-bold text-gray-700 dark:text-gray-300 text-[11px]">📅 ${isEn ? 'Trip Schedule' : 'Jadwal Perjalanan'}:</p>
+                    <p class="text-[11px] text-gray-600 dark:text-gray-400">• ${isEn ? 'Start Date' : 'Tanggal Mulai'}: ${fmtStart} ${pickupTimeVal ? '(' + pickupTimeVal + ' WIB)' : ''}</p>
+                    <p class="text-[11px] text-gray-600 dark:text-gray-400">• ${isEn ? 'End Date' : 'Tanggal Selesai'}: ${fmtEnd}</p>
+                    <p class="text-[11px] text-gray-600 dark:text-gray-400">• ${isEn ? 'Duration' : 'Durasi'}: ${days} ${isEn ? 'Days' : 'Hari'}</p>
+                </div>`;
             }
 
             // Ambil info pickup dan drop off
@@ -1120,8 +1240,9 @@
 
             // Ekstraksi Itinerary Summary secara Utuh Per Hari dengan Format Baru
             let itineraryText = "";
-
-            for (let i = 1; i <= days; i++) {
+            // Info Jadwal & Waktu Perjalanan
+            const startDateVal = document.getElementById('startDate').value;
+         for (let i = 1; i <= days; i++) {
                 const dayObj = dayData[i] || { area: 'BandungKota', dests: [], customText: '' };
                 
                 let areaText = dayObj.area;
@@ -1187,13 +1308,7 @@
             text += `📝 *${isEn ? 'Special Notes' : 'Catatan Khusus'}*: ${custNotes}%0A%0A`;
             
             text += `🗺️ *RANGKAIAN ITINERARY PER HARI:*${itineraryText}%0A%0A`;
-
-            text += `ℹ️ *KETENTUAN OPERASIONAL*%0A`;
-            text += `• ${isEn ? 'Maximum service duration is 12 Hours per day (ends by 09:00 PM WIB).' : 'Durasi pelayanan maksimal 12 Jam per hari (maksimal selesai pukul 21.00 WIB).'}%0A`;
-            text += `• ${isEn ? 'CGK Airport (Jakarta/Tangerang) pickup/drop fee is IDR 600,000 / one way.' : 'Layanan antar/jemput Bandara CGK (Jakarta/Tangerang) dikenakan Rp 600.000 / sekali jalan.'}%0A`;
-            text += `• ${isEn ? 'Local drop/pickup in Bandung City (Hotel to Station/vice versa) is IDR 200,000.' : 'Layanan Drop/Jemput lokal area Kota Bandung (Hotel ke Stasiun/sebaliknya) Rp 200.000.'}%0A`;
-            text += `• ${isEn ? 'Out of city / inter-city destinations incur additional operational fees.' : 'Destinasi luar kota / beda kota dikenakan tambahan biaya operasional antar-kota.'}%0A%0A`;
-
+            
             text += `📊 *RINCIAN ESTIMASI BIAYA*%0A`;
             text += `• ${isEn ? 'Vehicle Rental' : 'Sewa Transport'} (${days}x @ ${document.getElementById('carPriceDisplay').value}): ${detailTransport}%0A`;
             if (pickupFee > 0) {
